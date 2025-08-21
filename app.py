@@ -71,10 +71,75 @@ def get_financial_data():
     costs = [112, 118, 125, 135, 140, 150, 160, 170, 175, 185, 195, 205]
     return {'months': months, 'revenue': revenue, 'costs': costs}
 
+def get_capacity_data():
+    return {
+        'checkin_area': {'current': 245, 'utilization': 98, 'standard': 250, 'unit': 'm²/millón pax'},
+        'waiting_area': {'current': 890, 'utilization': 82, 'standard': 900, 'unit': 'm²/millón pax'},
+        'security_area': {'current': 120, 'utilization': 76, 'standard': 140, 'unit': 'm²/millón pax'},
+        'sterile_area': {'current': 450, 'utilization': 85, 'standard': 500, 'unit': 'm²/millón pax'},
+        'baggage_system': {'current': 2400, 'utilization': 80, 'max_capacity': 3000, 'unit': 'bags/hr'}
+    }
+
+def get_capacity_zones():
+    return [
+        {'zone': 'Terminal A - Check-in', 'utilization': 85, 'capacity': 12000, 'current': 10200},
+        {'zone': 'Terminal A - Seguridad', 'utilization': 76, 'capacity': 8000, 'current': 6080},
+        {'zone': 'Terminal B - Check-in', 'utilization': 92, 'capacity': 10000, 'current': 9200},
+        {'zone': 'Terminal B - Seguridad', 'utilization': 68, 'capacity': 6000, 'current': 4080},
+        {'zone': 'Sala de Espera Dom.', 'utilization': 82, 'capacity': 15000, 'current': 12300},
+        {'zone': 'Sala de Espera Int.', 'utilization': 74, 'capacity': 8000, 'current': 5920},
+        {'zone': 'Puertas de Embarque', 'utilization': 78, 'capacity': 25000, 'current': 19500},
+        {'zone': 'Recogida Equipajes', 'utilization': 83, 'capacity': 12000, 'current': 9960}
+    ]
+
+def get_security_data():
+    return {
+        'runway_incidents': {'rate': 0.12, 'target': 0.15, 'unit': '/1000 ops', 'trend': -0.02},
+        'fatal_accidents': {'rate': 0.00, 'target': 0.00, 'unit': '/1000 ops', 'trend': 0.00},
+        'work_accidents': {'rate': 0.03, 'target': 0.05, 'unit': '/1000 hrs', 'trend': -0.01},
+        'runway_incursions': {'rate': 0.05, 'target': 0.10, 'unit': '/1000 ops', 'trend': 0.01},
+        'bird_strikes': {'rate': 0.85, 'target': 1.00, 'unit': '/1000 ops', 'trend': -0.15},
+        'security_staff': {'ratio': 45, 'standard': 40, 'unit': '/millón pax', 'trend': 2},
+        'fod_reports': {'rate': 1.2, 'target': 1.0, 'unit': '/1000 ops', 'trend': 0.2},
+        'safety_score': {'score': 94.5, 'target': 95.0, 'unit': '/100', 'trend': 1.2}
+    }
+
+def get_quality_data():
+    return {
+        'security_time': {'avg': 6.4, 'target': 8.0, 'unit': 'min', 'trend': -0.3},
+        'checkin_time': {'avg': 3.2, 'target': 5.0, 'unit': 'min', 'trend': -0.1},
+        'baggage_time': {'avg': 8.1, 'target': 12.0, 'unit': 'min', 'trend': 0.4},
+        'nps_score': {'score': 67, 'target': 50, 'unit': '/100', 'trend': 3},
+        'satisfaction': {'score': 4.6, 'target': 4.0, 'unit': '/5', 'trend': 0.1},
+        'cleanliness': {'score': 4.5, 'target': 4.0, 'unit': '/5', 'trend': 0.2}
+    }
+
+def get_productivity_data():
+    return {
+        'pax_per_employee': {'value': 1240, 'benchmark': 1100, 'unit': '/año', 'trend': 45},
+        'ops_per_employee': {'value': 285, 'benchmark': 250, 'unit': '/año', 'trend': 12},
+        'cargo_per_employee': {'value': 45, 'benchmark': 40, 'unit': 'tons/año', 'trend': 2},
+        'gate_utilization': {'value': 78, 'target': 75, 'unit': '%', 'trend': 3},
+        'aircraft_rotation': {'value': 11.2, 'benchmark': 10.0, 'unit': '/día', 'trend': 0.4}
+    }
+
 # KPI Card component
-def create_kpi_card(title, value, change, icon, target=None):
+def create_kpi_card(title, value, change, icon, target=None, unit="", format_type="percent"):
     trend_color = '#00ff88' if change > 0 else '#ff4757'
     trend_arrow = '↗' if change > 0 else '↘'
+    
+    if format_type == "percent":
+        value_display = f"{value}%"
+        change_display = f"{change:+.1f}%"
+    elif format_type == "decimal":
+        value_display = f"{value:.2f}{unit}"
+        change_display = f"{change:+.2f}"
+    elif format_type == "integer":
+        value_display = f"{value:,}{unit}"
+        change_display = f"{change:+.0f}"
+    else:
+        value_display = f"{value}{unit}"
+        change_display = f"{change:+.1f}"
     
     progress = (value / target * 100) if target else None
     
@@ -86,10 +151,10 @@ def create_kpi_card(title, value, change, icon, target=None):
                 ], className="kpi-icon"),
                 html.Div([
                     html.H6(title, className="kpi-title"),
-                    html.H3(f"{value}%", className="kpi-value"),
+                    html.H3(value_display, className="kpi-value"),
                     html.Div([
                         html.Span(trend_arrow, style={'color': trend_color, 'fontSize': '16px'}),
-                        html.Span(f"{change:+.1f}%", style={'color': trend_color, 'marginLeft': '5px'})
+                        html.Span(change_display, style={'color': trend_color, 'marginLeft': '5px'})
                     ], className="kpi-change"),
                     html.Small("vs mes anterior", className="kpi-period")
                 ], className="kpi-content")
@@ -102,7 +167,7 @@ def create_kpi_card(title, value, change, icon, target=None):
                     color="info" if progress and progress >= 90 else "warning" if progress and progress >= 70 else "danger",
                     style={'height': '4px', 'background': 'rgba(255,255,255,0.1)'}
                 ) if target else None,
-                html.Small(f"Meta: {target}%" if target else "", className="kpi-target")
+                html.Small(f"Meta: {target}{unit if format_type != 'percent' else '%'}" if target else "", className="kpi-target")
             ], className="kpi-progress") if target else None
         ])
     ], className="kpi-card")
@@ -168,6 +233,14 @@ def render_tab_content(active_tab):
         return render_geographic_tab()
     elif active_tab == "financial":
         return render_financial_tab()
+    elif active_tab == "capacity":
+        return render_capacity_tab()
+    elif active_tab == "security":
+        return render_security_tab()
+    elif active_tab == "quality":
+        return render_quality_tab()
+    elif active_tab == "productivity":
+        return render_productivity_tab()
     else:
         return html.Div([
             html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
@@ -376,6 +449,401 @@ def render_financial_tab():
         ])
     ])
 
+def render_capacity_tab():
+    capacity_data = get_capacity_data()
+    zones_data = get_capacity_zones()
+    
+    return html.Div([
+        html.H4("Capacidad Operativa", className="page-title"),
+        
+        # KPI Cards Row
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Área Check-in",
+                    capacity_data['checkin_area']['current'],
+                    capacity_data['checkin_area']['utilization'] - 95,
+                    "mdi:desk",
+                    capacity_data['checkin_area']['standard'],
+                    capacity_data['checkin_area']['unit'],
+                    "integer"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Salas de Espera",
+                    capacity_data['waiting_area']['current'],
+                    capacity_data['waiting_area']['utilization'] - 85,
+                    "mdi:sofa",
+                    capacity_data['waiting_area']['standard'],
+                    capacity_data['waiting_area']['unit'],
+                    "integer"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Controles Seguridad",
+                    capacity_data['security_area']['current'],
+                    capacity_data['security_area']['utilization'] - 80,
+                    "mdi:security",
+                    capacity_data['security_area']['standard'],
+                    capacity_data['security_area']['unit'],
+                    "integer"
+                )
+            ], width=4)
+        ], className="mb-4"),
+        
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Área Estéril",
+                    capacity_data['sterile_area']['current'],
+                    capacity_data['sterile_area']['utilization'] - 80,
+                    "mdi:shield-check",
+                    capacity_data['sterile_area']['standard'],
+                    capacity_data['sterile_area']['unit'],
+                    "integer"
+                )
+            ], width=6),
+            dbc.Col([
+                create_kpi_card(
+                    "Sistema de Equipajes",
+                    capacity_data['baggage_system']['current'],
+                    capacity_data['baggage_system']['utilization'] - 75,
+                    "mdi:bag-suitcase",
+                    capacity_data['baggage_system']['max_capacity'],
+                    capacity_data['baggage_system']['unit'],
+                    "integer"
+                )
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Charts Row
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Utilización por Zonas", className="chart-title"),
+                        html.Small("Capacidad actual vs máxima", className="chart-subtitle")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="capacity-zones-chart")
+                    ])
+                ], className="chart-card")
+            ], width=8),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Comparativo IATA", className="chart-title"),
+                        html.Small("Estándares internacionales", className="chart-subtitle")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="capacity-standards-chart")
+                    ])
+                ], className="chart-card")
+            ], width=4)
+        ])
+    ])
+
+def render_security_tab():
+    security_data = get_security_data()
+    
+    return html.Div([
+        html.H4("Seguridad Operacional", className="page-title"),
+        
+        # KPI Cards Row 1
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Incidentes Pista",
+                    security_data['runway_incidents']['rate'],
+                    security_data['runway_incidents']['trend'],
+                    "mdi:runway",
+                    security_data['runway_incidents']['target'],
+                    security_data['runway_incidents']['unit'],
+                    "decimal"
+                )
+            ], width=3),
+            dbc.Col([
+                create_kpi_card(
+                    "Accidentes Mortales",
+                    security_data['fatal_accidents']['rate'],
+                    security_data['fatal_accidents']['trend'],
+                    "mdi:alert-circle",
+                    security_data['fatal_accidents']['target'],
+                    security_data['fatal_accidents']['unit'],
+                    "decimal"
+                )
+            ], width=3),
+            dbc.Col([
+                create_kpi_card(
+                    "Accidentes Trabajo",
+                    security_data['work_accidents']['rate'],
+                    security_data['work_accidents']['trend'],
+                    "mdi:hard-hat",
+                    security_data['work_accidents']['target'],
+                    security_data['work_accidents']['unit'],
+                    "decimal"
+                )
+            ], width=3),
+            dbc.Col([
+                create_kpi_card(
+                    "Incursiones Pista",
+                    security_data['runway_incursions']['rate'],
+                    security_data['runway_incursions']['trend'],
+                    "mdi:alert-triangle",
+                    security_data['runway_incursions']['target'],
+                    security_data['runway_incursions']['unit'],
+                    "decimal"
+                )
+            ], width=3)
+        ], className="mb-4"),
+        
+        # KPI Cards Row 2
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Choques Aves",
+                    security_data['bird_strikes']['rate'],
+                    security_data['bird_strikes']['trend'],
+                    "mdi:bird",
+                    security_data['bird_strikes']['target'],
+                    security_data['bird_strikes']['unit'],
+                    "decimal"
+                )
+            ], width=3),
+            dbc.Col([
+                create_kpi_card(
+                    "Personal Seguridad",
+                    security_data['security_staff']['ratio'],
+                    security_data['security_staff']['trend'],
+                    "mdi:account-supervisor",
+                    security_data['security_staff']['standard'],
+                    security_data['security_staff']['unit'],
+                    "integer"
+                )
+            ], width=3),
+            dbc.Col([
+                create_kpi_card(
+                    "Reportes FOD",
+                    security_data['fod_reports']['rate'],
+                    security_data['fod_reports']['trend'],
+                    "mdi:debris",
+                    security_data['fod_reports']['target'],
+                    security_data['fod_reports']['unit'],
+                    "decimal"
+                )
+            ], width=3),
+            dbc.Col([
+                create_kpi_card(
+                    "Score General",
+                    security_data['safety_score']['score'],
+                    security_data['safety_score']['trend'],
+                    "mdi:shield-star",
+                    security_data['safety_score']['target'],
+                    security_data['safety_score']['unit'],
+                    "decimal"
+                )
+            ], width=3)
+        ], className="mb-4"),
+        
+        # Security Matrix
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Matriz de Riesgos", className="chart-title"),
+                        html.Small("Probabilidad vs Severidad", className="chart-subtitle")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="security-risk-matrix")
+                    ])
+                ], className="chart-card")
+            ], width=12)
+        ])
+    ])
+
+def render_quality_tab():
+    quality_data = get_quality_data()
+    
+    return html.Div([
+        html.H4("Calidad de Servicio", className="page-title"),
+        
+        # KPI Cards Row 1
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Tiempo Control Seguridad",
+                    quality_data['security_time']['avg'],
+                    quality_data['security_time']['trend'],
+                    "mdi:clock-time-four",
+                    quality_data['security_time']['target'],
+                    quality_data['security_time']['unit'],
+                    "decimal"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Tiempo Check-in",
+                    quality_data['checkin_time']['avg'],
+                    quality_data['checkin_time']['trend'],
+                    "mdi:clock-fast",
+                    quality_data['checkin_time']['target'],
+                    quality_data['checkin_time']['unit'],
+                    "decimal"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Tiempo Espera Equipaje",
+                    quality_data['baggage_time']['avg'],
+                    quality_data['baggage_time']['trend'],
+                    "mdi:bag-carry-on",
+                    quality_data['baggage_time']['target'],
+                    quality_data['baggage_time']['unit'],
+                    "decimal"
+                )
+            ], width=4)
+        ], className="mb-4"),
+        
+        # KPI Cards Row 2
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "NPS Score",
+                    quality_data['nps_score']['score'],
+                    quality_data['nps_score']['trend'],
+                    "mdi:thumb-up",
+                    quality_data['nps_score']['target'],
+                    quality_data['nps_score']['unit'],
+                    "integer"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Satisfacción General",
+                    quality_data['satisfaction']['score'],
+                    quality_data['satisfaction']['trend'],
+                    "mdi:star",
+                    quality_data['satisfaction']['target'],
+                    quality_data['satisfaction']['unit'],
+                    "decimal"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Limpieza Baños",
+                    quality_data['cleanliness']['score'],
+                    quality_data['cleanliness']['trend'],
+                    "mdi:broom",
+                    quality_data['cleanliness']['target'],
+                    quality_data['cleanliness']['unit'],
+                    "decimal"
+                )
+            ], width=4)
+        ], className="mb-4"),
+        
+        # Customer Journey
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Customer Journey Map", className="chart-title"),
+                        html.Small("Tiempos de procesamiento por etapa", className="chart-subtitle")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="customer-journey-chart")
+                    ])
+                ], className="chart-card")
+            ], width=12)
+        ])
+    ])
+
+def render_productivity_tab():
+    productivity_data = get_productivity_data()
+    
+    return html.Div([
+        html.H4("Productividad Operacional", className="page-title"),
+        
+        # KPI Cards Row 1
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Pasajeros por Empleado",
+                    productivity_data['pax_per_employee']['value'],
+                    productivity_data['pax_per_employee']['trend'],
+                    "mdi:account-multiple",
+                    productivity_data['pax_per_employee']['benchmark'],
+                    productivity_data['pax_per_employee']['unit'],
+                    "integer"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Operaciones por Empleado",
+                    productivity_data['ops_per_employee']['value'],
+                    productivity_data['ops_per_employee']['trend'],
+                    "mdi:airplane",
+                    productivity_data['ops_per_employee']['benchmark'],
+                    productivity_data['ops_per_employee']['unit'],
+                    "integer"
+                )
+            ], width=4),
+            dbc.Col([
+                create_kpi_card(
+                    "Carga por Empleado",
+                    productivity_data['cargo_per_employee']['value'],
+                    productivity_data['cargo_per_employee']['trend'],
+                    "mdi:package",
+                    productivity_data['cargo_per_employee']['benchmark'],
+                    productivity_data['cargo_per_employee']['unit'],
+                    "integer"
+                )
+            ], width=4)
+        ], className="mb-4"),
+        
+        # KPI Cards Row 2
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card(
+                    "Utilización Puertas",
+                    productivity_data['gate_utilization']['value'],
+                    productivity_data['gate_utilization']['trend'],
+                    "mdi:door",
+                    productivity_data['gate_utilization']['target'],
+                    productivity_data['gate_utilization']['unit'],
+                    "percent"
+                )
+            ], width=6),
+            dbc.Col([
+                create_kpi_card(
+                    "Rotación Aeronaves",
+                    productivity_data['aircraft_rotation']['value'],
+                    productivity_data['aircraft_rotation']['trend'],
+                    "mdi:airplane-takeoff",
+                    productivity_data['aircraft_rotation']['benchmark'],
+                    productivity_data['aircraft_rotation']['unit'],
+                    "decimal"
+                )
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Productivity Charts
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Benchmarking Internacional", className="chart-title"),
+                        html.Small("AIFA vs aeropuertos similares", className="chart-subtitle")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="productivity-benchmark-chart")
+                    ])
+                ], className="chart-card")
+            ], width=12)
+        ])
+    ])
+
 # Callbacks for charts
 @callback(Output('participation-trend-chart', 'figure'),
           Input('interval-component', 'n_intervals'))
@@ -513,6 +981,164 @@ def update_financial_trend(n):
         font=dict(color='white'),
         xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Mes'),
         yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Millones MXN'),
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    
+    return fig
+
+# New tab callbacks
+@callback(Output('capacity-zones-chart', 'figure'),
+          Input('interval-component', 'n_intervals'))
+def update_capacity_zones(n):
+    zones = get_capacity_zones()
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Bar(
+        x=[zone['zone'] for zone in zones],
+        y=[zone['utilization'] for zone in zones],
+        marker_color='#00d4ff',
+        text=[f"{zone['utilization']}%" for zone in zones],
+        textposition='auto',
+        name='Utilización %'
+    ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Zonas del Aeropuerto'),
+        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Utilización (%)'),
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    
+    return fig
+
+@callback(Output('capacity-standards-chart', 'figure'),
+          Input('interval-component', 'n_intervals'))
+def update_capacity_standards(n):
+    data = get_capacity_data()
+    
+    areas = ['Check-in', 'Espera', 'Seguridad', 'Estéril']
+    current = [data['checkin_area']['current'], data['waiting_area']['current'], 
+               data['security_area']['current'], data['sterile_area']['current']]
+    standard = [data['checkin_area']['standard'], data['waiting_area']['standard'],
+                data['security_area']['standard'], data['sterile_area']['standard']]
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Bar(
+        x=areas, y=current, name='AIFA', marker_color='#00d4ff'
+    ))
+    
+    fig.add_trace(go.Bar(
+        x=areas, y=standard, name='Estándar IATA', marker_color='#f59e0b'
+    ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='m²/millón pax'),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02),
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    
+    return fig
+
+@callback(Output('security-risk-matrix', 'figure'),
+          Input('interval-component', 'n_intervals'))
+def update_security_matrix(n):
+    risks = [
+        {'name': 'Incursión Pista', 'prob': 2, 'sev': 5, 'color': 'High'},
+        {'name': 'Choque Aves', 'prob': 4, 'sev': 3, 'color': 'Medium'},
+        {'name': 'Acc. Trabajo', 'prob': 1, 'sev': 2, 'color': 'Low'},
+        {'name': 'FOD', 'prob': 3, 'sev': 4, 'color': 'Medium'},
+        {'name': 'Error ATC', 'prob': 1, 'sev': 5, 'color': 'High'}
+    ]
+    
+    colors = {'Low': '#00ff88', 'Medium': '#f59e0b', 'High': '#ff4757'}
+    
+    fig = go.Figure()
+    
+    for risk in risks:
+        fig.add_trace(go.Scatter(
+            x=[risk['prob']],
+            y=[risk['sev']],
+            mode='markers+text',
+            text=[risk['name']],
+            textposition='middle center',
+            marker=dict(size=40, color=colors[risk['color']]),
+            showlegend=False
+        ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        xaxis=dict(range=[0, 5], title='Probabilidad', gridcolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(range=[0, 6], title='Severidad', gridcolor='rgba(255,255,255,0.1)'),
+        margin=dict(l=40, r=20, t=40, b=40)
+    )
+    
+    return fig
+
+@callback(Output('customer-journey-chart', 'figure'),
+          Input('interval-component', 'n_intervals'))
+def update_customer_journey(n):
+    stages = ['Llegada', 'Check-in', 'Seguridad', 'Espera', 'Embarque']
+    times = [2.1, 3.2, 6.4, 15.5, 8.1]
+    targets = [3.0, 5.0, 8.0, 20.0, 10.0]
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=stages, y=times, mode='lines+markers', name='Tiempo Actual',
+        line=dict(color='#00d4ff', width=3), marker=dict(size=10)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=stages, y=targets, mode='lines+markers', name='Meta',
+        line=dict(color='#f59e0b', width=2, dash='dash'), marker=dict(size=8)
+    ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Etapa del Viaje'),
+        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Tiempo (min)'),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02),
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    
+    return fig
+
+@callback(Output('productivity-benchmark-chart', 'figure'),
+          Input('interval-component', 'n_intervals'))
+def update_productivity_benchmark(n):
+    airports = ['AIFA', 'Dubai', 'Amsterdam', 'Frankfurt', 'Singapore', 'Heathrow']
+    pax_per_emp = [1240, 1180, 1350, 1220, 1420, 1050]
+    
+    colors = ['#00d4ff' if x == 'AIFA' else '#8b92a9' for x in airports]
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Bar(
+        x=airports,
+        y=pax_per_emp,
+        marker_color=colors,
+        text=pax_per_emp,
+        textposition='auto'
+    ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Aeropuerto'),
+        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Pasajeros por Empleado/Año'),
         margin=dict(l=20, r=20, t=40, b=20)
     )
     
