@@ -822,7 +822,9 @@
                 initializeGlobe();
             }, 500);
             
-            // Rotación automática inicial después de 5 segundos
+            // Rotación automática inicial DESACTIVADA - Globo permanece estático
+            // Usuario debe activar rotación manualmente con el botón "Auto-Rotación"
+            /*
             setTimeout(() => {
                 if (!isRotating) {
                     rotateGlobe();
@@ -832,6 +834,7 @@
                     }, 10000);
                 }
             }, 5000);
+            */
         });
 
         // Responsive handling
