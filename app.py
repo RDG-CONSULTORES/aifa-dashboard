@@ -158,12 +158,70 @@ def get_satisfaction_heatmap_data():
     ]
 
 def get_productivity_data():
+    """Datos completos de los 5 KPIs oficiales de Productividad AIFA"""
     return {
-        'pax_per_employee': {'value': 1240, 'benchmark': 1100, 'unit': '/año', 'trend': 45},
-        'ops_per_employee': {'value': 285, 'benchmark': 250, 'unit': '/año', 'trend': 12},
-        'cargo_per_employee': {'value': 45, 'benchmark': 40, 'unit': 'tons/año', 'trend': 2},
-        'gate_utilization': {'value': 78, 'target': 75, 'unit': '%', 'trend': 3},
-        'aircraft_rotation': {'value': 11.2, 'benchmark': 10.0, 'unit': '/día', 'trend': 0.4}
+        # KPIs Principales según documento oficial
+        'movimientos_aeronaves_empleado': {
+            'current': 285,
+            'benchmark': 250,
+            'unit': '/año',
+            'trend': 'up',
+            'performance': 114.0,
+            'change': 12
+        },
+        'pasajeros_empleado': {
+            'current': 1240,
+            'benchmark': 1100,
+            'unit': '/año',
+            'trend': 'up',
+            'performance': 112.7,
+            'change': 45
+        },
+        'carga_empleado': {
+            'current': 45,
+            'benchmark': 40,
+            'unit': 'tons/año',
+            'trend': 'up',
+            'performance': 112.5,
+            'change': 2
+        },
+        'movimientos_aeronaves_puerta': {
+            'current': 892,
+            'benchmark': 850,
+            'unit': '/año',
+            'trend': 'up',
+            'performance': 104.9,
+            'change': 28
+        },
+        'pasajeros_puerta': {
+            'current': 167840,
+            'benchmark': 150000,
+            'unit': '/año',
+            'trend': 'up',
+            'performance': 111.9,
+            'change': 8420
+        }
+    }
+
+def get_executive_metrics():
+    """Métricas ejecutivas derivadas para dashboard de productividad"""
+    return {
+        'empleados_totales': {'value': '847', 'change': '+12', 'unit': 'empleados'},
+        'revenue_per_employee': {'value': '$156K', 'change': '+8.3%', 'unit': 'USD/año'},
+        'costo_por_pasajero': {'value': '$47.2', 'change': '-2.1%', 'unit': 'USD'},
+        'utilizacion_capacidad': {'value': '89.2%', 'change': '+3.4%', 'unit': 'capacidad'},
+        'otp_performance': {'value': '94.8%', 'change': '+1.2%', 'unit': 'puntualidad'},
+        'productividad_global': {'value': '92.3', 'change': '+4.5', 'unit': 'score'}
+    }
+
+def get_benchmark_data():
+    """Datos de benchmark internacional para comparación"""
+    return {
+        'aifa': [112.7, 114.0, 112.5, 104.9, 111.9, 108.5],
+        'promedio_latam': [95, 92, 88, 90, 85, 87],
+        'promedio_global': [100, 100, 100, 100, 100, 100],
+        'top_performer': [125, 130, 120, 115, 125, 118],
+        'categorias': ['Pax/Empleado', 'Ops/Empleado', 'Carga/Empleado', 'Ops/Puerta', 'Pax/Puerta', 'Eficiencia']
     }
 
 def get_route_network_data():
@@ -527,6 +585,74 @@ def create_satisfaction_stars(rating):
 
 def get_quality_chart_layout():
     """Layout base para gráficos de calidad de servicio"""
+    return {
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+        'plot_bgcolor': 'rgba(10, 14, 39, 0.95)',
+        'font': {'color': 'white', 'family': 'Inter', 'size': 12},
+        'margin': {'l': 80, 'r': 40, 't': 40, 'b': 80},
+        'xaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.15)', 'showgrid': True},
+        'yaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.15)', 'showgrid': True},
+        'legend': {'font': {'color': 'white'}, 'bgcolor': 'rgba(26, 31, 58, 0.9)'},
+        'hovermode': 'x unified'
+    }
+
+# Executive Dashboard Components for Productivity
+def create_productivity_kpi_enhanced(title, current, benchmark, unit, trend, icon, performance):
+    """KPI card ejecutiva con benchmark comparison"""
+    trend_color = "#00ff88" if trend == 'up' else "#ff4757" if trend == 'down' else "#f59e0b"
+    perf_color = "#00ff88" if performance >= 110 else "#f59e0b" if performance >= 100 else "#ff4757"
+    
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                DashIconify(icon=icon, width=48, height=48, style={'color': '#00d4ff', 'marginBottom': '0.75rem'}),
+                html.H3(f"{current:,}" if isinstance(current, int) else str(current), 
+                       style={'color': '#00d4ff', 'fontSize': '1.8rem', 'fontWeight': '700', 'margin': '0.5rem 0'}),
+                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.9rem', 'margin': '0.25rem 0'}),
+                html.H6(title, style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.75rem 0 0.5rem 0'}),
+                
+                # Benchmark comparison bar
+                html.Div([
+                    html.Small(f"Benchmark: {benchmark:,}", style={'color': '#a0aec0', 'fontSize': '0.75rem', 'display': 'block', 'marginBottom': '0.5rem'}),
+                    dbc.Progress([
+                        dbc.Progress(value=min(performance, 150), 
+                                   color="success" if performance >= 110 else "warning" if performance >= 100 else "danger",
+                                   bar=True, 
+                                   style={'height': '6px'})
+                    ], max=150, style={'height': '6px', 'backgroundColor': 'rgba(255,255,255,0.1)'}),
+                    html.Div([
+                        html.Span(f"{performance:.1f}%", style={'color': perf_color, 'fontWeight': '600', 'fontSize': '0.85rem'}),
+                        html.Span(" vs benchmark", style={'color': '#a0aec0', 'fontSize': '0.75rem', 'marginLeft': '4px'})
+                    ], style={'marginTop': '0.5rem'})
+                ], style={'marginTop': '1rem'})
+            ], style={'textAlign': 'center', 'padding': '1rem'})
+        ], style={'padding': '0.5rem'})
+    ], className="productivity-kpi-card", style={'height': '240px'})
+
+def create_executive_metric(title, value, change, unit):
+    """Métrica ejecutiva para summary section"""
+    change_color = "#00ff88" if change.startswith('+') else "#ff4757" if change.startswith('-') else "#f59e0b"
+    
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                html.H4(value, style={'color': '#00d4ff', 'fontSize': '1.4rem', 'fontWeight': '700', 'margin': '0'}),
+                html.P(title, style={'color': '#ffffff', 'fontSize': '0.85rem', 'margin': '0.5rem 0 0.25rem 0'}),
+                html.Div([
+                    html.Span(change, style={'color': change_color, 'fontSize': '0.8rem', 'fontWeight': '600'}),
+                    html.Span(f" {unit}", style={'color': '#a0aec0', 'fontSize': '0.75rem', 'marginLeft': '4px'})
+                ])
+            ], style={'textAlign': 'center'})
+        ], style={'padding': '1rem'})
+    ], className="executive-metric-card")
+
+def calculate_productivity_index(kpis_dict):
+    """Calcula índice consolidado de productividad"""
+    performances = [kpi['performance'] for kpi in kpis_dict.values()]
+    return sum(performances) / len(performances)
+
+def get_productivity_chart_layout():
+    """Layout estándar para gráficos ejecutivos de productividad"""
     return {
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(10, 14, 39, 0.95)',
@@ -1666,62 +1792,490 @@ def render_quality_tab():
     ])
 
 def render_productivity_tab():
+    """
+    Render productivity operational tab with Executive Dashboard
+    """
+    productivity_data = get_productivity_data()
+    executive_metrics = get_executive_metrics()
+    
+    # Calculate global efficiency index
+    efficiency_index = calculate_productivity_index(productivity_data)
+    
     return html.Div([
-        html.H4("Productividad Operacional", className="page-title", style={'color': 'white'}),
+        # Executive Header
+        html.Div([
+            html.Div([
+                DashIconify(icon="mdi:factory", width=32, height=32, style={'marginRight': '15px', 'color': '#00d4ff'}),
+                html.Div([
+                    html.H3("Executive Dashboard - Productividad Operacional", 
+                           style={'margin': 0, 'fontWeight': '600', 'color': '#ffffff'}),
+                    html.P("AIFA Operations Command Center", 
+                          style={'margin': 0, 'fontSize': '14px', 'color': '#8b92a9'})
+                ])
+            ], style={'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Div([
+                    html.P("ÍNDICE GLOBAL DE EFICIENCIA", 
+                          style={'margin': 0, 'fontSize': '12px', 'color': '#8b92a9', 'letterSpacing': '1px'}),
+                    html.H2(f"{efficiency_index}%", 
+                           style={'margin': 0, 'color': '#00ff88' if efficiency_index >= 85 else '#ffa726', 'fontWeight': '700'})
+                ], style={'textAlign': 'right'})
+            ])
+        ], style={
+            'display': 'flex',
+            'justifyContent': 'space-between',
+            'alignItems': 'center',
+            'marginBottom': '30px',
+            'padding': '20px',
+            'background': 'rgba(255, 255, 255, 0.05)',
+            'borderRadius': '12px',
+            'backdropFilter': 'blur(10px)'
+        }),
         
-        # KPI Cards Row 1
+        # Main KPIs Grid - Official AIFA Productivity KPIs
         dbc.Row([
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Pasajeros por Empleado", style={'color': 'white'}),
-                        html.H2("1,240/año", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Benchmark: 1,100/año", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=4),
+                create_productivity_kpi_enhanced(
+                    title="Movements per Hour",
+                    subtitle="Aircraft turnaround efficiency",
+                    icon="mdi:airplane-clock",
+                    current_value=productivity_data['movements_per_hour']['current'],
+                    target_value=productivity_data['movements_per_hour']['target'],
+                    benchmark_value=productivity_data['movements_per_hour']['benchmark'],
+                    change=productivity_data['movements_per_hour']['change'],
+                    unit="mov/hr",
+                    kpi_id="productivity-movements"
+                )
+            ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
+            
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Operaciones por Empleado", style={'color': 'white'}),
-                        html.H2("285/año", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Benchmark: 250/año", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=4),
+                create_productivity_kpi_enhanced(
+                    title="Turnaround Time",
+                    subtitle="Gate-to-gate efficiency",
+                    icon="mdi:timer-outline",
+                    current_value=productivity_data['turnaround_time']['current'],
+                    target_value=productivity_data['turnaround_time']['target'],
+                    benchmark_value=productivity_data['turnaround_time']['benchmark'],
+                    change=productivity_data['turnaround_time']['change'],
+                    unit="min",
+                    kpi_id="productivity-turnaround"
+                )
+            ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
+            
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Carga por Empleado", style={'color': 'white'}),
-                        html.H2("45 tons/año", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Benchmark: 40 tons/año", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=4)
-        ], className="mb-4"),
+                create_productivity_kpi_enhanced(
+                    title="Gate Utilization",
+                    subtitle="Parking position efficiency",
+                    icon="mdi:gate",
+                    current_value=productivity_data['gate_utilization']['current'],
+                    target_value=productivity_data['gate_utilization']['target'],
+                    benchmark_value=productivity_data['gate_utilization']['benchmark'],
+                    change=productivity_data['gate_utilization']['change'],
+                    unit="%",
+                    kpi_id="productivity-gates"
+                )
+            ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
+            
+            dbc.Col([
+                create_productivity_kpi_enhanced(
+                    title="Staff Productivity",
+                    subtitle="Passengers per employee",
+                    icon="mdi:account-group",
+                    current_value=productivity_data['staff_productivity']['current'],
+                    target_value=productivity_data['staff_productivity']['target'],
+                    benchmark_value=productivity_data['staff_productivity']['benchmark'],
+                    change=productivity_data['staff_productivity']['change'],
+                    unit="pax/emp",
+                    kpi_id="productivity-staff"
+                )
+            ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
+            
+            dbc.Col([
+                create_productivity_kpi_enhanced(
+                    title="Cost per WLU",
+                    subtitle="Work Load Unit efficiency",
+                    icon="mdi:currency-usd",
+                    current_value=productivity_data['cost_per_wlu']['current'],
+                    target_value=productivity_data['cost_per_wlu']['target'],
+                    benchmark_value=productivity_data['cost_per_wlu']['benchmark'],
+                    change=productivity_data['cost_per_wlu']['change'],
+                    unit="USD",
+                    kpi_id="productivity-cost"
+                )
+            ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'})
+        ], justify="center"),
         
-        # KPI Cards Row 2
+        # Analytics Section
+        html.Div([
+            html.H5("Operational Analytics", 
+                   style={'marginBottom': '20px', 'color': '#ffffff', 'fontWeight': '500'})
+        ], style={'marginTop': '30px', 'marginBottom': '20px'}),
+        
+        # Charts Grid
+        dbc.Row([
+            # Efficiency Matrix
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H6("Efficiency Matrix", 
+                               style={'marginBottom': '15px', 'color': '#8b92a9'}),
+                        dcc.Graph(
+                            id='productivity-efficiency-matrix',
+                            config={'displayModeBar': False}
+                        )
+                    ])
+                ], className="glass-card", style={'height': '400px'})
+            ], width=12, lg=6, style={'marginBottom': '20px'}),
+            
+            # Benchmark Comparison Radar
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H6("International Benchmark Comparison", 
+                               style={'marginBottom': '15px', 'color': '#8b92a9'}),
+                        dcc.Graph(
+                            id='productivity-benchmark-radar',
+                            config={'displayModeBar': False}
+                        )
+                    ])
+                ], className="glass-card", style={'height': '400px'})
+            ], width=12, lg=6, style={'marginBottom': '20px'}),
+            
+            # Productivity Trends
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H6("Productivity Trends Analysis", 
+                               style={'marginBottom': '15px', 'color': '#8b92a9'}),
+                        dcc.Graph(
+                            id='productivity-trends',
+                            config={'displayModeBar': False}
+                        )
+                    ])
+                ], className="glass-card", style={'height': '400px'})
+            ], width=12, lg=8, style={'marginBottom': '20px'}),
+            
+            # Resource Allocation
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H6("Resource ROI Analysis", 
+                               style={'marginBottom': '15px', 'color': '#8b92a9'}),
+                        dcc.Graph(
+                            id='productivity-roi-scatter',
+                            config={'displayModeBar': False}
+                        )
+                    ])
+                ], className="glass-card", style={'height': '400px'})
+            ], width=12, lg=4, style={'marginBottom': '20px'}),
+            
+            # Capacity Utilization Gauges
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H6("Capacity Utilization Metrics", 
+                               style={'marginBottom': '15px', 'color': '#8b92a9'}),
+                        dcc.Graph(
+                            id='productivity-capacity-gauges',
+                            config={'displayModeBar': False}
+                        )
+                    ])
+                ], className="glass-card", style={'height': '350px'})
+            ], width=12, lg=6, style={'marginBottom': '20px'}),
+            
+            # Cost Breakdown Waterfall
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H6("Operational Cost Breakdown", 
+                               style={'marginBottom': '15px', 'color': '#8b92a9'}),
+                        dcc.Graph(
+                            id='productivity-cost-waterfall',
+                            config={'displayModeBar': False}
+                        )
+                    ])
+                ], className="glass-card", style={'height': '350px'})
+            ], width=12, lg=6, style={'marginBottom': '20px'})
+        ]),
+        
+        # Executive Metrics Summary
+        html.Div([
+            html.H5("Executive Metrics Summary", 
+                   style={'marginBottom': '20px', 'color': '#ffffff', 'fontWeight': '500'})
+        ], style={'marginTop': '30px', 'marginBottom': '20px'}),
+        
         dbc.Row([
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Utilización Puertas", style={'color': 'white'}),
-                        html.H2("78%", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Meta: 75%", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=6),
+                create_executive_metric(
+                    title="Revenue per Movement",
+                    value=f"${executive_metrics['revenue_per_movement']:,.0f}",
+                    change=executive_metrics['revenue_per_movement_change'],
+                    icon="mdi:cash-multiple"
+                )
+            ], width=6, md=3),
+            
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Rotación Aeronaves", style={'color': 'white'}),
-                        html.H2("11.2/día", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Benchmark: 10.0/día", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=6)
+                create_executive_metric(
+                    title="Asset Utilization",
+                    value=f"{executive_metrics['asset_utilization']:.1f}%",
+                    change=executive_metrics['asset_utilization_change'],
+                    icon="mdi:factory"
+                )
+            ], width=6, md=3),
+            
+            dbc.Col([
+                create_executive_metric(
+                    title="Labor Efficiency",
+                    value=f"{executive_metrics['labor_efficiency']:.1f}%",
+                    change=executive_metrics['labor_efficiency_change'],
+                    icon="mdi:account-hard-hat"
+                )
+            ], width=6, md=3),
+            
+            dbc.Col([
+                create_executive_metric(
+                    title="Process Optimization",
+                    value=f"{executive_metrics['process_optimization']:.1f}%",
+                    change=executive_metrics['process_optimization_change'],
+                    icon="mdi:cog-sync"
+                )
+            ], width=6, md=3)
         ])
-    ])
+    ], className="tab-content")
+
+# Productivity Chart Functions
+def create_efficiency_matrix():
+    """Create efficiency matrix heatmap"""
+    departments = ['Ground Ops', 'Security', 'Customer Service', 'Maintenance', 'Cargo', 'Immigration']
+    metrics = ['Productivity', 'Quality', 'Cost Control', 'Time Management']
+    
+    values = np.random.normal(75, 15, (len(departments), len(metrics)))
+    values = np.clip(values, 40, 100)
+    
+    fig = go.Figure(data=go.Heatmap(
+        z=values,
+        x=metrics,
+        y=departments,
+        colorscale='RdYlGn',
+        showscale=True,
+        text=[[f"{val:.0f}%" for val in row] for row in values],
+        texttemplate="%{text}",
+        textfont={"size": 10, "color": "white"},
+        hovertemplate='<b>%{y}</b><br>%{x}: %{z:.0f}%<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title="Operational Efficiency by Department",
+        title_font_color='white',
+        xaxis_title="Metrics",
+        yaxis_title="Departments",
+        font=dict(color='white'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=350
+    )
+    
+    return fig
+
+def create_benchmark_radar():
+    """Create international benchmark radar chart"""
+    categories = ['Staff Productivity', 'Cost Efficiency', 'Turnaround Time', 
+                 'Gate Utilization', 'Customer Satisfaction']
+    
+    aifa_values = [87, 82, 91, 78, 85]
+    benchmark_values = [85, 80, 88, 75, 82]
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatterpolar(
+        r=aifa_values + [aifa_values[0]],
+        theta=categories + [categories[0]],
+        fill='toself',
+        name='AIFA',
+        line_color='#00d4ff',
+        fillcolor='rgba(0, 212, 255, 0.2)'
+    ))
+    
+    fig.add_trace(go.Scatterpolar(
+        r=benchmark_values + [benchmark_values[0]],
+        theta=categories + [categories[0]],
+        fill='toself',
+        name='International Benchmark',
+        line_color='#ffa726',
+        fillcolor='rgba(255, 167, 38, 0.2)'
+    ))
+    
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100],
+                color='white'
+            ),
+            angularaxis=dict(color='white')
+        ),
+        showlegend=True,
+        legend=dict(font_color='white'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=350
+    )
+    
+    return fig
+
+def create_productivity_trends():
+    """Create productivity trends time series"""
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    
+    movements_per_hour = [15.2, 15.8, 16.1, 15.9, 16.4, 16.8, 17.1, 17.3, 17.0, 17.5, 17.8, 18.2]
+    staff_productivity = [1185, 1205, 1240, 1228, 1265, 1290, 1315, 1325, 1308, 1340, 1355, 1380]
+    cost_per_wlu = [12.8, 12.5, 12.3, 12.4, 12.1, 11.9, 11.8, 11.6, 11.7, 11.5, 11.3, 11.2]
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=months, y=movements_per_hour,
+        mode='lines+markers',
+        name='Movements/Hour',
+        line=dict(color='#00d4ff', width=3),
+        yaxis='y'
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=months, y=[x/100 for x in staff_productivity],
+        mode='lines+markers',
+        name='Staff Productivity (x100)',
+        line=dict(color='#00ff88', width=3),
+        yaxis='y'
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=months, y=cost_per_wlu,
+        mode='lines+markers',
+        name='Cost per WLU',
+        line=dict(color='#ffa726', width=3),
+        yaxis='y2'
+    ))
+    
+    fig.update_layout(
+        title="12-Month Productivity Trends",
+        title_font_color='white',
+        xaxis=dict(title="Month", color='white'),
+        yaxis=dict(title="Productivity Index", color='white', side='left'),
+        yaxis2=dict(title="Cost per WLU (USD)", color='white', overlaying='y', side='right'),
+        legend=dict(font_color='white'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=350
+    )
+    
+    return fig
+
+def create_roi_scatter():
+    """Create resource ROI scatter plot"""
+    departments = ['Ground Ops', 'Security', 'Customer Service', 'Maintenance', 'Cargo', 'Immigration', 'IT', 'Admin']
+    investment = [850, 420, 320, 1200, 380, 180, 520, 240]
+    roi = [185, 142, 138, 168, 155, 134, 172, 125]
+    
+    fig = go.Figure(data=go.Scatter(
+        x=investment,
+        y=roi,
+        mode='markers+text',
+        text=departments,
+        textposition='top center',
+        marker=dict(
+            size=15,
+            color=roi,
+            colorscale='RdYlGn',
+            showscale=True,
+            colorbar=dict(title="ROI %", titlefont_color='white', tickfont_color='white')
+        ),
+        textfont=dict(color='white', size=10)
+    ))
+    
+    fig.update_layout(
+        title="Resource Investment vs ROI",
+        title_font_color='white',
+        xaxis=dict(title="Investment (K USD)", color='white'),
+        yaxis=dict(title="ROI (%)", color='white'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=350
+    )
+    
+    return fig
+
+def create_capacity_gauges():
+    """Create capacity utilization gauge charts"""
+    resources = ['Gates', 'Check-in', 'Security', 'Baggage']
+    utilizations = [78, 85, 72, 80]
+    colors = ['#00d4ff', '#00ff88', '#ffa726', '#ff6b6b']
+    
+    fig = go.Figure()
+    
+    for i, (resource, util, color) in enumerate(zip(resources, utilizations, colors)):
+        fig.add_trace(go.Indicator(
+            mode="gauge+number",
+            value=util,
+            domain={'row': i//2, 'column': i%2},
+            title={'text': resource, 'font': {'color': 'white', 'size': 12}},
+            gauge={
+                'axis': {'range': [None, 100], 'tickcolor': 'white'},
+                'bar': {'color': color},
+                'steps': [
+                    {'range': [0, 50], 'color': 'rgba(255, 71, 87, 0.3)'},
+                    {'range': [50, 80], 'color': 'rgba(255, 167, 38, 0.3)'},
+                    {'range': [80, 100], 'color': 'rgba(0, 255, 136, 0.3)'}
+                ],
+                'threshold': {
+                    'line': {'color': "red", 'width': 4},
+                    'thickness': 0.75,
+                    'value': 90
+                }
+            },
+            number={'font': {'color': 'white'}}
+        ))
+    
+    fig.update_layout(
+        grid={'rows': 2, 'columns': 2, 'pattern': "independent"},
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=300
+    )
+    
+    return fig
+
+def create_cost_waterfall():
+    """Create operational cost breakdown waterfall chart"""
+    categories = ['Personnel', 'Infrastructure', 'Technology', 'Energy', 'Maintenance', 'Other']
+    values = [4500, 2800, 1200, 800, 1100, 600]
+    
+    fig = go.Figure(go.Waterfall(
+        name="Cost Breakdown",
+        orientation="v",
+        measure=["relative"]*len(categories),
+        x=categories,
+        textposition="auto",
+        text=[f"${v}K" for v in values],
+        y=values,
+        connector={"line": {"color": "rgb(63, 63, 63)"}},
+        increasing={"marker": {"color": "#00d4ff"}},
+        decreasing={"marker": {"color": "#ff4757"}},
+        totals={"marker": {"color": "#00ff88"}}
+    ))
+    
+    fig.update_layout(
+        title="Monthly Operational Cost Breakdown",
+        title_font_color='white',
+        xaxis=dict(color='white'),
+        yaxis=dict(title="Cost (K USD)", color='white'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=300
+    )
+    
+    return fig
 
 # Callbacks for charts
 @callback(Output('participation-trend-chart', 'figure'),
@@ -2568,6 +3122,49 @@ def update_filter_buttons(all_clicks, intl_clicks, dom_clicks):
         print(f"Error en update_filter_buttons: {str(e)}")
         # En caso de error, devolver estado por defecto
         return ["filter-btn active", "filter-btn", "filter-btn"]
+
+# Productivity Chart Callbacks
+@callback(Output('productivity-efficiency-matrix', 'figure'),
+          [Input('tabs', 'active_tab')])
+def update_efficiency_matrix(active_tab):
+    if active_tab != "productivity":
+        return {}
+    return create_efficiency_matrix()
+
+@callback(Output('productivity-benchmark-radar', 'figure'),
+          [Input('tabs', 'active_tab')])
+def update_benchmark_radar(active_tab):
+    if active_tab != "productivity":
+        return {}
+    return create_benchmark_radar()
+
+@callback(Output('productivity-trends', 'figure'),
+          [Input('tabs', 'active_tab')])
+def update_productivity_trends(active_tab):
+    if active_tab != "productivity":
+        return {}
+    return create_productivity_trends()
+
+@callback(Output('productivity-roi-scatter', 'figure'),
+          [Input('tabs', 'active_tab')])
+def update_roi_scatter(active_tab):
+    if active_tab != "productivity":
+        return {}
+    return create_roi_scatter()
+
+@callback(Output('productivity-capacity-gauges', 'figure'),
+          [Input('tabs', 'active_tab')])
+def update_capacity_gauges(active_tab):
+    if active_tab != "productivity":
+        return {}
+    return create_capacity_gauges()
+
+@callback(Output('productivity-cost-waterfall', 'figure'),
+          [Input('tabs', 'active_tab')])
+def update_cost_waterfall(active_tab):
+    if active_tab != "productivity":
+        return {}
+    return create_cost_waterfall()
 
 # Time update callback - Ciudad de México timezone
 @callback(Output('live-update-time', 'children'),
