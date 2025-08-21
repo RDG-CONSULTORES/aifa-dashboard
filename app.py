@@ -1015,7 +1015,7 @@ def update_geographic_distribution(n):
     
     return fig
 
-# Route Network Map Callbacks
+# Route Network Map Callbacks - Simplified version
 @callback(
     Output('route-network-map', 'figure'),
     [Input('route-filter-all', 'n_clicks'),
@@ -1024,116 +1024,158 @@ def update_geographic_distribution(n):
 )
 def update_route_network(all_clicks, intl_clicks, dom_clicks):
     """Actualiza el mapa de rutas según el filtro seleccionado"""
-    ctx = dash.callback_context
-    filter_type = 'all'
-    
-    if ctx.triggered:
-        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        if 'intl' in button_id:
-            filter_type = 'international'
-        elif 'dom' in button_id:
-            filter_type = 'domestic'
-    
-    data = get_route_network_data()
-    hub = data['hub']
-    routes = data['routes']
-    
-    # Filtrar rutas según selección
-    if filter_type != 'all':
-        routes = [r for r in routes if r['type'] == filter_type]
-    
-    traces = []
-    
-    # Hub AIFA - Marker principal destacado
-    traces.append(go.Scattergeo(
-        lat=[hub['lat']],
-        lon=[hub['lon']],
-        text=['<b>AIFA HUB</b>'],
-        mode='markers+text',
-        marker=dict(
-            size=40,
-            color='#00d4ff',
-            line=dict(width=6, color='white'),
-            symbol='airport',
-            opacity=0.9
-        ),
-        textposition='bottom center',
-        textfont=dict(size=16, color='white', family='Inter'),
-        name='AIFA Hub',
-        hovertemplate='<b>AIFA - Hub Principal</b><br>Rutas Activas: %{customdata}<br>Estado: Operacional<extra></extra>',
-        customdata=[len(routes)]
-    ))
-    
-    # Líneas de rutas con grosor proporcional a volumen
-    for route in routes:
-        line_width = max(2, route['pax']/30000)
-        line_color = '#00d4ff' if route['type'] == 'international' else '#00fff0'
+    try:
+        # Determinar filtro activo de manera simple
+        ctx = dash.callback_context
+        filter_type = 'all'  # Por defecto mostrar todas
         
-        traces.append(go.Scattergeo(
-            lat=[hub['lat'], route['lat']],
-            lon=[hub['lon'], route['lon']],
-            mode='lines',
-            line=dict(
-                width=line_width,
-                color=line_color,
-                opacity=0.7
-            ),
-            showlegend=False,
-            hoverinfo='skip'
-        ))
-    
-    # Markers de destinos
-    for route in routes:
-        marker_size = max(15, route['pax']/12000)
-        marker_color = '#ff6b35' if route['type'] == 'international' else '#00ff88'
+        # Si hay context y fue triggereado, determinar qué botón
+        if ctx.triggered and ctx.triggered[0]['prop_id'] != '.':
+            button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+            if button_id == 'route-filter-intl':
+                filter_type = 'international'
+            elif button_id == 'route-filter-dom':
+                filter_type = 'domestic'
         
-        traces.append(go.Scattergeo(
-            lat=[route['lat']],
-            lon=[route['lon']],
-            text=[route['name']],
+        # Obtener datos
+        data = get_route_network_data()
+        hub = data['hub']
+        routes = data['routes']
+        
+        # Aplicar filtro
+        if filter_type == 'international':
+            routes = [r for r in routes if r['type'] == 'international']
+        elif filter_type == 'domestic':
+            routes = [r for r in routes if r['type'] == 'domestic']
+        
+        # Crear figura
+        fig = go.Figure()
+        
+        # 1. Hub AIFA - Marker central
+        fig.add_trace(go.Scattergeo(
+            lat=[hub['lat']],
+            lon=[hub['lon']],
+            text=['AIFA HUB'],
             mode='markers+text',
             marker=dict(
-                size=marker_size,
-                color=marker_color,
-                line=dict(width=3, color='white'),
-                opacity=0.8
+                size=35,
+                color='#00d4ff',
+                line=dict(width=4, color='white'),
+                symbol='diamond',
+                opacity=1.0
             ),
-            textposition='top center',
-            textfont=dict(size=11, color='white', family='Inter'),
-            showlegend=False,
-            hovertemplate='<b>%{text}</b><br>Pasajeros: %{customdata[0]:,}<br>Vuelos/mes: %{customdata[1]}<br>Tipo: %{meta}<extra></extra>',
-            customdata=[[route['pax'], route['flights']]],
-            meta=[route['type'].title()]
+            textposition='bottom center',
+            textfont=dict(size=14, color='white'),
+            name='AIFA Hub',
+            hovertemplate='<b>AIFA - Hub Principal</b><br>Rutas Activas: ' + str(len(routes)) + '<extra></extra>'
         ))
-    
-    # Layout con estilo premium
-    layout = go.Layout(
-        geo=dict(
-            scope='world',
-            projection_type='natural earth',
-            showland=True,
-            landcolor='rgba(26, 31, 58, 0.8)',
-            showocean=True,
-            oceancolor='rgba(10, 14, 39, 0.9)',
-            showlakes=True,
-            lakecolor='rgba(10, 14, 39, 0.9)',
-            showcountries=True,
-            countrycolor='rgba(0, 212, 255, 0.3)',
-            coastlinecolor='rgba(0, 212, 255, 0.4)',
-            bgcolor='rgba(0,0,0,0)',
-            showframe=False,
-            center=dict(lat=25, lon=-95),
-            projection_scale=1.2
-        ),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white', family='Inter'),
-        margin=dict(l=0, r=0, t=0, b=0),
-        showlegend=False,
-        height=500
-    )
-    
-    return {'data': traces, 'layout': layout}
+        
+        # 2. Líneas de rutas
+        for route in routes:
+            # Color según tipo
+            line_color = '#00d4ff' if route['type'] == 'international' else '#00fff0'
+            line_width = max(2.5, min(route['pax']/25000, 8))  # Entre 2.5 y 8
+            
+            fig.add_trace(go.Scattergeo(
+                lat=[hub['lat'], route['lat']],
+                lon=[hub['lon'], route['lon']],
+                mode='lines',
+                line=dict(
+                    width=line_width,
+                    color=line_color,
+                    opacity=0.8
+                ),
+                showlegend=False,
+                hoverinfo='skip'
+            ))
+        
+        # 3. Markers de destinos
+        for route in routes:
+            marker_size = max(12, min(route['pax']/10000, 25))  # Entre 12 y 25
+            marker_color = '#ff6b35' if route['type'] == 'international' else '#00ff88'
+            
+            fig.add_trace(go.Scattergeo(
+                lat=[route['lat']],
+                lon=[route['lon']],
+                text=[route['name']],
+                mode='markers+text',
+                marker=dict(
+                    size=marker_size,
+                    color=marker_color,
+                    line=dict(width=2, color='white'),
+                    opacity=0.9
+                ),
+                textposition='top center',
+                textfont=dict(size=10, color='white'),
+                showlegend=False,
+                hovertemplate='<b>' + route['name'] + '</b><br>' +
+                             'Pasajeros: ' + f"{route['pax']:,}" + '<br>' +
+                             'Vuelos/mes: ' + str(route['flights']) + '<br>' +
+                             'Tipo: ' + route['type'].title() + '<extra></extra>'
+            ))
+        
+        # Layout del mapa
+        fig.update_layout(
+            geo=dict(
+                scope='world',
+                projection_type='natural earth',
+                showland=True,
+                landcolor='rgba(26, 31, 58, 0.8)',
+                showocean=True,
+                oceancolor='rgba(10, 14, 39, 0.9)',
+                showcountries=True,
+                countrycolor='rgba(0, 212, 255, 0.3)',
+                coastlinecolor='rgba(0, 212, 255, 0.4)',
+                showlakes=True,
+                lakecolor='rgba(10, 14, 39, 0.9)',
+                bgcolor='rgba(0,0,0,0)',
+                center=dict(lat=25, lon=-95),
+                projection_scale=1.2
+            ),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white'),
+            margin=dict(l=0, r=0, t=0, b=0),
+            showlegend=False,
+            height=500
+        )
+        
+        return fig
+        
+    except Exception as e:
+        # En caso de error, devolver mapa básico
+        print(f"Error en update_route_network: {str(e)}")
+        
+        # Mapa de respaldo básico
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scattergeo(
+            lat=[19.7373],
+            lon=[-99.0068],
+            text=['AIFA'],
+            mode='markers+text',
+            marker=dict(size=30, color='#00d4ff'),
+            textposition='bottom center'
+        ))
+        
+        fig.update_layout(
+            geo=dict(
+                scope='world',
+                projection_type='natural earth',
+                showland=True,
+                landcolor='rgba(26, 31, 58, 0.8)',
+                showocean=True,
+                oceancolor='rgba(10, 14, 39, 0.9)',
+                center=dict(lat=25, lon=-95)
+            ),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white'),
+            margin=dict(l=0, r=0, t=0, b=0),
+            height=500
+        )
+        
+        return fig
 
 @callback(
     [Output('route-filter-all', 'className'),
@@ -1145,23 +1187,31 @@ def update_route_network(all_clicks, intl_clicks, dom_clicks):
 )
 def update_filter_buttons(all_clicks, intl_clicks, dom_clicks):
     """Actualiza el estado activo de los botones de filtro"""
-    ctx = dash.callback_context
-    base_class = "filter-btn"
-    active_class = "filter-btn active"
-    
-    if not ctx.triggered:
-        return [active_class, base_class, base_class]
-    
-    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-    
-    if 'all' in button_id:
-        return [active_class, base_class, base_class]
-    elif 'intl' in button_id:
-        return [base_class, active_class, base_class]
-    elif 'dom' in button_id:
-        return [base_class, base_class, active_class]
-    
-    return [active_class, base_class, base_class]
+    try:
+        ctx = dash.callback_context
+        base_class = "filter-btn"
+        active_class = "filter-btn active"
+        
+        # Por defecto, "Todas" está activo
+        if not ctx.triggered or ctx.triggered[0]['prop_id'] == '.':
+            return [active_class, base_class, base_class]
+        
+        # Determinar qué botón fue presionado
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        
+        if button_id == 'route-filter-all':
+            return [active_class, base_class, base_class]
+        elif button_id == 'route-filter-intl':
+            return [base_class, active_class, base_class]
+        elif button_id == 'route-filter-dom':
+            return [base_class, base_class, active_class]
+        else:
+            return [active_class, base_class, base_class]
+            
+    except Exception as e:
+        print(f"Error en update_filter_buttons: {str(e)}")
+        # En caso de error, devolver estado por defecto
+        return ["filter-btn active", "filter-btn", "filter-btn"]
 
 # Time update callback
 @callback(Output('live-update-time', 'children'),
