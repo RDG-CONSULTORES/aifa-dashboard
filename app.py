@@ -1051,30 +1051,37 @@ def update_route_network(all_clicks, intl_clicks, dom_clicks):
         # Crear figura
         fig = go.Figure()
         
-        # 1. Hub AIFA - Marker central
+        # 1. Hub AIFA - Marker central premium
         fig.add_trace(go.Scattergeo(
             lat=[hub['lat']],
             lon=[hub['lon']],
-            text=['AIFA HUB'],
+            text=['✈️ AIFA HUB'],
             mode='markers+text',
             marker=dict(
-                size=35,
-                color='#00d4ff',
-                line=dict(width=4, color='white'),
-                symbol='diamond',
+                size=45,
+                color='#f59e0b',  # Color dorado para destacar
+                line=dict(width=6, color='white'),
+                symbol='star',
                 opacity=1.0
             ),
             textposition='bottom center',
-            textfont=dict(size=14, color='white'),
+            textfont=dict(size=16, color='white', family='Inter'),
             name='AIFA Hub',
-            hovertemplate='<b>AIFA - Hub Principal</b><br>Rutas Activas: ' + str(len(routes)) + '<extra></extra>'
+            hovertemplate='<b>🛬 AIFA - Hub Principal</b><br>📍 Felipe Ángeles International<br>🌐 Rutas Activas: ' + str(len(routes)) + '<br>📊 Estado: Operacional<extra></extra>'
         ))
         
-        # 2. Líneas de rutas
+        # 2. Líneas de rutas - Mejoradas para mayor visibilidad
         for route in routes:
-            # Color según tipo
-            line_color = '#00d4ff' if route['type'] == 'international' else '#00fff0'
-            line_width = max(2.5, min(route['pax']/25000, 8))  # Entre 2.5 y 8
+            # Colores más contrastantes y visibles
+            if route['type'] == 'international':
+                line_color = '#00d4ff'  # Azul brillante para internacionales
+                line_dash = 'solid'
+            else:
+                line_color = '#00ff88'  # Verde brillante para domésticas  
+                line_dash = 'solid'
+            
+            # Grosor basado en volumen pero más grueso
+            line_width = max(4, min(route['pax']/20000, 12))  # Entre 4 y 12px
             
             fig.add_trace(go.Scattergeo(
                 lat=[hub['lat'], route['lat']],
@@ -1083,16 +1090,25 @@ def update_route_network(all_clicks, intl_clicks, dom_clicks):
                 line=dict(
                     width=line_width,
                     color=line_color,
-                    opacity=0.8
+                    opacity=1.0,  # Opacity completa para máxima visibilidad
+                    dash=line_dash
                 ),
                 showlegend=False,
                 hoverinfo='skip'
             ))
         
-        # 3. Markers de destinos
+        # 3. Markers de destinos - Rediseñados para mayor visibilidad
         for route in routes:
-            marker_size = max(12, min(route['pax']/10000, 25))  # Entre 12 y 25
-            marker_color = '#ff6b35' if route['type'] == 'international' else '#00ff88'
+            # Tamaños más grandes y distintivos
+            marker_size = max(18, min(route['pax']/8000, 35))  # Entre 18 y 35px
+            
+            # Colores más vibrantes y diferenciados
+            if route['type'] == 'international':
+                marker_color = '#ff6b35'  # Naranja vibrante para internacionales
+                marker_symbol = 'square'
+            else:
+                marker_color = '#00ff88'  # Verde brillante para domésticas
+                marker_symbol = 'circle'
             
             fig.add_trace(go.Scattergeo(
                 lat=[route['lat']],
@@ -1102,42 +1118,50 @@ def update_route_network(all_clicks, intl_clicks, dom_clicks):
                 marker=dict(
                     size=marker_size,
                     color=marker_color,
-                    line=dict(width=2, color='white'),
-                    opacity=0.9
+                    line=dict(width=4, color='white'),  # Border más grueso
+                    symbol=marker_symbol,
+                    opacity=1.0
                 ),
                 textposition='top center',
-                textfont=dict(size=10, color='white'),
+                textfont=dict(size=11, color='white', family='Inter'),
                 showlegend=False,
-                hovertemplate='<b>' + route['name'] + '</b><br>' +
-                             'Pasajeros: ' + f"{route['pax']:,}" + '<br>' +
-                             'Vuelos/mes: ' + str(route['flights']) + '<br>' +
-                             'Tipo: ' + route['type'].title() + '<extra></extra>'
+                hovertemplate='<b>🎯 ' + route['name'] + '</b><br>' +
+                             '👥 Pasajeros: ' + f"{route['pax']:,}" + '/año<br>' +
+                             '✈️ Vuelos: ' + str(route['flights']) + '/mes<br>' +
+                             '🌐 Tipo: ' + route['type'].title() + '<br>' +
+                             '📈 Load Factor: Excelente<extra></extra>'
             ))
         
-        # Layout del mapa
+        # Layout del mapa - Optimizado para mejor contraste
         fig.update_layout(
             geo=dict(
                 scope='world',
                 projection_type='natural earth',
                 showland=True,
-                landcolor='rgba(26, 31, 58, 0.8)',
+                landcolor='rgba(15, 20, 35, 0.95)',  # Más oscuro para contraste
                 showocean=True,
-                oceancolor='rgba(10, 14, 39, 0.9)',
+                oceancolor='rgba(5, 10, 25, 0.98)',  # Océano más profundo
                 showcountries=True,
-                countrycolor='rgba(0, 212, 255, 0.3)',
-                coastlinecolor='rgba(0, 212, 255, 0.4)',
-                showlakes=True,
-                lakecolor='rgba(10, 14, 39, 0.9)',
+                countrycolor='rgba(0, 212, 255, 0.6)',  # Borders más visibles
+                coastlinecolor='rgba(0, 212, 255, 0.7)',
+                showlakes=False,  # Eliminar lagos para simplificar
                 bgcolor='rgba(0,0,0,0)',
+                showframe=False,
                 center=dict(lat=25, lon=-95),
-                projection_scale=1.2
+                projection_scale=1.1,  # Zoom ligeramente menor
+                resolution=50  # Mejor resolución
             ),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white'),
+            font=dict(color='white', family='Inter'),
             margin=dict(l=0, r=0, t=0, b=0),
             showlegend=False,
-            height=500
+            height=500,
+            title=dict(
+                text="",
+                x=0.5,
+                font=dict(size=18, color='white')
+            )
         )
         
         return fig

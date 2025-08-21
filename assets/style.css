@@ -1046,9 +1046,81 @@ body {
     height: 100% !important;
 }
 
-/* Map specific styles */
+/* Map specific styles - Premium Effects */
+#route-network-map {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(5, 10, 25, 0.4);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+#route-network-map::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.03) 0%, 
+        transparent 50%, 
+        rgba(245, 158, 11, 0.03) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#route-network-map .plotly-plot {
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
 #world-routes-map .plotly-plot,
 #mexico-penetration-map .plotly-plot {
     border-radius: 8px;
     overflow: hidden;
+}
+
+/* Premium Map Container Animation */
+.chart-card:has(#route-network-map) {
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-card:has(#route-network-map)::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(0, 212, 255, 0.2) 50%, 
+        transparent 70%);
+    border-radius: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.chart-card:has(#route-network-map):hover::before {
+    opacity: 1;
+}
+
+/* Enhanced Filter Buttons Glow */
+.filter-btn.active {
+    background: rgba(0, 212, 255, 0.25) !important;
+    border-color: var(--primary-cyan) !important;
+    color: var(--primary-cyan) !important;
+    box-shadow: 
+        0 0 20px rgba(0, 212, 255, 0.4),
+        0 0 40px rgba(0, 212, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600 !important;
 }
