@@ -1,0 +1,538 @@
+/* AIFA Dashboard - Professional CSS with Glassmorphism */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables */
+:root {
+    --primary-cyan: #00d4ff;
+    --primary-gold: #f59e0b;
+    --primary-dark: #0a0e27;
+    --secondary-dark: #1a1f37;
+    --success-green: #00ff88;
+    --danger-red: #ff4757;
+    --warning-orange: #ffa726;
+    --text-primary: #ffffff;
+    --text-secondary: #8b92a9;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(0, 212, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f37 50%, #0a0e27 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Dashboard Layout */
+#_dash-app-content {
+    background: transparent;
+}
+
+/* Header Styles */
+.header {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-text {
+    margin: 0;
+}
+
+.header-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    background: linear-gradient(90deg, var(--primary-cyan), var(--primary-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 400;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.update-info {
+    text-align: right;
+}
+
+.update-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.update-time {
+    color: var(--primary-cyan);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    margin: 0 2rem 2rem 2rem;
+    overflow: hidden;
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-secondary) !important;
+    border: none !important;
+    padding: 1rem 1.5rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    background: transparent !important;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--primary-cyan) !important;
+    background: rgba(0, 212, 255, 0.05) !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-cyan) !important;
+    background: rgba(0, 212, 255, 0.1) !important;
+    border-bottom: 2px solid var(--primary-cyan) !important;
+}
+
+/* Content Area */
+.content-area {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Page Headers */
+.page-title {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+/* Cards */
+.card {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--glass-shadow) !important;
+    transition: all 0.3s ease !important;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.chart-card {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--glass-shadow) !important;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease !important;
+}
+
+.chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.card-header {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.card-body {
+    padding: 1.5rem !important;
+    background: transparent !important;
+}
+
+.chart-title {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chart-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* KPI Cards */
+.kpi-card {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--glass-shadow) !important;
+    transition: all 0.3s ease !important;
+    height: 100%;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.kpi-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.kpi-icon {
+    flex-shrink: 0;
+    padding: 0.5rem;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.kpi-content {
+    flex: 1;
+}
+
+.kpi-title {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-value {
+    color: var(--text-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    line-height: 1;
+}
+
+.kpi-change {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.kpi-period {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+}
+
+.kpi-progress {
+    margin-top: 1rem;
+}
+
+.kpi-target {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* Destination Items */
+.destination-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.destination-item:hover {
+    background: rgba(0, 212, 255, 0.05);
+    border-color: rgba(0, 212, 255, 0.2);
+    transform: translateX(2px);
+}
+
+.destination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.destination-info strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.destination-metric {
+    text-align: right;
+}
+
+.metric-value {
+    color: var(--primary-cyan);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+}
+
+.destination-details {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* Progress Bars */
+.progress {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+    height: 6px !important;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, var(--primary-cyan), var(--primary-gold)) !important;
+    border-radius: 4px !important;
+    transition: width 0.6s ease !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .content-area {
+        padding: 0 1rem;
+    }
+    
+    .nav-tabs {
+        margin: 0 1rem 2rem 1rem;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.75rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .header-title {
+        font-size: 1.5rem;
+    }
+    
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+    
+    .kpi-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .destination-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .destination-metric {
+        text-align: left;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-container {
+        padding: 0 1rem;
+    }
+    
+    .header-title {
+        font-size: 1.3rem;
+    }
+    
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    .chart-title {
+        font-size: 1rem;
+    }
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Loading States */
+.loading {
+    animation: pulse 2s infinite;
+}
+
+/* Utility Classes */
+.text-cyan {
+    color: var(--primary-cyan) !important;
+}
+
+.text-gold {
+    color: var(--primary-gold) !important;
+}
+
+.text-success {
+    color: var(--success-green) !important;
+}
+
+.text-danger {
+    color: var(--danger-red) !important;
+}
+
+.text-warning {
+    color: var(--warning-orange) !important;
+}
+
+.bg-glass {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 212, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 212, 255, 0.5);
+}
+
+/* Table Styles */
+.table {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+}
+
+.table th {
+    color: var(--text-secondary) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.5px !important;
+}
+
+.table td {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    padding: 1rem !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 212, 255, 0.05) !important;
+}
+
+/* Focus States */
+*:focus {
+    outline: 2px solid var(--primary-cyan) !important;
+    outline-offset: 2px !important;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .card, .chart-card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        background: white !important;
+    }
+    
+    .header {
+        background: white !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+}

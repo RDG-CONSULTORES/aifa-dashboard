@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Operaciones AIFA - Dashboard Ejecutivo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-cyan: #00d4ff;
+            --primary-gold: #f59e0b;
+            --primary-dark: #0a0e27;
+            --secondary-dark: #1a1f37;
+            --success-green: #00ff88;
+            --danger-red: #ff4757;
+            --text-primary: #ffffff;
+            --text-secondary: #8b92a9;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(0, 212, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f37 50%, #0a0e27 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .update-time {
+            color: var(--primary-cyan);
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin: 0 auto 2rem auto;
+            max-width: 1400px;
+            overflow: hidden;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-cyan);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-cyan);
+            background: rgba(0, 212, 255, 0.1);
+            border-bottom: 2px solid var(--primary-cyan);
+        }
+
+        /* Content */
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .kpi-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-icon {
+            font-size: 2rem;
+            color: var(--primary-cyan);
+        }
+
+        .kpi-title {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .kpi-period {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-gold));
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        /* Charts */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .chart-title {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                margin: 0 1rem 2rem 1rem;
+            }
+
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-container">
+            <div class="header-content">
+                <div style="font-size: 2.5rem; margin-right: 15px;">✈️</div>
+                <div>
+                    <h1 class="header-title">Centro de Operaciones AIFA</h1>
+                    <p class="header-subtitle">Aeropuerto Internacional Felipe Ángeles</p>
+                </div>
+            </div>
+            <div>
+                <small style="color: var(--text-secondary);">Última actualización: </small>
+                <span id="live-time" class="update-time"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('strategic')">KPIs Estratégicos</button>
+        <button class="nav-tab" onclick="showTab('geographic')">Análisis Geográfico</button>
+        <button class="nav-tab" onclick="showTab('financial')">Análisis Financiero</button>
+        <button class="nav-tab" onclick="showTab('capacity')">Capacidad Operativa</button>
+        <button class="nav-tab" onclick="showTab('security')">Seguridad</button>
+        <button class="nav-tab" onclick="showTab('quality')">Calidad de Servicio</button>
+        <button class="nav-tab" onclick="showTab('productivity')">Productividad</button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Strategic Tab -->
+        <div id="strategic" class="tab-content active fade-in">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">👥</div>
+                        <div>
+                            <div class="kpi-title">Participación Nacional Pasajeros</div>
+                            <div class="kpi-value">12.8%</div>
+                            <div class="kpi-change">
+                                <span style="color: var(--success-green);">↗</span>
+                                <span style="color: var(--success-green);">+2.3%</span>
+                            </div>
+                            <div class="kpi-period">vs mes anterior</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85.3%;"></div>
+                            </div>
+                            <small style="color: var(--text-secondary); font-size: 0.7rem; margin-top: 0.5rem; display: block;">Meta: 15%</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">✈️</div>
+                        <div>
+                            <div class="kpi-title">Participación Nacional Operaciones</div>
+                            <div class="kpi-value">9.7%</div>
+                            <div class="kpi-change">
+                                <span style="color: var(--success-green);">↗</span>
+                                <span style="color: var(--success-green);">+1.8%</span>
+                            </div>
+                            <div class="kpi-period">vs mes anterior</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80.8%;"></div>
+                            </div>
+                            <small style="color: var(--text-secondary); font-size: 0.7rem; margin-top: 0.5rem; display: block;">Meta: 12%</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">📦</div>
+                        <div>
+                            <div class="kpi-title">Participación Nacional Carga</div>
+                            <div class="kpi-value">8.4%</div>
+                            <div class="kpi-change">
+                                <span style="color: var(--success-green);">↗</span>
+                                <span style="color: var(--success-green);">+3.1%</span>
+                            </div>
+                            <div class="kpi-period">vs mes anterior</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 84%;"></div>
+                            </div>
+                            <small style="color: var(--text-secondary); font-size: 0.7rem; margin-top: 0.5rem; display: block;">Meta: 10%</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">📈</div>
+                        <div>
+                            <div class="kpi-title">Crecimiento vs Mercado</div>
+                            <div class="kpi-value">+5.5%</div>
+                            <div class="kpi-change">
+                                <span style="color: var(--success-green);">↗</span>
+                                <span style="color: var(--success-green);">+0.8%</span>
+                            </div>
+                            <div class="kpi-period">vs mes anterior</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">⏰</div>
+                        <div>
+                            <div class="kpi-title">Puntualidad de Vuelos</div>
+                            <div class="kpi-value">87.2%</div>
+                            <div class="kpi-change">
+                                <span style="color: var(--danger-red);">↘</span>
+                                <span style="color: var(--danger-red);">-1.3%</span>
+                            </div>
+                            <div class="kpi-period">vs mes anterior</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 96.9%;"></div>
+                            </div>
+                            <small style="color: var(--text-secondary); font-size: 0.7rem; margin-top: 0.5rem; display: block;">Meta: 90%</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">🗺️</div>
+                        <div>
+                            <div class="kpi-title">Utilización de Rutas</div>
+                            <div class="kpi-value">78.4%</div>
+                            <div class="kpi-change">
+                                <span style="color: var(--success-green);">↗</span>
+                                <span style="color: var(--success-green);">+2.1%</span>
+                            </div>
+                            <div class="kpi-period">vs mes anterior</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92.2%;"></div>
+                            </div>
+                            <small style="color: var(--text-secondary); font-size: 0.7rem; margin-top: 0.5rem; display: block;">Meta: 85%</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-title">Evolución Participación de Mercado</div>
+                    <div class="chart-subtitle">Últimos 12 meses</div>
+                    <div id="trendChart" style="height: 300px;"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Progreso Meta Anual</div>
+                    <div class="chart-subtitle">Participación de pasajeros</div>
+                    <div id="gaugeChart" style="height: 300px;"></div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Comparativo Aeropuertos Mexicanos</div>
+                <div class="chart-subtitle">Participación de mercado nacional</div>
+                <div id="comparisonChart" style="height: 400px;"></div>
+            </div>
+        </div>
+
+        <!-- Geographic Tab -->
+        <div id="geographic" class="tab-content">
+            <h2 style="color: white; margin-bottom: 2rem;">Análisis Geográfico</h2>
+            <div class="chart-card">
+                <div class="chart-title">Red de Rutas AIFA</div>
+                <div class="chart-subtitle">Destinos principales y tráfico de pasajeros</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: white;">Los Angeles, USA</strong><br>
+                        <small style="color: #8b92a9;">87,000 pasajeros</small><br>
+                        <small style="color: #00d4ff;">Factor de carga: 85.7%</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: white;">Guadalajara, México</strong><br>
+                        <small style="color: #8b92a9;">125,000 pasajeros</small><br>
+                        <small style="color: #00d4ff;">Factor de carga: 82.3%</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: white;">Monterrey, México</strong><br>
+                        <small style="color: #8b92a9;">98,000 pasajeros</small><br>
+                        <small style="color: #00d4ff;">Factor de carga: 78.5%</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: white;">Miami, USA</strong><br>
+                        <small style="color: #8b92a9;">92,000 pasajeros</small><br>
+                        <small style="color: #00d4ff;">Factor de carga: 87.4%</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: white;">Cancún, México</strong><br>
+                        <small style="color: #8b92a9;">156,000 pasajeros</small><br>
+                        <small style="color: #00d4ff;">Factor de carga: 89.2%</small>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <strong style="color: white;">Houston, USA</strong><br>
+                        <small style="color: #8b92a9;">76,000 pasajeros</small><br>
+                        <small style="color: #00d4ff;">Factor de carga: 81.3%</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Tab -->
+        <div id="financial" class="tab-content">
+            <h2 style="color: white; margin-bottom: 2rem;">Análisis Financiero</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="chart-card">
+                    <div class="chart-title">Ingresos Mensuales</div>
+                    <div style="font-size: 2.5rem; color: #00d4ff; margin: 1rem 0;">$324.5M</div>
+                    <div style="color: #00ff88;">↗ +8.2% vs mes anterior</div>
+                    <small style="color: #8b92a9;">MXN</small>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Margen EBITDA</div>
+                    <div style="font-size: 2.5rem; color: #f59e0b; margin: 1rem 0;">24.7%</div>
+                    <div style="color: #00ff88;">↗ +1.3% vs mes anterior</div>
+                    <small style="color: #8b92a9;">Rentabilidad operativa</small>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">ROI Anual</div>
+                    <div style="font-size: 2.5rem; color: #00ff88; margin: 1rem 0;">18.4%</div>
+                    <div style="color: #00ff88;">↗ +2.1% vs año anterior</div>
+                    <small style="color: #8b92a9;">Retorno sobre inversión</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other tabs (placeholder) -->
+        <div id="capacity" class="tab-content">
+            <h2 style="color: white; margin-bottom: 2rem;">Capacidad Operativa</h2>
+            <div class="chart-card">
+                <p style="color: #8b92a9; text-align: center; margin-top: 3rem;">Módulo en desarrollo - Framework implementado</p>
+            </div>
+        </div>
+
+        <div id="security" class="tab-content">
+            <h2 style="color: white; margin-bottom: 2rem;">Seguridad</h2>
+            <div class="chart-card">
+                <p style="color: #8b92a9; text-align: center; margin-top: 3rem;">Módulo en desarrollo - Framework implementado</p>
+            </div>
+        </div>
+
+        <div id="quality" class="tab-content">
+            <h2 style="color: white; margin-bottom: 2rem;">Calidad de Servicio</h2>
+            <div class="chart-card">
+                <p style="color: #8b92a9; text-align: center; margin-top: 3rem;">Módulo en desarrollo - Framework implementado</p>
+            </div>
+        </div>
+
+        <div id="productivity" class="tab-content">
+            <h2 style="color: white; margin-bottom: 2rem;">Productividad</h2>
+            <div class="chart-card">
+                <p style="color: #8b92a9; text-align: center; margin-top: 3rem;">Módulo en desarrollo - Framework implementado</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav buttons
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked nav button
+            event.target.classList.add('active');
+            
+            // Add fade-in animation
+            document.getElementById(tabName).classList.add('fade-in');
+            
+            // Initialize charts if strategic tab
+            if (tabName === 'strategic') {
+                setTimeout(initCharts, 100);
+            }
+        }
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('es-MX', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('live-time').textContent = timeString;
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Trend Chart
+            const trendData = [
+                {
+                    x: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    y: [8.2, 8.6, 9.1, 9.5, 10.2, 10.8, 11.3, 11.7, 12.1, 12.4, 12.6, 12.8],
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Pasajeros',
+                    line: { color: '#00d4ff', width: 3 },
+                    marker: { size: 8, color: '#00d4ff' }
+                },
+                {
+                    x: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    y: [6.8, 7.1, 7.5, 7.9, 8.3, 8.7, 9.0, 9.3, 9.5, 9.6, 9.7, 9.7],
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Operaciones',
+                    line: { color: '#f59e0b', width: 3 },
+                    marker: { size: 8, color: '#f59e0b' }
+                }
+            ];
+
+            const trendLayout = {
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)', title: 'Mes' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)', title: 'Participación (%)' },
+                legend: { orientation: 'h', y: 1.02, x: 1, xanchor: 'right' },
+                margin: { l: 40, r: 20, t: 20, b: 40 }
+            };
+
+            Plotly.newPlot('trendChart', trendData, trendLayout, { responsive: true });
+
+            // Gauge Chart
+            const gaugeData = [{
+                type: "indicator",
+                mode: "gauge+number+delta",
+                value: 12.8,
+                domain: { x: [0, 1], y: [0, 1] },
+                title: { text: "Meta 15%", font: { color: 'white' } },
+                delta: { reference: 15 },
+                gauge: {
+                    axis: { range: [null, 20] },
+                    bar: { color: "#00d4ff" },
+                    steps: [
+                        { range: [0, 10], color: "rgba(255,71,87,0.3)" },
+                        { range: [10, 15], color: "rgba(245,158,11,0.3)" },
+                        { range: [15, 20], color: "rgba(0,255,136,0.3)" }
+                    ],
+                    threshold: {
+                        line: { color: "red", width: 4 },
+                        thickness: 0.75,
+                        value: 15
+                    }
+                }
+            }];
+
+            const gaugeLayout = {
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                margin: { l: 20, r: 20, t: 40, b: 20 }
+            };
+
+            Plotly.newPlot('gaugeChart', gaugeData, gaugeLayout, { responsive: true });
+
+            // Comparison Chart
+            const comparisonData = [{
+                x: ['AICM', 'AIFA', 'Guadalajara', 'Cancún', 'Monterrey', 'Tijuana'],
+                y: [48.2, 12.8, 8.9, 15.4, 7.2, 4.9],
+                type: 'bar',
+                marker: { color: '#00d4ff' },
+                text: ['48.2%', '12.8%', '8.9%', '15.4%', '7.2%', '4.9%'],
+                textposition: 'auto'
+            }];
+
+            const comparisonLayout = {
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)', title: 'Aeropuerto' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)', title: 'Participación (%)' },
+                margin: { l: 40, r: 20, t: 20, b: 40 }
+            };
+
+            Plotly.newPlot('comparisonChart', comparisonData, comparisonLayout, { responsive: true });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            setTimeout(initCharts, 500);
+        });
+
+        // Add hover effects to KPI cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const kpiCards = document.querySelectorAll('.kpi-card');
+            kpiCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
