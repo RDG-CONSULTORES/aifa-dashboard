@@ -1567,3 +1567,297 @@ body {
         height: 300px;
     }
 }
+
+/* =====================================================
+   SECURITY OPERATIONS TAB - Bloomberg Terminal Style  
+   ===================================================== */
+
+/* Security Operations Header */
+.security-operations-header {
+    background: linear-gradient(135deg, rgba(255, 71, 87, 0.15) 0%, rgba(0, 212, 255, 0.15) 100%);
+    border: 2px solid rgba(255, 71, 87, 0.6);
+    box-shadow: 0 0 30px rgba(255, 71, 87, 0.3);
+    backdrop-filter: blur(20px);
+}
+
+.security-header-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+.security-header-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.security-status-badges {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.security-status-badges .badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+/* Security KPI Cards */
+.security-kpi-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.security-kpi-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 71, 87, 0.4);
+    border-color: var(--danger-red);
+}
+
+.security-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--danger-red), var(--warning-orange));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.security-kpi-card:hover::before {
+    opacity: 1;
+}
+
+.security-kpi-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.security-kpi-icon {
+    color: var(--danger-red);
+    filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.6));
+}
+
+.security-kpi-value {
+    font-family: 'Inter', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.security-kpi-unit {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+    font-weight: 500;
+}
+
+.security-kpi-title {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.security-target {
+    color: var(--primary-cyan);
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.security-status-badge {
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.5rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px;
+}
+
+/* Security Gauge Cards */
+.security-gauge-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    min-height: 120px;
+}
+
+.security-gauge-card:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+}
+
+.security-gauge-icon {
+    color: var(--primary-cyan);
+    margin-bottom: 0.5rem;
+}
+
+.security-gauge-percentage {
+    font-family: 'Inter', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0.5rem 0;
+}
+
+.security-gauge-title {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0.25rem 0;
+}
+
+.security-gauge-threshold {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+.security-circular-progress {
+    margin-top: 1rem;
+}
+
+/* Airport Security Map */
+.map-container {
+    background: rgba(10, 14, 39, 0.95);
+    border-radius: 8px;
+    padding: 1rem;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.airport-security-map {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+}
+
+.security-zone-indicator {
+    animation: security-pulse 2s ease-in-out infinite;
+}
+
+@keyframes security-pulse {
+    0%, 100% { 
+        opacity: 1;
+        r: 8;
+    }
+    50% { 
+        opacity: 0.6;
+        r: 12;
+    }
+}
+
+/* Incident Rows */
+.incident-row {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.incident-row:hover {
+    background: rgba(0, 212, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.incident-row span {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* Section Subtitles */
+.section-subtitle {
+    color: var(--primary-cyan);
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Security Charts Enhancements */
+.security-kpi-card .chart-card,
+.security-gauge-card .chart-card {
+    border: 1px solid rgba(255, 71, 87, 0.2);
+}
+
+.chart-card .card-header h6.chart-title {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Security Design */
+@media (max-width: 1200px) {
+    .security-header-title {
+        font-size: 1.5rem;
+    }
+    
+    .security-kpi-value {
+        font-size: 1.5rem;
+    }
+    
+    .security-kpi-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .security-status-badges {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .security-kpi-card {
+        margin-bottom: 1rem;
+    }
+    
+    .airport-security-map {
+        width: 100%;
+        height: 250px;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        text-align: center;
+    }
+}
