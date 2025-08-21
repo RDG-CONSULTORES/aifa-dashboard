@@ -116,14 +116,45 @@ def get_security_data():
     }
 
 def get_quality_data():
+    """Datos completos de los 11 KPIs oficiales de Calidad de Servicio AIFA"""
     return {
-        'security_time': {'avg': 6.4, 'target': 8.0, 'unit': 'min', 'trend': -0.3},
-        'checkin_time': {'avg': 3.2, 'target': 5.0, 'unit': 'min', 'trend': -0.1},
-        'baggage_time': {'avg': 8.1, 'target': 12.0, 'unit': 'min', 'trend': 0.4},
-        'nps_score': {'score': 67, 'target': 50, 'unit': '/100', 'trend': 3},
-        'satisfaction': {'score': 4.6, 'target': 4.0, 'unit': '/5', 'trend': 0.1},
-        'cleanliness': {'score': 4.5, 'target': 4.0, 'unit': '/5', 'trend': 0.2}
+        # KPIs oficiales del documento AIFA (11 métricas mandatorias)
+        'capacidad_diaria': {'value': 485, 'target': 450, 'unit': 'movimientos/día', 'status': 'excellent', 'trend': 12},
+        'demoras_motivo': {'total': 47, 'climaticas': 18, 'tecnicas': 15, 'operacionales': 14, 'unit': 'demoras/día'},
+        'demora_promedio': {'avg': 12.3, 'target': 15.0, 'unit': 'min/vuelo', 'status': 'excellent', 'trend': -1.2},
+        'tiempo_seguridad': {'avg': 6.4, 'target': 8.0, 'unit': 'min', 'status': 'excellent', 'trend': -0.3},
+        'disponibilidad_equipaje': {'availability': 98.5, 'target': 95.0, 'unit': '%', 'status': 'excellent', 'trend': 1.2},
+        'tiempo_checkin_pico': {'avg': 3.2, 'target': 5.0, 'unit': 'min', 'status': 'excellent', 'trend': -0.1},
+        'tiempo_equipaje_pico': {'avg': 8.1, 'target': 12.0, 'unit': 'min', 'status': 'excellent', 'trend': 0.4},
+        'facilidad_ubicacion': {'score': 4.4, 'target': 4.0, 'unit': '/5', 'status': 'excellent', 'trend': 0.1},
+        'precision_informacion': {'score': 4.6, 'target': 4.0, 'unit': '/5', 'status': 'excellent', 'trend': 0.2},
+        'limpieza_banos': {'score': 4.5, 'target': 4.0, 'unit': '/5', 'status': 'excellent', 'trend': 0.2},
+        'satisfaccion_general': {'score': 4.6, 'target': 4.0, 'unit': '/5', 'status': 'excellent', 'trend': 0.1},
+        
+        # NPS Score y breakdown
+        'nps_score': {'score': 67, 'target': 50, 'unit': '/100', 'status': 'excellent', 'trend': 3},
+        'nps_breakdown': {'promotores': 58, 'pasivos': 33, 'detractores': 9}
     }
+
+def get_customer_journey_data():
+    """Datos del Customer Journey con 6 touchpoints principales"""
+    return {
+        'llegada': {'score': 4.8, 'time': 2.1, 'target': 3.0, 'status': 'excellent', 'icon': 'mdi:car-arrow-right'},
+        'checkin': {'score': 4.6, 'time': 3.2, 'target': 5.0, 'status': 'excellent', 'icon': 'mdi:airplane-check'},
+        'seguridad': {'score': 4.4, 'time': 6.4, 'target': 8.0, 'status': 'good', 'icon': 'mdi:security'},
+        'comercial': {'score': 4.2, 'time': 15.3, 'target': 'libre', 'status': 'good', 'icon': 'mdi:shopping'},
+        'embarque': {'score': 4.7, 'time': 4.1, 'target': 5.0, 'status': 'excellent', 'icon': 'mdi:gate'},
+        'equipaje': {'score': 4.1, 'time': 8.1, 'target': 12.0, 'status': 'warning', 'icon': 'mdi:baggage-claim'}
+    }
+
+def get_satisfaction_heatmap_data():
+    """Datos para heatmap de satisfacción por áreas del aeropuerto"""
+    return [
+        ['Terminal', 'Check-in', 'Seguridad', 'Comercial'],
+        [4.8, 4.6, 4.4, 4.2],
+        [4.7, 4.5, 4.3, 4.1],
+        [4.6, 4.4, 4.2, 4.0]
+    ]
 
 def get_productivity_data():
     return {
@@ -389,6 +420,103 @@ def create_airport_map_svg():
 
 def get_security_chart_layout():
     """Layout estándar para gráficos de seguridad"""
+    return {
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+        'plot_bgcolor': 'rgba(10, 14, 39, 0.95)',
+        'font': {'color': 'white', 'family': 'Inter', 'size': 12},
+        'margin': {'l': 80, 'r': 40, 't': 40, 'b': 80},
+        'xaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.15)', 'showgrid': True},
+        'yaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.15)', 'showgrid': True},
+        'legend': {'font': {'color': 'white'}, 'bgcolor': 'rgba(26, 31, 58, 0.9)'},
+        'hovermode': 'x unified'
+    }
+
+# Customer Journey Experience Components
+def create_journey_touchpoint_card(title, metric, unit, target, status, icon):
+    """Crear card para cada punto del customer journey"""
+    status_colors = {
+        'excellent': '#00ff88',
+        'good': '#f59e0b', 
+        'warning': '#ff4757'
+    }
+    
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                DashIconify(icon=icon, width=36, height=36, className="journey-touchpoint-icon"),
+                html.H4(f"{metric}", className="journey-metric-value"),
+                html.P(unit, className="journey-metric-unit"),
+                html.H6(title, className="journey-touchpoint-title"),
+                html.Small(f"Meta: {target}", className="journey-target")
+            ], className="journey-touchpoint-content"),
+            html.Div([
+                dbc.Badge(status.upper(), color="light", className="journey-status-badge",
+                         style={'backgroundColor': status_colors[status], 'color': 'white'})
+            ], className="journey-status-container")
+        ])
+    ], className="journey-touchpoint-card")
+
+def create_quality_kpi_card(title, value, unit, change, trend, icon):
+    """KPI card con indicador de tendencia para calidad"""
+    trend_icon = "mdi:trending-up" if trend == 'up' else "mdi:trending-down" if trend == 'down' else "mdi:trending-neutral"
+    trend_color = "#00ff88" if trend == 'up' else "#ff4757" if trend == 'down' else "#f59e0b"
+    
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                DashIconify(icon=icon, width=48, height=48, className="quality-kpi-icon"),
+                html.Div([
+                    html.H3(f"{value}", className="quality-kpi-value"),
+                    html.P(unit, className="quality-kpi-unit"),
+                    html.H6(title, className="quality-kpi-title"),
+                    html.Div([
+                        DashIconify(icon=trend_icon, width=16, height=16, style={'color': trend_color}),
+                        html.Small(f"{change:+.1f}", style={'color': trend_color, 'marginLeft': '4px'})
+                    ], className="quality-trend-indicator")
+                ], className="quality-kpi-content")
+            ], style={'display': 'flex', 'alignItems': 'center', 'gap': '1rem'})
+        ])
+    ], className="quality-kpi-card")
+
+def create_nps_score_display(score, promoters, passives, detractors):
+    """Display principal del NPS con breakdown"""
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                html.H2(f"{score}", className="nps-main-score"),
+                html.P("NPS Score", className="nps-label"),
+                html.Div([
+                    html.Div([
+                        html.Span(f"{promoters}%", className="nps-segment-value"),
+                        html.P("Promotores", className="nps-segment-label")
+                    ], className="nps-segment promoters"),
+                    html.Div([
+                        html.Span(f"{passives}%", className="nps-segment-value"), 
+                        html.P("Pasivos", className="nps-segment-label")
+                    ], className="nps-segment passives"),
+                    html.Div([
+                        html.Span(f"{detractors}%", className="nps-segment-value"),
+                        html.P("Detractores", className="nps-segment-label")
+                    ], className="nps-segment detractors")
+                ], className="nps-breakdown")
+            ])
+        ])
+    ], className="nps-score-card")
+
+def create_satisfaction_stars(rating):
+    """Crear display de estrellas para rating de satisfacción"""
+    stars = []
+    for i in range(5):
+        if i < int(rating):
+            stars.append(DashIconify(icon="mdi:star", width=24, height=24, style={'color': '#f59e0b'}))
+        elif i < rating:
+            stars.append(DashIconify(icon="mdi:star-half-full", width=24, height=24, style={'color': '#f59e0b'}))
+        else:
+            stars.append(DashIconify(icon="mdi:star-outline", width=24, height=24, style={'color': '#8b92a9'}))
+    return html.Div(stars, className="satisfaction-stars")
+
+def get_quality_chart_layout():
+    """Layout base para gráficos de calidad de servicio"""
     return {
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(10, 14, 39, 0.95)',
@@ -1275,69 +1403,257 @@ def render_security_tab():
     ])
 
 def render_quality_tab():
+    """Customer Journey Experience Dashboard con 11 KPIs oficiales AIFA"""
+    quality_data = get_quality_data()
+    journey_data = get_customer_journey_data()
+    nps_breakdown = quality_data['nps_breakdown']
+    
     return html.Div([
-        html.H4("Calidad de Servicio", className="page-title", style={'color': 'white'}),
+        # Customer Journey Experience Header
+        dbc.Card([
+            dbc.CardBody([
+                html.Div([
+                    html.H1("Customer Journey Experience AIFA", className="quality-header-title"),
+                    html.P("Monitoreo 11 KPIs Oficiales • Experiencia del Pasajero • NPS 67/100", 
+                           className="quality-header-subtitle"),
+                    html.Div([
+                        dbc.Badge("SATISFACCIÓN 4.6/5", color="success", className="me-2"),
+                        dbc.Badge("NPS EXCELENTE", color="info", className="me-2"),
+                        dbc.Badge("ESTÁNDARES OACI", color="warning", className="me-2"),
+                        dbc.Badge("TIEMPO REAL", color="success")
+                    ], className="quality-status-badges")
+                ])
+            ])
+        ], className="quality-operations-header mb-4"),
         
-        # KPI Cards Row 1
+        # Customer Journey Timeline (6 Touchpoints)
+        html.H5("Customer Journey Timeline", className="section-subtitle mb-3"),
+        dbc.Card([
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col([
+                        create_journey_touchpoint_card(
+                            "Llegada/Acceso",
+                            f"{journey_data['llegada']['score']}/5",
+                            f"{journey_data['llegada']['time']} min",
+                            f"<{journey_data['llegada']['target']} min",
+                            journey_data['llegada']['status'],
+                            journey_data['llegada']['icon']
+                        )
+                    ], width=2),
+                    dbc.Col([
+                        create_journey_touchpoint_card(
+                            "Check-in",
+                            f"{journey_data['checkin']['score']}/5",
+                            f"{journey_data['checkin']['time']} min",
+                            f"<{journey_data['checkin']['target']} min",
+                            journey_data['checkin']['status'],
+                            journey_data['checkin']['icon']
+                        )
+                    ], width=2),
+                    dbc.Col([
+                        create_journey_touchpoint_card(
+                            "Control Seguridad",
+                            f"{journey_data['seguridad']['score']}/5",
+                            f"{journey_data['seguridad']['time']} min",
+                            f"<{journey_data['seguridad']['target']} min",
+                            journey_data['seguridad']['status'],
+                            journey_data['seguridad']['icon']
+                        )
+                    ], width=2),
+                    dbc.Col([
+                        create_journey_touchpoint_card(
+                            "Área Comercial",
+                            f"{journey_data['comercial']['score']}/5",
+                            f"{journey_data['comercial']['time']} min",
+                            journey_data['comercial']['target'],
+                            journey_data['comercial']['status'],
+                            journey_data['comercial']['icon']
+                        )
+                    ], width=2),
+                    dbc.Col([
+                        create_journey_touchpoint_card(
+                            "Embarque",
+                            f"{journey_data['embarque']['score']}/5",
+                            f"{journey_data['embarque']['time']} min",
+                            f"<{journey_data['embarque']['target']} min",
+                            journey_data['embarque']['status'],
+                            journey_data['embarque']['icon']
+                        )
+                    ], width=2),
+                    dbc.Col([
+                        create_journey_touchpoint_card(
+                            "Equipaje",
+                            f"{journey_data['equipaje']['score']}/5",
+                            f"{journey_data['equipaje']['time']} min",
+                            f"<{journey_data['equipaje']['target']} min",
+                            journey_data['equipaje']['status'],
+                            journey_data['equipaje']['icon']
+                        )
+                    ], width=2)
+                ])
+            ])
+        ], className="journey-timeline-container mb-4"),
+        
+        # KPIs Dashboard Principal (4 cards principales)
+        html.H5("KPIs Dashboard Principal", className="section-subtitle mb-3"),
         dbc.Row([
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Tiempo Control Seguridad", style={'color': 'white'}),
-                        html.H2("6.4 min", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Meta: <8 min", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=4),
+                create_nps_score_display(
+                    quality_data['nps_score']['score'],
+                    nps_breakdown['promotores'],
+                    nps_breakdown['pasivos'],
+                    nps_breakdown['detractores']
+                )
+            ], width=3),
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H5("Tiempo Check-in", style={'color': 'white'}),
-                        html.H2("3.2 min", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Meta: <5 min", style={'color': '#00ff88'})
+                        html.Div([
+                            DashIconify(icon="mdi:heart", width=48, height=48, className="quality-kpi-icon"),
+                            html.Div([
+                                html.H3(f"{quality_data['satisfaccion_general']['score']}/5", className="quality-kpi-value"),
+                                html.P("Satisfacción General", className="quality-kpi-title"),
+                                create_satisfaction_stars(quality_data['satisfaccion_general']['score']),
+                                html.Small(f"Meta: >{quality_data['satisfaccion_general']['target']}/5", className="quality-target")
+                            ], className="quality-kpi-content")
+                        ], style={'display': 'flex', 'alignItems': 'center', 'gap': '1rem'})
                     ])
-                ], className="chart-card")
-            ], width=4),
+                ], className="quality-kpi-card")
+            ], width=3),
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Tiempo Espera Equipaje", style={'color': 'white'}),
-                        html.H2("8.1 min", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Meta: <12 min", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=4)
+                create_quality_kpi_card(
+                    "Capacidad Diaria",
+                    quality_data['capacidad_diaria']['value'],
+                    quality_data['capacidad_diaria']['unit'],
+                    quality_data['capacidad_diaria']['trend'],
+                    'up',
+                    "mdi:airplane-takeoff"
+                )
+            ], width=3),
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Demora Promedio",
+                    quality_data['demora_promedio']['avg'],
+                    quality_data['demora_promedio']['unit'],
+                    quality_data['demora_promedio']['trend'],
+                    'down',
+                    "mdi:clock-outline"
+                )
+            ], width=3)
         ], className="mb-4"),
         
-        # KPI Cards Row 2
+        # Analytics Avanzados (4 gráficos)
+        html.H5("Analytics Avanzados", className="section-subtitle mb-3"),
         dbc.Row([
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Heatmap Satisfacción por Áreas", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("NPS Score", style={'color': 'white'}),
-                        html.H2("67/100", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Excelente (>50)", style={'color': '#00ff88'})
+                        dcc.Graph(id="quality-satisfaction-heatmap", style={"height": "300px"})
                     ])
                 ], className="chart-card")
-            ], width=4),
+            ], width=6),
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("NPS Breakdown", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Satisfacción General", style={'color': 'white'}),
-                        html.H2("4.6/5", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("92% satisfacción", style={'color': '#00ff88'})
+                        dcc.Graph(id="quality-nps-chart", style={"height": "300px"})
                     ])
                 ], className="chart-card")
-            ], width=4),
+            ], width=6)
+        ], className="mb-3"),
+        
+        dbc.Row([
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Tendencias Calidad (12 meses)", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Limpieza Baños", style={'color': 'white'}),
-                        html.H2("4.5/5", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("90% satisfacción", style={'color': '#00ff88'})
+                        dcc.Graph(id="quality-trends-chart", style={"height": "300px"})
                     ])
                 ], className="chart-card")
-            ], width=4)
+            ], width=6),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Matriz Performance: Tiempo vs Satisfacción", className="chart-title")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="quality-performance-matrix", style={"height": "300px"})
+                    ])
+                ], className="chart-card")
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Métricas Operacionales (Grid de 6 mini-cards)
+        html.H5("Métricas Operacionales Oficiales", className="section-subtitle mb-3"),
+        dbc.Row([
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Disponibilidad Equipaje",
+                    f"{quality_data['disponibilidad_equipaje']['availability']}%",
+                    "disponibilidad",
+                    quality_data['disponibilidad_equipaje']['trend'],
+                    'up',
+                    "mdi:baggage-claim"
+                )
+            ], width=2),
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Precisión Información",
+                    f"{quality_data['precision_informacion']['score']}/5",
+                    "pantallas",
+                    quality_data['precision_informacion']['trend'],
+                    'up',
+                    "mdi:information"
+                )
+            ], width=2),
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Facilidad Ubicación",
+                    f"{quality_data['facilidad_ubicacion']['score']}/5",
+                    "instalaciones",
+                    quality_data['facilidad_ubicacion']['trend'],
+                    'up',
+                    "mdi:map-marker"
+                )
+            ], width=2),
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Limpieza Baños",
+                    f"{quality_data['limpieza_banos']['score']}/5",
+                    "encuesta",
+                    quality_data['limpieza_banos']['trend'],
+                    'up',
+                    "mdi:toilet"
+                )
+            ], width=2),
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Check-in Hora Pico",
+                    f"{quality_data['tiempo_checkin_pico']['avg']} min",
+                    "tiempo espera",
+                    quality_data['tiempo_checkin_pico']['trend'],
+                    'down',
+                    "mdi:airplane-check"
+                )
+            ], width=2),
+            dbc.Col([
+                create_quality_kpi_card(
+                    "Equipaje Hora Pico",
+                    f"{quality_data['tiempo_equipaje_pico']['avg']} min",
+                    "tiempo espera",
+                    quality_data['tiempo_equipaje_pico']['trend'],
+                    'stable',
+                    "mdi:clock-fast"
+                )
+            ], width=2)
         ])
     ])
 
@@ -1855,6 +2171,130 @@ def update_security_incidents_distribution(active_tab):
             **get_security_chart_layout(),
             'showlegend': False,
             'margin': dict(l=20, r=20, t=20, b=20)
+        }
+    }
+
+# Quality Service Callbacks - Customer Journey Analytics
+@callback(Output('quality-satisfaction-heatmap', 'figure'), Input('tabs', 'active_tab'))
+def update_quality_satisfaction_heatmap(active_tab):
+    if active_tab != "calidad":
+        return {}
+    
+    areas = ['Terminal', 'Check-in', 'Seguridad', 'Comercial', 'Embarque', 'Equipaje']
+    timeperiods = ['Hora Pico', 'Normal', 'Nocturno']
+    
+    # Matriz de satisfacción por área y período
+    satisfaction_matrix = [
+        [4.8, 4.6, 4.4, 4.2, 4.7, 4.1],  # Hora Pico
+        [4.9, 4.8, 4.6, 4.5, 4.8, 4.3],  # Normal
+        [4.7, 4.5, 4.3, 4.0, 4.6, 4.0]   # Nocturno
+    ]
+    
+    return {
+        'data': [go.Heatmap(
+            z=satisfaction_matrix,
+            x=areas,
+            y=timeperiods,
+            colorscale=[
+                [0, '#ff4757'], [0.25, '#f59e0b'], [0.5, '#00d4ff'], [0.75, '#00ff88'], [1, '#00ff88']
+            ],
+            hovertemplate='<b>%{y} - %{x}</b><br>Satisfacción: %{z}/5<extra></extra>',
+            showscale=True,
+            colorbar=dict(
+                title="Satisfacción",
+                titleside="right",
+                tickmode="array",
+                tickvals=[3.5, 4.0, 4.5, 5.0],
+                ticktext=["3.5", "4.0", "4.5", "5.0"],
+                len=0.6
+            )
+        )],
+        'layout': get_quality_chart_layout()
+    }
+
+@callback(Output('quality-nps-chart', 'figure'), Input('tabs', 'active_tab'))
+def update_quality_nps_chart(active_tab):
+    if active_tab != "calidad":
+        return {}
+    
+    labels = ['Promotores', 'Pasivos', 'Detractores']
+    values = [58, 33, 9]
+    colors = ['#00ff88', '#f59e0b', '#ff4757']
+    
+    return {
+        'data': [go.Pie(
+            labels=labels,
+            values=values,
+            hole=0.5,
+            marker=dict(colors=colors, line=dict(color='#0a0e27', width=2)),
+            hovertemplate='<b>%{label}</b><br>Porcentaje: %{value}%<br>NPS: %{percent}<extra></extra>',
+            textinfo='label+percent',
+            textposition='outside'
+        )],
+        'layout': {
+            **get_quality_chart_layout(),
+            'showlegend': False,
+            'margin': dict(l=20, r=20, t=20, b=20),
+            'annotations': [dict(text=f'NPS<br><b>67</b>', x=0.5, y=0.5, font_size=20, showarrow=False)]
+        }
+    }
+
+@callback(Output('quality-trends-chart', 'figure'), Input('tabs', 'active_tab'))
+def update_quality_trends_chart(active_tab):
+    if active_tab != "calidad":
+        return {}
+    
+    months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    
+    return {
+        'data': [
+            go.Scatter(x=months, y=[4.4, 4.5, 4.3, 4.6, 4.5, 4.7, 4.6, 4.8, 4.5, 4.6, 4.6, 4.6],
+                      name='Satisfacción General', line=dict(color='#00ff88', width=3),
+                      hovertemplate='<b>Satisfacción General</b><br>%{x}: %{y}/5<extra></extra>'),
+            go.Scatter(x=months, y=[6.8, 6.5, 6.7, 6.4, 6.6, 6.2, 6.4, 6.1, 6.5, 6.3, 6.4, 6.4],
+                      name='Tiempo Seguridad', line=dict(color='#f59e0b', width=3),
+                      hovertemplate='<b>Tiempo Seguridad</b><br>%{x}: %{y} min<extra></extra>'),
+            go.Scatter(x=months, y=[65, 62, 68, 64, 66, 69, 67, 70, 65, 67, 67, 67],
+                      name='NPS Score', line=dict(color='#00d4ff', width=3),
+                      hovertemplate='<b>NPS Score</b><br>%{x}: %{y}/100<extra></extra>'),
+            go.Scatter(x=months, y=[3.4, 3.3, 3.5, 3.2, 3.4, 3.1, 3.2, 3.0, 3.3, 3.1, 3.2, 3.2],
+                      name='Tiempo Check-in', line=dict(color='#8b5cf6', width=3),
+                      hovertemplate='<b>Tiempo Check-in</b><br>%{x}: %{y} min<extra></extra>')
+        ],
+        'layout': get_quality_chart_layout()
+    }
+
+@callback(Output('quality-performance-matrix', 'figure'), Input('tabs', 'active_tab'))
+def update_quality_performance_matrix(active_tab):
+    if active_tab != "calidad":
+        return {}
+    
+    # Scatter plot: X=Tiempo de servicio, Y=Satisfacción, Tamaño=Volumen pasajeros
+    areas = ['Terminal', 'Check-in', 'Seguridad', 'Comercial', 'Embarque', 'Equipaje']
+    tiempo_servicio = [2.1, 3.2, 6.4, 15.3, 4.1, 8.1]
+    satisfaccion = [4.8, 4.6, 4.4, 4.2, 4.7, 4.1]
+    volumen_pax = [100, 85, 95, 60, 90, 80]  # Tamaño de burbuja
+    
+    return {
+        'data': [go.Scatter(
+            x=tiempo_servicio,
+            y=satisfaccion,
+            mode='markers+text',
+            marker=dict(
+                size=[v/2 for v in volumen_pax],
+                color=['#00ff88', '#00d4ff', '#f59e0b', '#ff6b35', '#8b5cf6', '#ff4757'],
+                opacity=0.7,
+                line=dict(width=2, color='white')
+            ),
+            text=areas,
+            textposition='middle center',
+            hovertemplate='<b>%{text}</b><br>Tiempo: %{x} min<br>Satisfacción: %{y}/5<extra></extra>'
+        )],
+        'layout': {
+            **get_quality_chart_layout(),
+            'xaxis': {'title': 'Tiempo de Servicio (min)', 'color': '#a0aec0'},
+            'yaxis': {'title': 'Satisfacción (1-5)', 'color': '#a0aec0', 'range': [3.8, 5.0]},
+            'showlegend': False
         }
     }
 

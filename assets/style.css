@@ -2014,3 +2014,299 @@ body {
         text-align: center;
     }
 }
+
+/* Customer Journey Experience Styles */
+.quality-operations-header {
+    background: linear-gradient(135deg, rgba(16, 20, 48, 0.95), rgba(26, 31, 58, 0.95));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    backdrop-filter: blur(20px);
+}
+
+.quality-header-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #00d4ff;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.quality-header-subtitle {
+    font-size: 1.1rem;
+    color: #8b92a9;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.quality-status-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.quality-status-badges .badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+/* Customer Journey Timeline */
+.journey-timeline-container {
+    background: linear-gradient(135deg, rgba(16, 20, 48, 0.9), rgba(26, 31, 58, 0.9));
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.journey-touchpoint-card {
+    background: linear-gradient(135deg, rgba(16, 20, 48, 0.9), rgba(26, 31, 58, 0.9));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.journey-touchpoint-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.15);
+}
+
+.journey-touchpoint-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00ff88, #00d4ff, #f59e0b);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.journey-touchpoint-card:hover::before {
+    opacity: 1;
+}
+
+.journey-touchpoint-content {
+    text-align: center;
+    padding: 1rem;
+}
+
+.journey-touchpoint-icon {
+    color: #00d4ff;
+    margin-bottom: 0.5rem;
+}
+
+.journey-metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00d4ff;
+    margin: 0.5rem 0;
+}
+
+.journey-metric-unit {
+    font-size: 0.85rem;
+    color: #8b92a9;
+    margin-bottom: 0.5rem;
+}
+
+.journey-touchpoint-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
+.journey-target {
+    font-size: 0.75rem;
+    color: #a0aec0;
+}
+
+.journey-status-container {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.journey-status-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+}
+
+/* Quality KPI Cards */
+.quality-kpi-card {
+    background: linear-gradient(135deg, rgba(16, 20, 48, 0.9), rgba(26, 31, 58, 0.9));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.quality-kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.1);
+}
+
+.quality-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00d4ff, #f59e0b);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.quality-kpi-card:hover::before {
+    opacity: 1;
+}
+
+.quality-kpi-content {
+    text-align: left;
+}
+
+.quality-kpi-icon {
+    color: #00d4ff;
+}
+
+.quality-kpi-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00d4ff;
+    margin: 0.25rem 0;
+}
+
+.quality-kpi-unit {
+    font-size: 0.9rem;
+    color: #8b92a9;
+    margin-bottom: 0.25rem;
+}
+
+.quality-kpi-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.quality-target {
+    font-size: 0.8rem;
+    color: #a0aec0;
+}
+
+.quality-trend-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+/* NPS Score Display */
+.nps-score-card {
+    background: linear-gradient(135deg, rgba(16, 20, 48, 0.9), rgba(26, 31, 58, 0.9));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    text-align: center;
+}
+
+.nps-main-score {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #00d4ff;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.nps-label {
+    font-size: 1.1rem;
+    color: #8b92a9;
+    margin-bottom: 1rem;
+}
+
+.nps-breakdown {
+    display: flex;
+    justify-content: space-around;
+    gap: 0.5rem;
+}
+
+.nps-segment {
+    text-align: center;
+    flex: 1;
+}
+
+.nps-segment-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.nps-segment-label {
+    font-size: 0.8rem;
+    color: #8b92a9;
+    margin: 0;
+}
+
+.nps-segment.promoters .nps-segment-value {
+    color: #00ff88;
+}
+
+.nps-segment.passives .nps-segment-value {
+    color: #f59e0b;
+}
+
+.nps-segment.detractors .nps-segment-value {
+    color: #ff4757;
+}
+
+/* Satisfaction Stars */
+.satisfaction-stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+}
+
+/* Responsive Design for Quality Tab */
+@media (max-width: 768px) {
+    .quality-header-title {
+        font-size: 1.8rem;
+    }
+    
+    .quality-kpi-value {
+        font-size: 1.5rem;
+    }
+    
+    .journey-touchpoint-content {
+        padding: 0.75rem;
+    }
+    
+    .quality-status-badges {
+        gap: 0.5rem;
+    }
+    
+    .quality-kpi-card {
+        margin-bottom: 1rem;
+    }
+    
+    .nps-main-score {
+        font-size: 2.5rem;
+    }
+    
+    .nps-breakdown {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
