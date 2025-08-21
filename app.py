@@ -13,6 +13,7 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+import pytz
 import random
 
 # Initialize Dash app
@@ -443,17 +444,23 @@ def create_journey_touchpoint_card(title, metric, unit, target, status, icon):
     return dbc.Card([
         dbc.CardBody([
             html.Div([
-                DashIconify(icon=icon, width=36, height=36, className="journey-touchpoint-icon"),
-                html.H4(f"{metric}", className="journey-metric-value"),
-                html.P(unit, className="journey-metric-unit"),
-                html.H6(title, className="journey-touchpoint-title"),
-                html.Small(f"Meta: {target}", className="journey-target")
-            ], className="journey-touchpoint-content"),
+                DashIconify(icon=icon, width=32, height=32, style={'color': '#00d4ff', 'marginBottom': '0.5rem'}),
+                html.H4(f"{metric}", style={'color': '#00d4ff', 'fontSize': '1.4rem', 'fontWeight': '700', 'margin': '0.25rem 0'}),
+                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.8rem', 'margin': '0.25rem 0'}),
+                html.H6(title, style={'color': '#ffffff', 'fontSize': '0.9rem', 'fontWeight': '600', 'margin': '0.5rem 0'}),
+                html.Small(f"Meta: {target}", style={'color': '#a0aec0', 'fontSize': '0.75rem'})
+            ], style={'textAlign': 'center', 'padding': '0.75rem'}),
             html.Div([
-                dbc.Badge(status.upper(), color="light", className="journey-status-badge",
-                         style={'backgroundColor': status_colors[status], 'color': 'white'})
-            ], className="journey-status-container")
-        ])
+                dbc.Badge(status.upper(), color="light", style={
+                    'backgroundColor': status_colors[status], 
+                    'color': 'white',
+                    'fontSize': '0.7rem',
+                    'fontWeight': '600',
+                    'padding': '0.25rem 0.75rem',
+                    'borderRadius': '6px'
+                })
+            ], style={'textAlign': 'center', 'marginTop': '0.5rem'})
+        ], style={'padding': '0.75rem'})
     ], className="journey-touchpoint-card")
 
 def create_quality_kpi_card(title, value, unit, change, trend, icon):
@@ -464,18 +471,17 @@ def create_quality_kpi_card(title, value, unit, change, trend, icon):
     return dbc.Card([
         dbc.CardBody([
             html.Div([
-                DashIconify(icon=icon, width=48, height=48, className="quality-kpi-icon"),
+                DashIconify(icon=icon, width=40, height=40, style={'color': '#00d4ff', 'marginBottom': '0.5rem'}),
+                html.H3(f"{value}", style={'color': '#00d4ff', 'fontSize': '1.6rem', 'fontWeight': '700', 'margin': '0.25rem 0'}),
+                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.85rem', 'margin': '0.25rem 0'}),
+                html.H6(title, style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.5rem 0'}),
                 html.Div([
-                    html.H3(f"{value}", className="quality-kpi-value"),
-                    html.P(unit, className="quality-kpi-unit"),
-                    html.H6(title, className="quality-kpi-title"),
-                    html.Div([
-                        DashIconify(icon=trend_icon, width=16, height=16, style={'color': trend_color}),
-                        html.Small(f"{change:+.1f}", style={'color': trend_color, 'marginLeft': '4px'})
-                    ], className="quality-trend-indicator")
-                ], className="quality-kpi-content")
-            ], style={'display': 'flex', 'alignItems': 'center', 'gap': '1rem'})
-        ])
+                    DashIconify(icon=trend_icon, width=16, height=16, style={'color': trend_color}),
+                    html.Small(f"{change:+.1f}" if isinstance(change, (int, float)) else str(change), 
+                              style={'color': trend_color, 'marginLeft': '4px', 'fontSize': '0.8rem'})
+                ], style={'display': 'flex', 'alignItems': 'center', 'gap': '0.25rem'})
+            ], style={'textAlign': 'center', 'padding': '0.5rem'})
+        ], style={'padding': '1rem'})
     ], className="quality-kpi-card")
 
 def create_nps_score_display(score, promoters, passives, detractors):
@@ -483,24 +489,27 @@ def create_nps_score_display(score, promoters, passives, detractors):
     return dbc.Card([
         dbc.CardBody([
             html.Div([
-                html.H2(f"{score}", className="nps-main-score"),
-                html.P("NPS Score", className="nps-label"),
+                html.H2(f"{score}", style={
+                    'fontSize': '2.5rem', 'fontWeight': '800', 'color': '#00d4ff', 
+                    'margin': '0', 'textShadow': '0 0 20px rgba(0, 212, 255, 0.3)'
+                }),
+                html.P("NPS Score", style={'fontSize': '1rem', 'color': '#ffffff', 'marginBottom': '1rem'}),
                 html.Div([
                     html.Div([
-                        html.Span(f"{promoters}%", className="nps-segment-value"),
-                        html.P("Promotores", className="nps-segment-label")
-                    ], className="nps-segment promoters"),
+                        html.Span(f"{promoters}%", style={'fontSize': '1.1rem', 'fontWeight': '700', 'color': '#00ff88', 'display': 'block', 'marginBottom': '0.25rem'}),
+                        html.P("Promotores", style={'fontSize': '0.8rem', 'color': '#ffffff', 'margin': '0'})
+                    ], style={'textAlign': 'center', 'flex': '1'}),
                     html.Div([
-                        html.Span(f"{passives}%", className="nps-segment-value"), 
-                        html.P("Pasivos", className="nps-segment-label")
-                    ], className="nps-segment passives"),
+                        html.Span(f"{passives}%", style={'fontSize': '1.1rem', 'fontWeight': '700', 'color': '#f59e0b', 'display': 'block', 'marginBottom': '0.25rem'}), 
+                        html.P("Pasivos", style={'fontSize': '0.8rem', 'color': '#ffffff', 'margin': '0'})
+                    ], style={'textAlign': 'center', 'flex': '1'}),
                     html.Div([
-                        html.Span(f"{detractors}%", className="nps-segment-value"),
-                        html.P("Detractores", className="nps-segment-label")
-                    ], className="nps-segment detractors")
-                ], className="nps-breakdown")
-            ])
-        ])
+                        html.Span(f"{detractors}%", style={'fontSize': '1.1rem', 'fontWeight': '700', 'color': '#ff4757', 'display': 'block', 'marginBottom': '0.25rem'}),
+                        html.P("Detractores", style={'fontSize': '0.8rem', 'color': '#ffffff', 'margin': '0'})
+                    ], style={'textAlign': 'center', 'flex': '1'})
+                ], style={'display': 'flex', 'justifyContent': 'space-around', 'gap': '0.5rem'})
+            ], style={'textAlign': 'center'})
+        ], style={'padding': '1.5rem'})
     ], className="nps-score-card")
 
 def create_satisfaction_stars(rating):
@@ -1510,15 +1519,13 @@ def render_quality_tab():
                 dbc.Card([
                     dbc.CardBody([
                         html.Div([
-                            DashIconify(icon="mdi:heart", width=48, height=48, className="quality-kpi-icon"),
-                            html.Div([
-                                html.H3(f"{quality_data['satisfaccion_general']['score']}/5", className="quality-kpi-value"),
-                                html.P("Satisfacción General", className="quality-kpi-title"),
-                                create_satisfaction_stars(quality_data['satisfaccion_general']['score']),
-                                html.Small(f"Meta: >{quality_data['satisfaccion_general']['target']}/5", className="quality-target")
-                            ], className="quality-kpi-content")
-                        ], style={'display': 'flex', 'alignItems': 'center', 'gap': '1rem'})
-                    ])
+                            DashIconify(icon="mdi:heart", width=40, height=40, style={'color': '#00d4ff', 'marginBottom': '0.5rem'}),
+                            html.H3(f"{quality_data['satisfaccion_general']['score']}/5", style={'color': '#00d4ff', 'fontSize': '1.6rem', 'fontWeight': '700', 'margin': '0.25rem 0'}),
+                            html.P("Satisfacción General", style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.5rem 0'}),
+                            create_satisfaction_stars(quality_data['satisfaccion_general']['score']),
+                            html.Small(f"Meta: >{quality_data['satisfaccion_general']['target']}/5", style={'color': '#a0aec0', 'fontSize': '0.8rem'})
+                        ], style={'textAlign': 'center', 'padding': '0.5rem'})
+                    ], style={'padding': '1rem'})
                 ], className="quality-kpi-card")
             ], width=3),
             dbc.Col([
@@ -2177,7 +2184,7 @@ def update_security_incidents_distribution(active_tab):
 # Quality Service Callbacks - Customer Journey Analytics
 @callback(Output('quality-satisfaction-heatmap', 'figure'), Input('tabs', 'active_tab'))
 def update_quality_satisfaction_heatmap(active_tab):
-    if active_tab != "calidad":
+    if active_tab != "quality":
         return {}
     
     areas = ['Terminal', 'Check-in', 'Seguridad', 'Comercial', 'Embarque', 'Equipaje']
@@ -2214,7 +2221,7 @@ def update_quality_satisfaction_heatmap(active_tab):
 
 @callback(Output('quality-nps-chart', 'figure'), Input('tabs', 'active_tab'))
 def update_quality_nps_chart(active_tab):
-    if active_tab != "calidad":
+    if active_tab != "quality":
         return {}
     
     labels = ['Promotores', 'Pasivos', 'Detractores']
@@ -2241,7 +2248,7 @@ def update_quality_nps_chart(active_tab):
 
 @callback(Output('quality-trends-chart', 'figure'), Input('tabs', 'active_tab'))
 def update_quality_trends_chart(active_tab):
-    if active_tab != "calidad":
+    if active_tab != "quality":
         return {}
     
     months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
@@ -2266,7 +2273,7 @@ def update_quality_trends_chart(active_tab):
 
 @callback(Output('quality-performance-matrix', 'figure'), Input('tabs', 'active_tab'))
 def update_quality_performance_matrix(active_tab):
-    if active_tab != "calidad":
+    if active_tab != "quality":
         return {}
     
     # Scatter plot: X=Tiempo de servicio, Y=Satisfacción, Tamaño=Volumen pasajeros
@@ -2561,13 +2568,14 @@ def update_filter_buttons(all_clicks, intl_clicks, dom_clicks):
         # En caso de error, devolver estado por defecto
         return ["filter-btn active", "filter-btn", "filter-btn"]
 
-# Time update callback
+# Time update callback - Ciudad de México timezone
 @callback(Output('live-update-time', 'children'),
           Input('interval-component', 'n_intervals'))
 def update_time(n):
-    from datetime import datetime
-    now = datetime.now()
-    return now.strftime("%d/%m/%Y %H:%M:%S")
+    # Timezone de Ciudad de México
+    mexico_tz = pytz.timezone('America/Mexico_City')
+    now = datetime.now(mexico_tz)
+    return now.strftime("%d/%m/%Y %H:%M:%S CST")
 
 if __name__ == '__main__':
     import os
