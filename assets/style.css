@@ -893,3 +893,125 @@ body {
         font-size: 1rem;
     }
 }
+
+/* Enhanced Destination Cards - Geographic Tab */
+.enhanced-destination-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-destination-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.enhanced-destination-card:hover {
+    background: rgba(0, 212, 255, 0.06);
+    border-color: rgba(0, 212, 255, 0.3);
+    transform: translateY(-2px) translateX(2px);
+    box-shadow: 
+        0 8px 32px rgba(0, 212, 255, 0.15),
+        0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.enhanced-destination-card:hover::before {
+    opacity: 1;
+}
+
+.enhanced-destination-card .destination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.enhanced-destination-card .destination-info {
+    flex: 1;
+}
+
+.enhanced-destination-card .destination-metric {
+    text-align: right;
+    min-width: 80px;
+}
+
+.enhanced-destination-card .destination-details {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+/* Responsive adjustments for enhanced destination cards */
+@media (max-width: 768px) {
+    .enhanced-destination-card .destination-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .enhanced-destination-card .destination-metric {
+        text-align: left;
+    }
+    
+    .enhanced-destination-card .destination-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* Additional Geographic Tab Styles */
+.route-filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.route-filter-buttons .btn {
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    background: rgba(0, 212, 255, 0.05);
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.route-filter-buttons .btn:hover,
+.route-filter-buttons .btn.active {
+    background: rgba(0, 212, 255, 0.2);
+    border-color: var(--primary-cyan);
+    color: var(--primary-cyan);
+}
+
+/* Chart container improvements for geographic tab */
+.geographic-chart-container {
+    position: relative;
+    height: 400px;
+}
+
+.geographic-chart-container .plotly-plot {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Map specific styles */
+#world-routes-map .plotly-plot,
+#mexico-penetration-map .plotly-plot {
+    border-radius: 8px;
+    overflow: hidden;
+}
