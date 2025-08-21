@@ -444,24 +444,25 @@ def create_journey_touchpoint_card(title, metric, unit, target, status, icon):
     return dbc.Card([
         dbc.CardBody([
             html.Div([
-                DashIconify(icon=icon, width=32, height=32, style={'color': '#00d4ff', 'marginBottom': '0.5rem'}),
-                html.H4(f"{metric}", style={'color': '#00d4ff', 'fontSize': '1.4rem', 'fontWeight': '700', 'margin': '0.25rem 0'}),
-                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.8rem', 'margin': '0.25rem 0'}),
-                html.H6(title, style={'color': '#ffffff', 'fontSize': '0.9rem', 'fontWeight': '600', 'margin': '0.5rem 0'}),
-                html.Small(f"Meta: {target}", style={'color': '#a0aec0', 'fontSize': '0.75rem'})
-            ], style={'textAlign': 'center', 'padding': '0.75rem'}),
-            html.Div([
-                dbc.Badge(status.upper(), color="light", style={
+                DashIconify(icon=icon, width=36, height=36, style={'color': '#00d4ff', 'marginBottom': '0.75rem'}),
+                html.H4(f"{metric}", style={'color': '#00d4ff', 'fontSize': '1.5rem', 'fontWeight': '700', 'margin': '0.5rem 0'}),
+                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.85rem', 'margin': '0.25rem 0'}),
+                html.H6(title, style={'color': '#ffffff', 'fontSize': '0.95rem', 'fontWeight': '600', 'margin': '0.75rem 0 0.5rem 0'}),
+                html.Small(f"Meta: {target}", style={'color': '#a0aec0', 'fontSize': '0.75rem', 'marginBottom': '0.75rem', 'display': 'block'}),
+                dbc.Badge(status.upper(), style={
                     'backgroundColor': status_colors[status], 
-                    'color': 'white',
+                    'color': '#ffffff',
                     'fontSize': '0.7rem',
                     'fontWeight': '600',
-                    'padding': '0.25rem 0.75rem',
-                    'borderRadius': '6px'
+                    'padding': '0.35rem 0.85rem',
+                    'borderRadius': '8px',
+                    'border': 'none',
+                    'textShadow': '0 1px 2px rgba(0,0,0,0.3)',
+                    'marginTop': '0.5rem'
                 })
-            ], style={'textAlign': 'center', 'marginTop': '0.5rem'})
-        ], style={'padding': '0.75rem'})
-    ], className="journey-touchpoint-card")
+            ], style={'textAlign': 'center', 'padding': '1rem', 'minHeight': '180px', 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'space-between'})
+        ], style={'padding': '0.5rem'})
+    ], className="journey-touchpoint-card", style={'height': '200px'})
 
 def create_quality_kpi_card(title, value, unit, change, trend, icon):
     """KPI card con indicador de tendencia para calidad"""
@@ -471,18 +472,18 @@ def create_quality_kpi_card(title, value, unit, change, trend, icon):
     return dbc.Card([
         dbc.CardBody([
             html.Div([
-                DashIconify(icon=icon, width=40, height=40, style={'color': '#00d4ff', 'marginBottom': '0.5rem'}),
-                html.H3(f"{value}", style={'color': '#00d4ff', 'fontSize': '1.6rem', 'fontWeight': '700', 'margin': '0.25rem 0'}),
-                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.85rem', 'margin': '0.25rem 0'}),
-                html.H6(title, style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.5rem 0'}),
+                DashIconify(icon=icon, width=44, height=44, style={'color': '#00d4ff', 'marginBottom': '0.75rem'}),
+                html.H3(f"{value}", style={'color': '#00d4ff', 'fontSize': '1.7rem', 'fontWeight': '700', 'margin': '0.5rem 0'}),
+                html.P(unit, style={'color': '#ffffff', 'fontSize': '0.9rem', 'margin': '0.25rem 0'}),
+                html.H6(title, style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.75rem 0 0.5rem 0'}),
                 html.Div([
-                    DashIconify(icon=trend_icon, width=16, height=16, style={'color': trend_color}),
+                    DashIconify(icon=trend_icon, width=18, height=18, style={'color': trend_color}),
                     html.Small(f"{change:+.1f}" if isinstance(change, (int, float)) else str(change), 
-                              style={'color': trend_color, 'marginLeft': '4px', 'fontSize': '0.8rem'})
-                ], style={'display': 'flex', 'alignItems': 'center', 'gap': '0.25rem'})
-            ], style={'textAlign': 'center', 'padding': '0.5rem'})
-        ], style={'padding': '1rem'})
-    ], className="quality-kpi-card")
+                              style={'color': trend_color, 'marginLeft': '6px', 'fontSize': '0.85rem', 'fontWeight': '600'})
+                ], style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'gap': '0.25rem', 'marginTop': '0.5rem'})
+            ], style={'textAlign': 'center', 'padding': '1rem', 'minHeight': '180px', 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'space-between'})
+        ], style={'padding': '0.5rem'})
+    ], className="quality-kpi-card", style={'height': '200px'})
 
 def create_nps_score_display(score, promoters, passives, detractors):
     """Display principal del NPS con breakdown"""
@@ -490,27 +491,27 @@ def create_nps_score_display(score, promoters, passives, detractors):
         dbc.CardBody([
             html.Div([
                 html.H2(f"{score}", style={
-                    'fontSize': '2.5rem', 'fontWeight': '800', 'color': '#00d4ff', 
-                    'margin': '0', 'textShadow': '0 0 20px rgba(0, 212, 255, 0.3)'
+                    'fontSize': '2.2rem', 'fontWeight': '800', 'color': '#00d4ff', 
+                    'margin': '0 0 0.5rem 0', 'textShadow': '0 0 20px rgba(0, 212, 255, 0.3)'
                 }),
                 html.P("NPS Score", style={'fontSize': '1rem', 'color': '#ffffff', 'marginBottom': '1rem'}),
                 html.Div([
                     html.Div([
-                        html.Span(f"{promoters}%", style={'fontSize': '1.1rem', 'fontWeight': '700', 'color': '#00ff88', 'display': 'block', 'marginBottom': '0.25rem'}),
-                        html.P("Promotores", style={'fontSize': '0.8rem', 'color': '#ffffff', 'margin': '0'})
+                        html.Span(f"{promoters}%", style={'fontSize': '1rem', 'fontWeight': '700', 'color': '#00ff88', 'display': 'block', 'marginBottom': '0.25rem'}),
+                        html.P("Promotores", style={'fontSize': '0.75rem', 'color': '#ffffff', 'margin': '0'})
                     ], style={'textAlign': 'center', 'flex': '1'}),
                     html.Div([
-                        html.Span(f"{passives}%", style={'fontSize': '1.1rem', 'fontWeight': '700', 'color': '#f59e0b', 'display': 'block', 'marginBottom': '0.25rem'}), 
-                        html.P("Pasivos", style={'fontSize': '0.8rem', 'color': '#ffffff', 'margin': '0'})
+                        html.Span(f"{passives}%", style={'fontSize': '1rem', 'fontWeight': '700', 'color': '#f59e0b', 'display': 'block', 'marginBottom': '0.25rem'}), 
+                        html.P("Pasivos", style={'fontSize': '0.75rem', 'color': '#ffffff', 'margin': '0'})
                     ], style={'textAlign': 'center', 'flex': '1'}),
                     html.Div([
-                        html.Span(f"{detractors}%", style={'fontSize': '1.1rem', 'fontWeight': '700', 'color': '#ff4757', 'display': 'block', 'marginBottom': '0.25rem'}),
-                        html.P("Detractores", style={'fontSize': '0.8rem', 'color': '#ffffff', 'margin': '0'})
+                        html.Span(f"{detractors}%", style={'fontSize': '1rem', 'fontWeight': '700', 'color': '#ff4757', 'display': 'block', 'marginBottom': '0.25rem'}),
+                        html.P("Detractores", style={'fontSize': '0.75rem', 'color': '#ffffff', 'margin': '0'})
                     ], style={'textAlign': 'center', 'flex': '1'})
                 ], style={'display': 'flex', 'justifyContent': 'space-around', 'gap': '0.5rem'})
-            ], style={'textAlign': 'center'})
-        ], style={'padding': '1.5rem'})
-    ], className="nps-score-card")
+            ], style={'textAlign': 'center', 'padding': '1rem', 'minHeight': '180px', 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'space-between'})
+        ], style={'padding': '0.5rem'})
+    ], className="nps-score-card", style={'height': '200px'})
 
 def create_satisfaction_stars(rating):
     """Crear display de estrellas para rating de satisfacción"""
@@ -1519,14 +1520,14 @@ def render_quality_tab():
                 dbc.Card([
                     dbc.CardBody([
                         html.Div([
-                            DashIconify(icon="mdi:heart", width=40, height=40, style={'color': '#00d4ff', 'marginBottom': '0.5rem'}),
-                            html.H3(f"{quality_data['satisfaccion_general']['score']}/5", style={'color': '#00d4ff', 'fontSize': '1.6rem', 'fontWeight': '700', 'margin': '0.25rem 0'}),
-                            html.P("Satisfacción General", style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.5rem 0'}),
+                            DashIconify(icon="mdi:heart", width=44, height=44, style={'color': '#00d4ff', 'marginBottom': '0.75rem'}),
+                            html.H3(f"{quality_data['satisfaccion_general']['score']}/5", style={'color': '#00d4ff', 'fontSize': '1.7rem', 'fontWeight': '700', 'margin': '0.5rem 0'}),
+                            html.P("Satisfacción General", style={'color': '#ffffff', 'fontSize': '1rem', 'fontWeight': '600', 'margin': '0.75rem 0 0.5rem 0'}),
                             create_satisfaction_stars(quality_data['satisfaccion_general']['score']),
-                            html.Small(f"Meta: >{quality_data['satisfaccion_general']['target']}/5", style={'color': '#a0aec0', 'fontSize': '0.8rem'})
-                        ], style={'textAlign': 'center', 'padding': '0.5rem'})
-                    ], style={'padding': '1rem'})
-                ], className="quality-kpi-card")
+                            html.Small(f"Meta: >{quality_data['satisfaccion_general']['target']}/5", style={'color': '#a0aec0', 'fontSize': '0.8rem', 'marginTop': '0.5rem', 'display': 'block'})
+                        ], style={'textAlign': 'center', 'padding': '1rem', 'minHeight': '180px', 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'space-between'})
+                    ], style={'padding': '0.5rem'})
+                ], className="quality-kpi-card", style={'height': '200px'})
             ], width=3),
             dbc.Col([
                 create_quality_kpi_card(
