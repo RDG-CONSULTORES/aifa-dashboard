@@ -988,72 +988,289 @@ def render_capacity_tab():
 
 def render_security_tab():
     """Dashboard Bloomberg Terminal para Seguridad Operacional AIFA con 15 KPIs oficiales"""
+    security_data = get_security_data()
+    
     return html.Div([
-        html.H2("🔒 TAB SEGURIDAD OPERACIONAL FUNCIONAL", 
-                style={'color': '#ff4757', 'textAlign': 'center', 'padding': '2rem'}),
-        html.P("Dashboard de Seguridad funcionando correctamente - Ver todos los KPIs oficiales AIFA", 
-               style={'color': 'white', 'textAlign': 'center', 'marginBottom': '3rem'}),
+        # Security Operations Header
+        dbc.Card([
+            dbc.CardBody([
+                html.Div([
+                    html.H1("Centro de Control de Seguridad Operacional", className="security-header-title"),
+                    html.P("Monitoreo 15 KPIs Oficiales AIFA • Cumplimiento OACI • Gestión de Riesgos", 
+                           className="security-header-subtitle"),
+                    html.Div([
+                        dbc.Badge("SMS ACTIVO", color="success", className="me-2"),
+                        dbc.Badge("NIVEL SEGURIDAD A", color="info", className="me-2"), 
+                        dbc.Badge("94.5/100 SCORE", color="warning", className="me-2"),
+                        dbc.Badge("CUMPLIMIENTO OACI", color="success")
+                    ], className="security-status-badges")
+                ])
+            ])
+        ], className="security-operations-header mb-4"),
         
-        # KPIs básicos para probar
+        # KPIs Principales (Top Row - 5 KPIs críticos)
+        html.H5("KPIs Críticos de Seguridad", className="section-subtitle mb-3"),
+        dbc.Row([
+            dbc.Col([
+                create_security_kpi_card(
+                    "Incidentes en Pista",
+                    security_data['runway_incidents']['rate'], 
+                    security_data['runway_incidents']['unit'],
+                    security_data['runway_incidents']['target'],
+                    security_data['runway_incidents']['status'],
+                    "mdi:runway"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Accidentes Mortales",
+                    security_data['fatal_accidents']['rate'],
+                    security_data['fatal_accidents']['unit'],
+                    security_data['fatal_accidents']['target'],
+                    security_data['fatal_accidents']['status'],
+                    "mdi:alert-circle"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Accidentes Laborales",
+                    security_data['work_accidents']['rate'],
+                    security_data['work_accidents']['unit'],
+                    security_data['work_accidents']['target'],
+                    security_data['work_accidents']['status'],
+                    "mdi:hard-hat"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Incursiones Pista",
+                    security_data['runway_incursions']['rate'],
+                    security_data['runway_incursions']['unit'],
+                    security_data['runway_incursions']['target'],
+                    security_data['runway_incursions']['status'],
+                    "mdi:airplane-alert"
+                )
+            ], width=3, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Choques con Aves",
+                    security_data['bird_strikes']['rate'],
+                    security_data['bird_strikes']['unit'],
+                    security_data['bird_strikes']['target'],
+                    security_data['bird_strikes']['status'],
+                    "mdi:bird"
+                )
+            ], width=3, className="mb-3")
+        ]),
+        
+        # Centro de Control Visual
+        html.H5("Centro de Control Visual", className="section-subtitle mb-3"),
         dbc.Row([
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Mapa Aeroportuario AIFA", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Incidentes Pista", style={'color': 'white'}),
-                        html.H2("0.12/1000 ops", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Meta: <0.15/1000 ops", style={'color': '#00ff88'})
+                        create_airport_map_svg()
                     ])
                 ], className="chart-card")
-            ], width=3),
+            ], width=8),
+            
             dbc.Col([
+                # Panel de incidentes tiempo real
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Incidentes Tiempo Real", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Accidentes Mortales", style={'color': 'white'}),
-                        html.H2("0.00/1000 ops", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Excelente", style={'color': '#00ff88'})
+                        html.Div([
+                            html.Div([
+                                DashIconify(icon="mdi:check-circle", width=24, height=24, style={"color": "#00ff88"}),
+                                html.Span("Sin incidentes críticos", className="ms-2")
+                            ], className="incident-row mb-2"),
+                            html.Div([
+                                DashIconify(icon="mdi:information", width=24, height=24, style={"color": "#00d4ff"}),
+                                html.Span("FOD reportado Pista 12L", className="ms-2")
+                            ], className="incident-row mb-2"),
+                            html.Div([
+                                DashIconify(icon="mdi:clock", width=24, height=24, style={"color": "#f59e0b"}),
+                                html.Span("Inspección rutinaria 14:30", className="ms-2")
+                            ], className="incident-row mb-2")
+                        ])
                     ])
-                ], className="chart-card")
-            ], width=3),
-            dbc.Col([
+                ], className="chart-card"),
+                
+                # Estado sistemas críticos
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Sistemas Críticos", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Choques Aves", style={'color': 'white'}),
-                        html.H2("0.85/1000 ops", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Dentro del estándar", style={'color': '#00ff88'})
+                        create_security_gauge("Iluminación", 99, 85, "mdi:lightbulb"),
+                        create_security_gauge("Cámaras", 96, 80, "mdi:camera"),
+                        create_security_gauge("Comunicaciones", 99, 90, "mdi:radio")
                     ])
-                ], className="chart-card")
-            ], width=3),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Score General", style={'color': 'white'}),
-                        html.H2("94.5/100", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Excelente", style={'color': '#00ff88'})
-                    ])
-                ], className="chart-card")
-            ], width=3)
+                ], className="chart-card mt-3")
+            ], width=4)
         ], className="mb-4"),
         
-        # Más KPIs
+        # Dashboard Analítico (4 gráficos)
+        html.H5("Análisis de Tendencias y Riesgos", className="section-subtitle mb-3"),
         dbc.Row([
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Tendencias Mensuales", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Personal Seguridad", style={'color': 'white'}),
-                        html.H2("45/millón pax", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Sobre estándar (40)", style={'color': '#00ff88'})
+                        dcc.Graph(id="security-trends-chart", style={"height": "320px"})
                     ])
                 ], className="chart-card")
             ], width=6),
+            
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Comparativo vs Estándares OACI", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Incursiones Pista", style={'color': 'white'}),
-                        html.H2("0.05/1000 ops", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Bajo el límite", style={'color': '#00ff88'})
+                        dcc.Graph(id="security-standards-chart", style={"height": "320px"})
                     ])
                 ], className="chart-card")
             ], width=6)
+        ], className="mb-3"),
+        
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Matriz de Riesgos por Zona", className="chart-title")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="security-risk-matrix", style={"height": "320px"})
+                    ])
+                ], className="chart-card")
+            ], width=6),
+            
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H6("Distribución de Tipos de Incidentes", className="chart-title")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="security-incidents-distribution", style={"height": "320px"})
+                    ])
+                ], className="chart-card")
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Métricas Operacionales (Grid de 10 KPIs restantes)
+        html.H5("Métricas Operacionales Complementarias", className="section-subtitle mb-3"),
+        dbc.Row([
+            dbc.Col([
+                create_security_kpi_card(
+                    "Personal Seguridad",
+                    security_data['security_staff']['rate'],
+                    security_data['security_staff']['unit'],
+                    security_data['security_staff']['target'],
+                    security_data['security_staff']['status'],
+                    "mdi:security"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Incidentes/Movimiento",
+                    security_data['incident_movements']['rate'],
+                    security_data['incident_movements']['unit'],
+                    security_data['incident_movements']['target'],
+                    security_data['incident_movements']['status'],
+                    "mdi:airplane-settings"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Densidad Cámaras",
+                    security_data['cameras_density']['rate'],
+                    security_data['cameras_density']['unit'],
+                    security_data['cameras_density']['target'],
+                    security_data['cameras_density']['status'],
+                    "mdi:camera-outline"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Eventos Fauna",
+                    security_data['wildlife_events']['rate'],
+                    security_data['wildlife_events']['unit'],
+                    security_data['wildlife_events']['target'],
+                    security_data['wildlife_events']['status'],
+                    "mdi:paw"
+                )
+            ], width=3, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Luces Funcionales",
+                    security_data['lighting_functional']['rate'],
+                    security_data['lighting_functional']['unit'],
+                    security_data['lighting_functional']['target'],
+                    security_data['lighting_functional']['status'],
+                    "mdi:lightbulb-on"
+                )
+            ], width=3, className="mb-3")
+        ]),
+        
+        dbc.Row([
+            dbc.Col([
+                create_security_kpi_card(
+                    "Incidentes Iluminación",
+                    security_data['lighting_incidents']['rate'],
+                    security_data['lighting_incidents']['unit'],
+                    security_data['lighting_incidents']['target'],
+                    security_data['lighting_incidents']['status'],
+                    "mdi:lightbulb-alert"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Oquedades Atendidas",
+                    security_data['pothole_attended']['rate'],
+                    security_data['pothole_attended']['unit'],
+                    security_data['pothole_attended']['target'],
+                    security_data['pothole_attended']['status'],
+                    "mdi:road-variant"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Mantenimiento Pistas",
+                    security_data['runway_maintenance']['rate'],
+                    security_data['runway_maintenance']['unit'],
+                    security_data['runway_maintenance']['target'],
+                    security_data['runway_maintenance']['status'],
+                    "mdi:runway"
+                )
+            ], width=2, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Reportes FOD",
+                    security_data['fod_reports']['rate'],
+                    security_data['fod_reports']['unit'],
+                    security_data['fod_reports']['target'],
+                    security_data['fod_reports']['status'],
+                    "mdi:alert-box"
+                )
+            ], width=3, className="mb-3"),
+            dbc.Col([
+                create_security_kpi_card(
+                    "Daños FOD",
+                    security_data['fod_damage']['rate'],
+                    security_data['fod_damage']['unit'],
+                    security_data['fod_damage']['target'],
+                    security_data['fod_damage']['status'],
+                    "mdi:airplane-alert"
+                )
+            ], width=3, className="mb-3")
         ])
     ])
 
