@@ -160,58 +160,60 @@ def get_satisfaction_heatmap_data():
 def get_productivity_data():
     """Datos completos de los 5 KPIs oficiales de Productividad AIFA"""
     return {
-        # KPIs Principales según documento oficial
-        'movimientos_aeronaves_empleado': {
-            'current': 285,
-            'benchmark': 250,
-            'unit': '/año',
+        # KPIs Principales - Executive Dashboard
+        'movements_per_hour': {
+            'current': 18.2,
+            'benchmark': 16.0,
+            'unit': 'mov/hr',
             'trend': 'up',
-            'performance': 114.0,
-            'change': 12
+            'performance': 113.8,
+            'change': 1.2
         },
-        'pasajeros_empleado': {
-            'current': 1240,
-            'benchmark': 1100,
-            'unit': '/año',
-            'trend': 'up',
-            'performance': 112.7,
-            'change': 45
-        },
-        'carga_empleado': {
-            'current': 45,
+        'turnaround_time': {
+            'current': 35,
             'benchmark': 40,
-            'unit': 'tons/año',
-            'trend': 'up',
-            'performance': 112.5,
-            'change': 2
+            'unit': 'min',
+            'trend': 'down',  # down is good for turnaround time
+            'performance': 114.3,
+            'change': -3
         },
-        'movimientos_aeronaves_puerta': {
-            'current': 892,
-            'benchmark': 850,
-            'unit': '/año',
+        'gate_utilization': {
+            'current': 78.4,
+            'benchmark': 75.0,
+            'unit': '%',
             'trend': 'up',
-            'performance': 104.9,
-            'change': 28
+            'performance': 104.5,
+            'change': 2.8
         },
-        'pasajeros_puerta': {
-            'current': 167840,
-            'benchmark': 150000,
-            'unit': '/año',
+        'staff_productivity': {
+            'current': 1380,
+            'benchmark': 1200,
+            'unit': 'pax/emp',
             'trend': 'up',
-            'performance': 111.9,
-            'change': 8420
+            'performance': 115.0,
+            'change': 85
+        },
+        'cost_per_wlu': {
+            'current': 11.20,
+            'benchmark': 12.50,
+            'unit': 'USD',
+            'trend': 'down',  # down is good for costs
+            'performance': 110.4,
+            'change': -0.95
         }
     }
 
 def get_executive_metrics():
     """Métricas ejecutivas derivadas para dashboard de productividad"""
     return {
-        'empleados_totales': {'value': '847', 'change': '+12', 'unit': 'empleados'},
-        'revenue_per_employee': {'value': '$156K', 'change': '+8.3%', 'unit': 'USD/año'},
-        'costo_por_pasajero': {'value': '$47.2', 'change': '-2.1%', 'unit': 'USD'},
-        'utilizacion_capacidad': {'value': '89.2%', 'change': '+3.4%', 'unit': 'capacidad'},
-        'otp_performance': {'value': '94.8%', 'change': '+1.2%', 'unit': 'puntualidad'},
-        'productividad_global': {'value': '92.3', 'change': '+4.5', 'unit': 'score'}
+        'revenue_per_movement': 2450,
+        'revenue_per_movement_change': '+3.2%',
+        'asset_utilization': 84.5,
+        'asset_utilization_change': '+2.1%',
+        'labor_efficiency': 91.8,
+        'labor_efficiency_change': '+1.8%',
+        'process_optimization': 87.3,
+        'process_optimization_change': '+4.2%'
     }
 
 def get_benchmark_data():
