@@ -479,8 +479,8 @@ def render_financial_tab():
 def render_capacity_tab():
     print("🐛 DEBUG: render_capacity_tab() called successfully")
     return html.Div([
-        html.H4("✅ Capacidad Operativa (WORKING v2.1)", className="page-title", style={'color': 'white'}),
-        html.P("Version: 2.1 - Debug con logging", style={'color': '#8b92a9', 'fontSize': '0.8rem', 'marginBottom': '1rem'}),
+        html.H4("🚀 Capacidad Operativa (FORCE DEPLOY v2.2)", className="page-title", style={'color': 'white'}),
+        html.P("Version: 2.2 - FORCE REDEPLOY - Si ves esto, el deploy funcionó", style={'color': '#f59e0b', 'fontSize': '0.9rem', 'marginBottom': '1rem'}),
         
         # Simple KPI Cards Row
         dbc.Row([
