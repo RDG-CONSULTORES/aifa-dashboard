@@ -47,54 +47,11 @@
             overflow-x: hidden;
         }
 
-        /* Header Premium */
-        .demo-header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 1.5rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .demo-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .demo-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .demo-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
-
         /* Layout Principal */
         .dashboard-container {
             display: grid;
             grid-template-columns: 300px 1fr;
-            height: calc(100vh - 120px);
+            height: 100vh;  /* Usar todo el espacio sin header */
             gap: 1rem;
             padding: 1rem;
             max-width: 1600px;
@@ -337,12 +294,6 @@
     </style>
 </head>
 <body>
-    <!-- Header Premium -->
-    <div class="demo-header">
-        <h1 class="demo-title"><span class="material-icons" style="font-size: 2rem; vertical-align: middle; margin-right: 12px;">public</span>AIFA - Control 360° Red Global de Rutas</h1>
-        <p class="demo-subtitle">Sistema de Navegación Ejecutiva | Tecnología Aeroportuaria Premium</p>
-    </div>
-
     <!-- Dashboard Container -->
     <div class="dashboard-container">
         
