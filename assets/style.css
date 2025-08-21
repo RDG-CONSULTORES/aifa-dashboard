@@ -1124,3 +1124,39 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
     font-weight: 600 !important;
 }
+
+/* Control 360° Tab Specific Styles */
+.control-360-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.control-360-container:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.control-360-iframe {
+    width: 100%;
+    height: calc(100vh - 180px);
+    border: none;
+    border-radius: 16px;
+    background: transparent;
+}
+
+/* Premium Tab Indicator for Control 360° */
+.nav-tabs .nav-link[href="#control-360"]::after {
+    content: "✨";
+    margin-left: 6px;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.nav-tabs .nav-link[href="#control-360"].active::after {
+    opacity: 1;
+}

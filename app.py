@@ -285,6 +285,9 @@ app.layout = html.Div([
         dbc.Tab(label="Análisis Geográfico", tab_id="geographic",
                 label_style={'color': '#8b92a9'},
                 active_label_style={'color': '#00d4ff', 'background': 'rgba(0, 212, 255, 0.1)'}),
+        dbc.Tab(label="Control 360°", tab_id="control-360",
+                label_style={'color': '#8b92a9'},
+                active_label_style={'color': '#00d4ff', 'background': 'rgba(0, 212, 255, 0.1)'}),
         dbc.Tab(label="Análisis Financiero", tab_id="financial",
                 label_style={'color': '#8b92a9'},
                 active_label_style={'color': '#00d4ff', 'background': 'rgba(0, 212, 255, 0.1)'}),
@@ -314,6 +317,8 @@ def render_tab_content(active_tab):
         return render_strategic_tab()
     elif active_tab == "geographic":
         return render_geographic_tab()
+    elif active_tab == "control-360":
+        return render_control_360_tab()
     elif active_tab == "financial":
         return render_financial_tab()
     elif active_tab == "capacity":
@@ -520,6 +525,23 @@ def render_geographic_tab():
                 ], className="chart-card")
             ], width=12)
         ])
+    ])
+
+def render_control_360_tab():
+    """Renderiza el tab del Control 360° con la demo 3D interactiva"""
+    return html.Div([
+        html.H4("Control 360° - Red Global de Rutas AIFA", className="page-title"),
+        html.P("Sistema de Navegación Ejecutiva | Tecnología Aeroportuaria Premium", 
+               className="page-subtitle"),
+        
+        # Container principal para la demo 3D
+        html.Div([
+            # Iframe que carga la demo 3D routes
+            html.Iframe(
+                src="/assets/demo_3d_routes.html",
+                className="control-360-iframe"
+            )
+        ], className="control-360-container")
     ])
 
 def render_financial_tab():
