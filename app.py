@@ -178,7 +178,14 @@ app.layout = html.Div([
     html.Div([
         html.Div([
             html.Div([
-                DashIconify(icon="fluent:airplane-take-off-20-filled", width=40, height=40, style={'color': '#00d4ff'}),
+                html.Img(
+                    src="/assets/aifa-logo.jpg",
+                    height="50px",
+                    style={
+                        'marginRight': '15px',
+                        'filter': 'drop-shadow(0 0 10px rgba(0, 212, 255, 0.3))'
+                    }
+                ),
                 html.Div([
                     html.H1("Centro de Operaciones AIFA", className="header-title"),
                     html.P("Aeropuerto Internacional Felipe Ángeles", className="header-subtitle")
