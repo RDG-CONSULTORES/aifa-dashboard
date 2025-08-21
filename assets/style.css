@@ -1286,12 +1286,13 @@ body {
 
 .financial-table {
     font-family: 'Inter', monospace;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     background: transparent !important;
+    color: var(--text-primary) !important;
 }
 
 .financial-table .metric-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     font-weight: 600;
 }
 
@@ -1302,17 +1303,43 @@ body {
 }
 
 .financial-table th {
-    background: rgba(0, 212, 255, 0.1) !important;
+    background: rgba(0, 212, 255, 0.15) !important;
     color: var(--primary-cyan) !important;
     border-color: rgba(0, 212, 255, 0.3) !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
+    font-size: 0.75rem !important;
+    padding: 1rem 0.75rem !important;
 }
 
 .financial-table td {
+    background: rgba(10, 14, 39, 0.6) !important;
+    color: var(--text-primary) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
     vertical-align: middle !important;
+    padding: 0.875rem 0.75rem !important;
+    font-weight: 500 !important;
+}
+
+.financial-table tbody tr:hover td {
+    background: rgba(0, 212, 255, 0.08) !important;
+}
+
+/* Specific cell styling for financial table */
+.financial-table .text-success {
+    color: var(--success-green) !important;
+    font-weight: 600 !important;
+}
+
+.financial-table .text-danger {
+    color: var(--danger-red) !important;
+    font-weight: 600 !important;
+}
+
+.financial-table .text-warning {
+    color: var(--warning-orange) !important;
+    font-weight: 600 !important;
 }
 
 /* Bloomberg Chart Enhancements */
