@@ -227,26 +227,32 @@ app.layout = html.Div([
 @callback(Output("tab-content", "children"),
           Input("tabs", "active_tab"))
 def render_tab_content(active_tab):
-    if active_tab == "strategic":
-        return render_strategic_tab()
-    elif active_tab == "geographic":
-        return render_geographic_tab()
-    elif active_tab == "financial":
-        return render_financial_tab()
-    elif active_tab == "capacity":
-        return render_capacity_tab()
-    elif active_tab == "security":
-        return render_security_tab()
-    elif active_tab == "quality":
-        return render_quality_tab()
-    elif active_tab == "productivity":
-        return render_productivity_tab()
-    else:
+    try:
+        if active_tab == "strategic":
+            return render_strategic_tab()
+        elif active_tab == "geographic":
+            return render_geographic_tab()
+        elif active_tab == "financial":
+            return render_financial_tab()
+        elif active_tab == "capacity":
+            return render_capacity_tab()
+        elif active_tab == "security":
+            return render_security_tab()
+        elif active_tab == "quality":
+            return render_quality_tab()
+        elif active_tab == "productivity":
+            return render_productivity_tab()
+        else:
+            return html.Div([
+                html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
+                       style={'color': '#8b92a9', 'textAlign': 'center', 'marginTop': '50px'}),
+                html.P("En desarrollo - Framework implementado", 
+                      style={'color': '#8b92a9', 'textAlign': 'center'})
+            ])
+    except Exception as e:
         return html.Div([
-            html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
-                   style={'color': '#8b92a9', 'textAlign': 'center', 'marginTop': '50px'}),
-            html.P("En desarrollo - Framework implementado", 
-                  style={'color': '#8b92a9', 'textAlign': 'center'})
+            html.H4("Error en la pestaña", style={'color': '#ff4757', 'textAlign': 'center', 'marginTop': '50px'}),
+            html.P(f"Error: {str(e)}", style={'color': '#8b92a9', 'textAlign': 'center'})
         ])
 
 def render_strategic_tab():
