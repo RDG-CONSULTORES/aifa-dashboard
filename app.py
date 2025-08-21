@@ -227,53 +227,26 @@ app.layout = html.Div([
 @callback(Output("tab-content", "children"),
           Input("tabs", "active_tab"))
 def render_tab_content(active_tab):
-    print(f"🐛 DEBUG: Received active_tab = '{active_tab}'")
-    
-    try:
-        if active_tab == "strategic":
-            print("🐛 DEBUG: Rendering strategic tab")
-            return render_strategic_tab()
-        elif active_tab == "geographic":
-            print("🐛 DEBUG: Rendering geographic tab")
-            return render_geographic_tab()
-        elif active_tab == "financial":
-            print("🐛 DEBUG: Rendering financial tab")
-            return render_financial_tab()
-        elif active_tab == "capacity":
-            print("🐛 DEBUG: Rendering CAPACITY tab - THIS SHOULD WORK!")
-            result = render_capacity_tab()
-            print("🐛 DEBUG: Capacity tab rendered successfully")
-            return result
-        elif active_tab == "security":
-            print("🐛 DEBUG: Rendering SECURITY tab - THIS SHOULD WORK!")
-            result = render_security_tab()
-            print("🐛 DEBUG: Security tab rendered successfully")
-            return result
-        elif active_tab == "quality":
-            print("🐛 DEBUG: Rendering QUALITY tab - THIS SHOULD WORK!")
-            result = render_quality_tab()
-            print("🐛 DEBUG: Quality tab rendered successfully")
-            return result
-        elif active_tab == "productivity":
-            print("🐛 DEBUG: Rendering PRODUCTIVITY tab - THIS SHOULD WORK!")
-            result = render_productivity_tab()
-            print("🐛 DEBUG: Productivity tab rendered successfully")
-            return result
-        else:
-            print(f"🐛 DEBUG: Tab '{active_tab}' not found in conditions - showing default")
-            return html.Div([
-                html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
-                       style={'color': '#8b92a9', 'textAlign': 'center', 'marginTop': '50px'}),
-                html.P("En desarrollo - Framework implementado", 
-                      style={'color': '#8b92a9', 'textAlign': 'center'})
-            ])
-    except Exception as e:
-        print(f"🐛 DEBUG: ERROR in render_tab_content: {str(e)}")
-        import traceback
-        traceback.print_exc()
+    if active_tab == "strategic":
+        return render_strategic_tab()
+    elif active_tab == "geographic":
+        return render_geographic_tab()
+    elif active_tab == "financial":
+        return render_financial_tab()
+    elif active_tab == "capacity":
+        return render_capacity_tab()
+    elif active_tab == "security":
+        return render_security_tab()
+    elif active_tab == "quality":
+        return render_quality_tab()
+    elif active_tab == "productivity":
+        return render_productivity_tab()
+    else:
         return html.Div([
-            html.H4("Error en la pestaña", style={'color': '#ff4757', 'textAlign': 'center', 'marginTop': '50px'}),
-            html.P(f"Error: {str(e)}", style={'color': '#8b92a9', 'textAlign': 'center'})
+            html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
+                   style={'color': '#8b92a9', 'textAlign': 'center', 'marginTop': '50px'}),
+            html.P("En desarrollo - Framework implementado", 
+                  style={'color': '#8b92a9', 'textAlign': 'center'})
         ])
 
 def render_strategic_tab():
@@ -477,7 +450,6 @@ def render_financial_tab():
     ])
 
 def render_capacity_tab():
-    print("🐛 DEBUG: render_capacity_tab() called successfully")
     return html.Div([
         html.H4("🚀 Capacidad Operativa (FORCE DEPLOY v2.2)", className="page-title", style={'color': 'white'}),
         html.P("Version: 2.2 - FORCE REDEPLOY - Si ves esto, el deploy funcionó", style={'color': '#f59e0b', 'fontSize': '0.9rem', 'marginBottom': '1rem'}),
