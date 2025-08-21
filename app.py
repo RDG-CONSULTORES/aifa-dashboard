@@ -246,6 +246,59 @@ def create_enhanced_destination_card(route):
         ], className="destination-details")
     ], className="enhanced-destination-card")
 
+# Bloomberg Terminal Components
+def create_trading_card(label, value, change, trend):
+    """Crear trading card estilo Bloomberg"""
+    return dbc.Card([
+        dbc.CardBody([
+            html.P(label, className="trading-label"),
+            html.H2(value, className="trading-value"),
+            html.Div([
+                DashIconify(
+                    icon="mdi:trending-up" if trend == "positive" else "mdi:trending-down", 
+                    width=20, height=20, 
+                    className="me-2"
+                ),
+                change
+            ], className=f"trading-change {trend}")
+        ])
+    ], className="trading-card")
+
+def create_financial_kpi(title, value, change, icon):
+    """Crear KPI financiero con icono"""
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                DashIconify(icon=icon, width=32, height=32, className="financial-icon"),
+                html.Div([
+                    html.H4(value, className="financial-kpi-value"),
+                    html.P(title, className="financial-kpi-title"),
+                    html.Small(change, className="financial-kpi-change")
+                ])
+            ], className="d-flex align-items-center")
+        ])
+    ], className="financial-kpi-card")
+
+def create_financial_row(metric, current, target, variance, trend, industry, performance):
+    """Crear fila para la matriz de rendimiento financiero"""
+    trend_icon = "mdi:trending-up" if trend == "up" else "mdi:trending-down" if trend == "down" else "mdi:trending-neutral"
+    trend_color = "text-success" if trend == "up" else "text-danger" if trend == "down" else "text-warning"
+    
+    return html.Tr([
+        html.Td(metric, className="metric-name"),
+        html.Td(current),
+        html.Td(target),
+        html.Td(variance, className="text-success" if "+" in variance else "text-danger"),
+        html.Td([DashIconify(icon=trend_icon, width=16, height=16, className=trend_color)]),
+        html.Td(industry),
+        html.Td([
+            dbc.Badge(
+                "Excelente" if performance == "excellent" else "Bueno" if performance == "good" else "Advertencia",
+                color="success" if performance == "excellent" else "info" if performance == "good" else "warning"
+            )
+        ])
+    ])
+
 # App layout
 app.layout = html.Div([
     # Header
@@ -527,63 +580,127 @@ def render_control_360_tab():
     ])
 
 def render_financial_tab():
-    financial_data = get_financial_data()
-    
+    """Renderiza el tab financiero con estilo Bloomberg Terminal profesional"""
     return html.Div([
-        html.H4("Análisis Financiero", className="page-title"),
+        # Bloomberg Terminal Header
+        dbc.Card([
+            dbc.CardBody([
+                html.Div([
+                    html.H1("AIFA Terminal Financiero", className="terminal-title"),
+                    html.P("Análisis Financiero en Tiempo Real • Métricas de Rendimiento", className="terminal-subtitle")
+                ], className="bloomberg-header-content")
+            ])
+        ], className="bloomberg-header mb-4"),
         
+        # Trading Cards - Métricas Principales
+        dbc.Row([
+            dbc.Col([
+                create_trading_card("Ingresos", "$290M MXN", "+5.4% vs mes anterior", "positive")
+            ], width=3),
+            dbc.Col([
+                create_trading_card("Margen EBITDA", "29.3%", "+1.8% vs mes anterior", "positive") 
+            ], width=3),
+            dbc.Col([
+                create_trading_card("ROI Anual", "22.1%", "+3.2% vs año anterior", "positive")
+            ], width=3),
+            dbc.Col([
+                create_trading_card("Flujo Operativo", "$127M MXN", "+8.1% vs plan", "positive")
+            ], width=3)
+        ], className="trading-grid mb-4"),
+        
+        # KPI Grid Financiero
+        dbc.Row([
+            dbc.Col([create_financial_kpi("Ingresos por Pasajero", "$148", "+$12 vs objetivo", "mdi:account-cash")], width=3),
+            dbc.Col([create_financial_kpi("Ingresos Aeronáuticos", "$89", "+$8 vs anterior", "mdi:airplane")], width=3),
+            dbc.Col([create_financial_kpi("Ingresos No-Aeronáuticos", "$59", "+$4 vs anterior", "mdi:store")], width=3),
+            dbc.Col([create_financial_kpi("% No-Aeronáuticos", "39.9%", "+2.1% vs plan", "mdi:percent")], width=3)
+        ], className="mb-3"),
+        
+        dbc.Row([
+            dbc.Col([create_financial_kpi("Costo por Operación", "$2,847", "-$156 optimización", "mdi:calculator")], width=3),
+            dbc.Col([create_financial_kpi("Costo por Pasajero", "$42", "-$3 eficiencia", "mdi:wallet")], width=3),
+            dbc.Col([create_financial_kpi("Costos Personal", "34.2%", "-1.8% del revenue", "mdi:account-group")], width=3),
+            dbc.Col([create_financial_kpi("Margen Operativo", "18.7%", "+2.4% vs objetivo", "mdi:chart-line")], width=3)
+        ], className="mb-4"),
+        
+        # Charts Grid 2x2
         dbc.Row([
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Análisis de Flujos de Ingresos", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Ingresos Mensuales", style={'color': 'white'}),
-                        html.H2("$290M MXN", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.Div([
-                            html.Span("↗", style={'color': '#00ff88', 'fontSize': '1.2rem'}),
-                            html.Span(" +5.4% vs mes anterior", style={'color': '#00ff88', 'marginLeft': '0.5rem'})
-                        ])
+                        dcc.Graph(id="revenue-donut", style={"height": "300px"})
                     ])
                 ], className="chart-card")
-            ], width=4),
+            ], width=6),
+            
             dbc.Col([
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Estructura de Costos", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Margen EBITDA", style={'color': 'white'}),
-                        html.H2("29.3%", style={'color': '#f59e0b', 'margin': '1rem 0'}),
-                        html.Div([
-                            html.Span("↗", style={'color': '#00ff88', 'fontSize': '1.2rem'}),
-                            html.Span(" +1.8% vs mes anterior", style={'color': '#00ff88', 'marginLeft': '0.5rem'})
-                        ])
+                        dcc.Graph(id="cost-waterfall", style={"height": "300px"})
                     ])
                 ], className="chart-card")
-            ], width=4),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("ROI Anual", style={'color': 'white'}),
-                        html.H2("22.1%", style={'color': '#00ff88', 'margin': '1rem 0'}),
-                        html.Div([
-                            html.Span("↗", style={'color': '#00ff88', 'fontSize': '1.2rem'}),
-                            html.Span(" +3.2% vs año anterior", style={'color': '#00ff88', 'marginLeft': '0.5rem'})
-                        ])
-                    ])
-                ], className="chart-card")
-            ], width=4)
+            ], width=6)
         ], className="mb-4"),
         
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader([
-                        html.H5("Evolución Financiera", className="chart-title"),
-                        html.Small("Ingresos vs Costos (Millones MXN)", className="chart-subtitle")
+                        html.H5("Rentabilidad vs Benchmarks", className="chart-title")
                     ]),
                     dbc.CardBody([
-                        dcc.Graph(id="financial-trend-chart")
+                        dcc.Graph(id="profitability-trends", style={"height": "300px"})
                     ])
                 ], className="chart-card")
-            ], width=12)
-        ])
+            ], width=6),
+            
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Análisis de Flujo de Efectivo", className="chart-title")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="cashflow-analysis", style={"height": "300px"})
+                    ])
+                ], className="chart-card")
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Financial Performance Matrix
+        dbc.Card([
+            dbc.CardHeader([
+                html.H5("Matriz de Rendimiento Financiero", className="chart-title")
+            ]),
+            dbc.CardBody([
+                dbc.Table([
+                    html.Thead([
+                        html.Tr([
+                            html.Th("Métrica"),
+                            html.Th("Actual"),
+                            html.Th("Objetivo"),
+                            html.Th("Variación"),
+                            html.Th("Tendencia"),
+                            html.Th("Promedio Industria"),
+                            html.Th("Rendimiento")
+                        ])
+                    ]),
+                    html.Tbody([
+                        create_financial_row("Ingresos por Pasajero", "$148", "$145", "+$3", "up", "$142", "excellent"),
+                        create_financial_row("Margen EBITDA", "29.3%", "25.0%", "+4.3%", "up", "22.0%", "excellent"),
+                        create_financial_row("Costo por Operación", "$2,847", "$3,000", "-$153", "down", "$3,200", "excellent"),
+                        create_financial_row("% Ingresos No-Aero", "39.9%", "40.0%", "-0.1%", "stable", "35.0%", "good"),
+                        create_financial_row("Margen Operativo", "18.7%", "16.0%", "+2.7%", "up", "15.0%", "excellent"),
+                        create_financial_row("% Costos Personal", "34.2%", "35.0%", "-0.8%", "down", "38.0%", "good")
+                    ])
+                ], striped=True, hover=True, className="financial-table")
+            ])
+        ], className="financial-table-container")
     ])
 
 def render_capacity_tab():
@@ -946,37 +1063,126 @@ def update_airport_comparison(n):
     
     return fig
 
-@callback(Output('financial-trend-chart', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_financial_trend(n):
-    data = get_financial_data()
+# Bloomberg Terminal Layout Helper
+def get_bloomberg_layout():
+    return {
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+        'plot_bgcolor': 'rgba(10, 14, 39, 0.9)',
+        'font': {'color': 'white', 'family': 'Inter'},
+        'margin': {'l': 40, 'r': 40, 't': 40, 'b': 40},
+        'showlegend': True,
+        'legend': {
+            'font': {'color': 'white'},
+            'bgcolor': 'rgba(26, 31, 58, 0.8)'
+        },
+        'xaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.1)'},
+        'yaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.1)'}
+    }
+
+# Financial Charts Callbacks
+@callback(Output('revenue-donut', 'figure'), Input('tabs', 'active_tab'))
+def update_revenue_donut(active_tab):
+    if active_tab != "financial":
+        return {}
     
-    fig = go.Figure()
+    return {
+        'data': [go.Pie(
+            labels=['Aeronáuticos', 'No-Aeronáuticos', 'Comerciales', 'Estacionamiento'],
+            values=[178, 85, 19, 8],
+            hole=0.6,
+            marker_colors=['#00d4ff', '#00fff0', '#8b5cf6', '#ff6b35'],
+            textinfo='label+percent',
+            hovertemplate='<b>%{label}</b><br>$%{value}M MXN<br>%{percent}<extra></extra>'
+        )],
+        'layout': get_bloomberg_layout()
+    }
+
+@callback(Output('cost-waterfall', 'figure'), Input('tabs', 'active_tab'))
+def update_cost_waterfall(active_tab):
+    if active_tab != "financial":
+        return {}
     
-    fig.add_trace(go.Bar(
-        x=data['months'],
-        y=data['revenue'],
-        name='Ingresos',
-        marker_color='#00d4ff'
-    ))
+    return {
+        'data': [go.Waterfall(
+            name="Estructura de Costos",
+            orientation="v",
+            measure=["relative", "relative", "relative", "relative", "total"],
+            x=["Personal", "Mantenimiento", "Servicios", "Otros", "Total"],
+            y=[78, 45, 32, 18, 173],
+            text=['$78M', '$45M', '$32M', '$18M', '$173M'],
+            textposition='outside',
+            connector={"line": {"color": "rgb(63, 63, 63)"}},
+            increasing={"marker": {"color": "#ff4757"}},
+            totals={"marker": {"color": "#00d4ff"}}
+        )],
+        'layout': get_bloomberg_layout()
+    }
+
+@callback(Output('profitability-trends', 'figure'), Input('tabs', 'active_tab'))
+def update_profitability_trends(active_tab):
+    if active_tab != "financial":
+        return {}
     
-    fig.add_trace(go.Bar(
-        x=data['months'],
-        y=data['costs'],
-        name='Costos',
-        marker_color='#ff4757'
-    ))
+    months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
     
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Mes'),
-        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Millones MXN'),
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
+    return {
+        'data': [
+            go.Scatter(
+                x=months,
+                y=[15.2, 16.8, 17.5, 18.1, 18.7, 19.2, 18.9, 18.5, 19.1, 19.6, 19.8, 20.2],
+                name='AIFA',
+                mode='lines+markers',
+                line=dict(color='#00d4ff', width=3),
+                marker=dict(size=6, color='#00d4ff')
+            ),
+            go.Scatter(
+                x=months,
+                y=[14.5] * 12,
+                name='Promedio Industria',
+                mode='lines',
+                line=dict(color='#ff6b35', width=2, dash='dash')
+            ),
+            go.Scatter(
+                x=months,
+                y=[16.0] * 12,
+                name='Objetivo',
+                mode='lines',
+                line=dict(color='#00ff88', width=2, dash='dot')
+            )
+        ],
+        'layout': get_bloomberg_layout()
+    }
+
+@callback(Output('cashflow-analysis', 'figure'), Input('tabs', 'active_tab'))
+def update_cashflow_analysis(active_tab):
+    if active_tab != "financial":
+        return {}
     
-    return fig
+    months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    
+    return {
+        'data': [
+            go.Scatter(
+                x=months,
+                y=[85, 92, 98, 105, 112, 118, 125, 132, 127, 135, 142, 148],
+                name='Flujo Operativo',
+                mode='lines',
+                fill='tonexty',
+                line=dict(color='#00ff88'),
+                fillcolor='rgba(0, 255, 136, 0.2)'
+            ),
+            go.Scatter(
+                x=months,
+                y=[78, 84, 89, 95, 101, 106, 112, 118, 115, 121, 127, 132],
+                name='Flujo Libre',
+                mode='lines',
+                fill='tozeroy',
+                line=dict(color='#00d4ff'),
+                fillcolor='rgba(0, 212, 255, 0.2)'
+            )
+        ],
+        'layout': get_bloomberg_layout()
+    }
 
 # Removed unused callbacks for non-existent chart IDs
 

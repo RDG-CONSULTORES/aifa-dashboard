@@ -1160,3 +1160,188 @@ body {
 .nav-tabs .nav-link[href="#control-360"].active::after {
     opacity: 1;
 }
+
+/* Bloomberg Terminal Styles */
+.bloomberg-header {
+    background: linear-gradient(135deg, #000814 0%, #001d3d 100%);
+    border: 2px solid var(--primary-cyan);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+}
+
+.bloomberg-header-content {
+    text-align: center;
+    padding: 1rem;
+}
+
+.terminal-title {
+    font-family: 'Inter', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-cyan);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.terminal-subtitle {
+    font-family: 'Inter', monospace;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.trading-grid {
+    margin-bottom: 2rem;
+}
+
+.trading-card {
+    background: linear-gradient(135deg, rgba(0, 8, 20, 0.9) 0%, rgba(0, 29, 61, 0.8) 100%);
+    border: 1px solid var(--primary-cyan);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.trading-card:hover {
+    border-color: var(--primary-cyan);
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.trading-label {
+    font-family: 'Inter', monospace;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.trading-value {
+    font-family: 'Inter', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-cyan);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.trading-change {
+    font-family: 'Inter', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.trading-change.positive { 
+    color: var(--success-green); 
+}
+
+.trading-change.negative { 
+    color: var(--danger-red); 
+}
+
+.financial-kpi-card {
+    background: var(--glass-bg);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.financial-kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 212, 255, 0.2);
+    border-color: var(--primary-cyan);
+}
+
+.financial-icon {
+    font-size: 2rem;
+    color: var(--primary-cyan);
+    margin-right: 1rem;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.financial-kpi-value {
+    font-family: 'Inter', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.financial-kpi-title {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.financial-kpi-change {
+    font-family: 'Inter', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--success-green);
+}
+
+.financial-table {
+    font-family: 'Inter', monospace;
+    font-size: 0.8rem;
+    background: transparent !important;
+}
+
+.financial-table .metric-name {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.financial-table-container {
+    background: var(--glass-bg);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.financial-table th {
+    background: rgba(0, 212, 255, 0.1) !important;
+    color: var(--primary-cyan) !important;
+    border-color: rgba(0, 212, 255, 0.3) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.financial-table td {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    vertical-align: middle !important;
+}
+
+/* Bloomberg Chart Enhancements */
+.chart-card:has(#revenue-donut),
+.chart-card:has(#cost-waterfall),
+.chart-card:has(#profitability-trends),
+.chart-card:has(#cashflow-analysis) {
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    background: rgba(10, 14, 39, 0.9);
+}
+
+.chart-card:has(#revenue-donut):hover,
+.chart-card:has(#cost-waterfall):hover,
+.chart-card:has(#profitability-trends):hover,
+.chart-card:has(#cashflow-analysis):hover {
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+    border-color: var(--primary-cyan);
+}
+
+/* Premium Terminal Animation */
+@keyframes terminal-glow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+    }
+}
+
+.bloomberg-header {
+    animation: terminal-glow 3s ease-in-out infinite;
+}
