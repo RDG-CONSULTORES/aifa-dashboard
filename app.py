@@ -229,7 +229,7 @@ def create_enhanced_destination_card(route):
         ], className="destination-row"),
         
         html.Div([
-            html.Span("📅", style={'marginRight': '6px', 'fontSize': '0.8rem'}),
+            DashIconify(icon="mdi:calendar", width=16, height=16, style={'marginRight': '6px', 'color': '#8b92a9'}),
             html.Span(f"{route['frequency']} vuelos/mes", style={
                 'color': '#8b92a9',
                 'fontSize': '0.75rem'
@@ -238,7 +238,7 @@ def create_enhanced_destination_card(route):
                 'color': '#8b92a9',
                 'margin': '0 6px'
             }),
-            html.Span("✈️", style={'marginRight': '4px', 'fontSize': '0.8rem'}),
+            DashIconify(icon="mdi:airplane", width=16, height=16, style={'marginRight': '4px', 'color': '#8b92a9'}),
             html.Span(f"{route['frequency']//4} vuelos/sem", style={
                 'color': '#8b92a9',
                 'fontSize': '0.75rem'
@@ -450,49 +450,31 @@ def render_geographic_tab():
         html.H4("Análisis Geográfico", className="page-title"),
         html.P("Red de destinos, rutas estratégicas y análisis de mercado", className="page-subtitle"),
         
-        # KPIs Geográficos Row 1
+        # KPIs Geográficos - Grid 2x3 Balanceado y Responsive
         dbc.Row([
             dbc.Col([
-                create_kpi_card("Destinos Activos", 28, 3, "material-symbols:flight", None, "", "integer")
-            ], width=2),
+                create_kpi_card("Destinos Activos", 28, 3, "mdi:map-marker-multiple", None, "", "integer")
+            ], lg=4, md=6, sm=12),
             dbc.Col([
-                create_kpi_card("Países", 8, 2, "material-symbols:public", None, "", "integer")
-            ], width=2),
+                create_kpi_card("Países Conectados", 8, 2, "mdi:earth", None, "", "integer")
+            ], lg=4, md=6, sm=12),
             dbc.Col([
-                create_kpi_card("Rutas Internacionales", 12, 4, "material-symbols:connecting-airports", None, "", "integer")
-            ], width=2),
-            dbc.Col([
-                create_kpi_card("Rutas Domésticas", 16, 1, "material-symbols:home", None, "", "integer")
-            ], width=2),
-            dbc.Col([
-                create_kpi_card("Nuevas Rutas 2024", 7, 7, "material-symbols:new-releases", None, "", "integer")
-            ], width=2),
-            dbc.Col([
-                create_kpi_card("Factor Carga Prom.", 84.2, 2.1, "material-symbols:analytics", None, "%", "decimal")
-            ], width=2)
+                create_kpi_card("Rutas Internacionales", 12, 4, "mdi:airplane", None, "", "integer")
+            ], lg=4, md=6, sm=12)
         ], className="mb-4"),
         
-        # Red Global de Rutas
-        dbc.Card([
-            dbc.CardHeader([
-                html.Div([
-                    html.H5("Red Global de Rutas AIFA", className="chart-title"),
-                    html.Div([
-                        dbc.ButtonGroup([
-                            dbc.Button("Todas", id="route-filter-all", size="sm", 
-                                      className="filter-btn active", color="info", outline=True),
-                            dbc.Button("Internacionales", id="route-filter-intl", size="sm", 
-                                      className="filter-btn", color="info", outline=True),
-                            dbc.Button("Domésticas", id="route-filter-dom", size="sm", 
-                                      className="filter-btn", color="info", outline=True),
-                        ])
-                    ])
-                ], className="d-flex justify-content-between align-items-center")
-            ]),
-            dbc.CardBody([
-                dcc.Graph(id="route-network-map", style={"height": "500px"})
-            ])
-        ], className="chart-card mb-4"),
+        dbc.Row([
+            dbc.Col([
+                create_kpi_card("Rutas Domésticas", 16, 1, "mdi:home-map-marker", None, "", "integer")
+            ], lg=4, md=6, sm=12),
+            dbc.Col([
+                create_kpi_card("Nuevas Rutas 2024", 7, 7, "mdi:plus-circle", None, "", "integer")
+            ], lg=4, md=6, sm=12),
+            dbc.Col([
+                create_kpi_card("Factor Carga Promedio", 84.2, 2.1, "mdi:gauge", None, "%", "decimal")
+            ], lg=4, md=6, sm=12)
+        ], className="mb-4"),
+        
         
         # Panel de Destinos
         dbc.Row([
