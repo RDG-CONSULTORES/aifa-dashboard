@@ -123,6 +123,24 @@ def get_productivity_data():
         'aircraft_rotation': {'value': 11.2, 'benchmark': 10.0, 'unit': '/día', 'trend': 0.4}
     }
 
+def get_route_network_data():
+    """Datos de la red de rutas AIFA con coordenadas geográficas"""
+    aifa_lat, aifa_lon = 19.7373, -99.0068
+    
+    return {
+        'hub': {'name': 'AIFA', 'lat': aifa_lat, 'lon': aifa_lon},
+        'routes': [
+            {"name": "Los Angeles", "lat": 34.0522, "lon": -118.2437, "pax": 87000, "type": "international", "flights": 21},
+            {"name": "Houston", "lat": 29.7604, "lon": -95.3698, "pax": 76000, "type": "international", "flights": 19},
+            {"name": "Miami", "lat": 25.7617, "lon": -80.1918, "pax": 92000, "type": "international", "flights": 17},
+            {"name": "Guadalajara", "lat": 20.6597, "lon": -103.3496, "pax": 125000, "type": "domestic", "flights": 42},
+            {"name": "Monterrey", "lat": 25.6866, "lon": -100.3161, "pax": 98000, "type": "domestic", "flights": 35},
+            {"name": "Cancún", "lat": 21.1619, "lon": -86.8515, "pax": 156000, "type": "domestic", "flights": 28},
+            {"name": "Madrid", "lat": 40.4168, "lon": -3.7038, "pax": 67000, "type": "international", "flights": 14},
+            {"name": "Bogotá", "lat": 4.7110, "lon": -74.0721, "pax": 45000, "type": "international", "flights": 12}
+        ]
+    }
+
 # KPI Card component
 def create_kpi_card(title, value, change, icon, target=None, unit="", format_type="percent"):
     trend_color = '#00ff88' if change > 0 else '#ff4757'
@@ -448,6 +466,28 @@ def render_geographic_tab():
                 create_kpi_card("Factor Carga Prom.", 84.2, 2.1, "material-symbols:analytics", None, "%", "decimal")
             ], width=2)
         ], className="mb-4"),
+        
+        # Red Global de Rutas
+        dbc.Card([
+            dbc.CardHeader([
+                html.Div([
+                    html.H5("Red Global de Rutas AIFA", className="chart-title"),
+                    html.Div([
+                        dbc.ButtonGroup([
+                            dbc.Button("Todas", id="route-filter-all", size="sm", 
+                                      className="filter-btn active", color="info", outline=True),
+                            dbc.Button("Internacionales", id="route-filter-intl", size="sm", 
+                                      className="filter-btn", color="info", outline=True),
+                            dbc.Button("Domésticas", id="route-filter-dom", size="sm", 
+                                      className="filter-btn", color="info", outline=True),
+                        ])
+                    ])
+                ], className="d-flex justify-content-between align-items-center")
+            ]),
+            dbc.CardBody([
+                dcc.Graph(id="route-network-map", style={"height": "500px"})
+            ])
+        ], className="chart-card mb-4"),
         
         # Panel de Destinos
         dbc.Row([
@@ -974,6 +1014,154 @@ def update_geographic_distribution(n):
     )
     
     return fig
+
+# Route Network Map Callbacks
+@callback(
+    Output('route-network-map', 'figure'),
+    [Input('route-filter-all', 'n_clicks'),
+     Input('route-filter-intl', 'n_clicks'),
+     Input('route-filter-dom', 'n_clicks')]
+)
+def update_route_network(all_clicks, intl_clicks, dom_clicks):
+    """Actualiza el mapa de rutas según el filtro seleccionado"""
+    ctx = dash.callback_context
+    filter_type = 'all'
+    
+    if ctx.triggered:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        if 'intl' in button_id:
+            filter_type = 'international'
+        elif 'dom' in button_id:
+            filter_type = 'domestic'
+    
+    data = get_route_network_data()
+    hub = data['hub']
+    routes = data['routes']
+    
+    # Filtrar rutas según selección
+    if filter_type != 'all':
+        routes = [r for r in routes if r['type'] == filter_type]
+    
+    traces = []
+    
+    # Hub AIFA - Marker principal destacado
+    traces.append(go.Scattergeo(
+        lat=[hub['lat']],
+        lon=[hub['lon']],
+        text=['<b>AIFA HUB</b>'],
+        mode='markers+text',
+        marker=dict(
+            size=40,
+            color='#00d4ff',
+            line=dict(width=6, color='white'),
+            symbol='airport',
+            opacity=0.9
+        ),
+        textposition='bottom center',
+        textfont=dict(size=16, color='white', family='Inter'),
+        name='AIFA Hub',
+        hovertemplate='<b>AIFA - Hub Principal</b><br>Rutas Activas: %{customdata}<br>Estado: Operacional<extra></extra>',
+        customdata=[len(routes)]
+    ))
+    
+    # Líneas de rutas con grosor proporcional a volumen
+    for route in routes:
+        line_width = max(2, route['pax']/30000)
+        line_color = '#00d4ff' if route['type'] == 'international' else '#00fff0'
+        
+        traces.append(go.Scattergeo(
+            lat=[hub['lat'], route['lat']],
+            lon=[hub['lon'], route['lon']],
+            mode='lines',
+            line=dict(
+                width=line_width,
+                color=line_color,
+                opacity=0.7
+            ),
+            showlegend=False,
+            hoverinfo='skip'
+        ))
+    
+    # Markers de destinos
+    for route in routes:
+        marker_size = max(15, route['pax']/12000)
+        marker_color = '#ff6b35' if route['type'] == 'international' else '#00ff88'
+        
+        traces.append(go.Scattergeo(
+            lat=[route['lat']],
+            lon=[route['lon']],
+            text=[route['name']],
+            mode='markers+text',
+            marker=dict(
+                size=marker_size,
+                color=marker_color,
+                line=dict(width=3, color='white'),
+                opacity=0.8
+            ),
+            textposition='top center',
+            textfont=dict(size=11, color='white', family='Inter'),
+            showlegend=False,
+            hovertemplate='<b>%{text}</b><br>Pasajeros: %{customdata[0]:,}<br>Vuelos/mes: %{customdata[1]}<br>Tipo: %{meta}<extra></extra>',
+            customdata=[[route['pax'], route['flights']]],
+            meta=[route['type'].title()]
+        ))
+    
+    # Layout con estilo premium
+    layout = go.Layout(
+        geo=dict(
+            scope='world',
+            projection_type='natural earth',
+            showland=True,
+            landcolor='rgba(26, 31, 58, 0.8)',
+            showocean=True,
+            oceancolor='rgba(10, 14, 39, 0.9)',
+            showlakes=True,
+            lakecolor='rgba(10, 14, 39, 0.9)',
+            showcountries=True,
+            countrycolor='rgba(0, 212, 255, 0.3)',
+            coastlinecolor='rgba(0, 212, 255, 0.4)',
+            bgcolor='rgba(0,0,0,0)',
+            showframe=False,
+            center=dict(lat=25, lon=-95),
+            projection_scale=1.2
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white', family='Inter'),
+        margin=dict(l=0, r=0, t=0, b=0),
+        showlegend=False,
+        height=500
+    )
+    
+    return {'data': traces, 'layout': layout}
+
+@callback(
+    [Output('route-filter-all', 'className'),
+     Output('route-filter-intl', 'className'),
+     Output('route-filter-dom', 'className')],
+    [Input('route-filter-all', 'n_clicks'),
+     Input('route-filter-intl', 'n_clicks'),
+     Input('route-filter-dom', 'n_clicks')]
+)
+def update_filter_buttons(all_clicks, intl_clicks, dom_clicks):
+    """Actualiza el estado activo de los botones de filtro"""
+    ctx = dash.callback_context
+    base_class = "filter-btn"
+    active_class = "filter-btn active"
+    
+    if not ctx.triggered:
+        return [active_class, base_class, base_class]
+    
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    
+    if 'all' in button_id:
+        return [active_class, base_class, base_class]
+    elif 'intl' in button_id:
+        return [base_class, active_class, base_class]
+    elif 'dom' in button_id:
+        return [base_class, base_class, active_class]
+    
+    return [active_class, base_class, base_class]
 
 # Time update callback
 @callback(Output('live-update-time', 'children'),
