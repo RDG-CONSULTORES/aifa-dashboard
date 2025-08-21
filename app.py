@@ -339,19 +339,22 @@ def create_security_kpi_card(title, value, unit, target, status, icon):
 
 def create_security_gauge(title, percentage, critical_threshold, icon):
     """Crear gauge circular para métricas de seguridad"""
+    # Asegurar que percentage sea entero
+    percentage_val = int(float(percentage)) if isinstance(percentage, (str, float)) else percentage
+    
     return dbc.Card([
         dbc.CardBody([
             html.Div([
                 DashIconify(icon=icon, width=36, height=36, className="security-gauge-icon"),
-                html.H4(f"{percentage}%", className="security-gauge-percentage"),
+                html.H4(f"{percentage_val}%", className="security-gauge-percentage"),
                 html.P(title, className="security-gauge-title"),
                 html.Small(f"Crítico: >{critical_threshold}%", className="security-gauge-threshold")
             ], className="text-center"),
             
             # Circular progress
             dbc.Progress(
-                value=percentage,
-                color="success" if percentage < critical_threshold else "warning" if percentage < 90 else "danger",
+                value=percentage_val,
+                color="success" if percentage_val < critical_threshold else "warning" if percentage_val < 90 else "danger",
                 className="security-circular-progress",
                 style={"height": "8px"}
             )
@@ -1113,9 +1116,9 @@ def render_security_tab():
                         html.H6("Sistemas Críticos", className="chart-title")
                     ]),
                     dbc.CardBody([
-                        create_security_gauge("Iluminación", 98.7, 85, "mdi:lightbulb"),
-                        create_security_gauge("Cámaras", 96.3, 80, "mdi:camera"),
-                        create_security_gauge("Comunicaciones", 99.1, 90, "mdi:radio")
+                        create_security_gauge("Iluminación", 99, 85, "mdi:lightbulb"),
+                        create_security_gauge("Cámaras", 96, 80, "mdi:camera"),
+                        create_security_gauge("Comunicaciones", 99, 90, "mdi:radio")
                     ])
                 ], className="chart-card mt-3")
             ], width=4)
