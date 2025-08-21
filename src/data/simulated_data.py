@@ -45,7 +45,7 @@ def generate_kpi_data():
 
 def generate_historical_data():
     """Generate historical trend data"""
-    dates = pd.date_range(end=datetime.now(), periods=12, freq='M')
+    dates = pd.date_range(end=datetime.now(), periods=12, freq='ME')
     
     # Market participation trend
     base_participation = 8.0
@@ -136,7 +136,7 @@ def generate_state_penetration():
 
 def generate_financial_data():
     """Generate financial performance data"""
-    months = pd.date_range(end=datetime.now(), periods=12, freq='M')
+    months = pd.date_range(end=datetime.now(), periods=12, freq='ME')
     
     financial_data = []
     base_revenue = 150  # Million MXN
