@@ -430,116 +430,55 @@ def render_geographic_tab():
         # KPIs Geográficos Row 1
         dbc.Row([
             dbc.Col([
-                create_kpi_card("Destinos Activos", "28", "+3 vs 2023", "🌍")
+                create_kpi_card("Destinos Activos", 28, 3, "material-symbols:flight", None, "", "integer")
             ], width=2),
             dbc.Col([
-                create_kpi_card("Países", "8", "+2 vs 2023", "🗺️")
+                create_kpi_card("Países", 8, 2, "material-symbols:public", None, "", "integer")
             ], width=2),
             dbc.Col([
-                create_kpi_card("Rutas Internacionales", "12", "+4 vs 2023", "✈️")
+                create_kpi_card("Rutas Internacionales", 12, 4, "material-symbols:connecting-airports", None, "", "integer")
             ], width=2),
             dbc.Col([
-                create_kpi_card("Rutas Domésticas", "16", "+1 vs 2023", "🏠")
+                create_kpi_card("Rutas Domésticas", 16, 1, "material-symbols:home", None, "", "integer")
             ], width=2),
             dbc.Col([
-                create_kpi_card("Nuevas Rutas 2024", "7", "Crecimiento", "🆕")
+                create_kpi_card("Nuevas Rutas 2024", 7, 7, "material-symbols:new-releases", None, "", "integer")
             ], width=2),
             dbc.Col([
-                create_kpi_card("Factor Carga Prom.", "84.2%", "+2.1% vs 2023", "📊")
+                create_kpi_card("Factor Carga Prom.", 84.2, 2.1, "material-symbols:analytics", None, "%", "decimal")
             ], width=2)
         ], className="mb-4"),
         
-        # Mapa Interactivo y Filtros
+        # Panel de Destinos
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader([
+                        html.H5("Principales Destinos", className="chart-title"),
+                        html.Small("Red de rutas y conexiones AIFA", className="chart-subtitle")
+                    ]),
+                    dbc.CardBody([
                         html.Div([
-                            html.H5("Mapa Interactivo de Rutas", className="chart-title", style={'marginBottom': '1rem'}),
-                            html.Div([
-                                dbc.ButtonGroup([
-                                    dbc.Button("Todas", id="filter-all-routes", size="sm", color="primary", outline=True),
-                                    dbc.Button("Domésticas", id="filter-domestic", size="sm", color="info", outline=True),
-                                    dbc.Button("Internacionales", id="filter-international", size="sm", color="warning", outline=True),
-                                ], className="mb-2"),
-                                html.Br(),
-                                dbc.ButtonGroup([
-                                    dbc.Button("Top Tráfico", id="filter-top-traffic", size="sm", color="success", outline=True),
-                                    dbc.Button("Alta Frecuencia", id="filter-high-freq", size="sm", color="secondary", outline=True)
-                                ])
-                            ], style={'display': 'flex', 'gap': '1rem', 'alignItems': 'center', 'flexWrap': 'wrap'})
-                        ], style={'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'flex-start', 'flexWrap': 'wrap'})
-                    ]),
-                    dbc.CardBody([
-                        dcc.Graph(id="world-routes-map", style={'height': '500px'})
-                    ])
-                ], className="chart-card")
-            ], width=8),
-            
-            # Panel de Destinos
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader([
-                        html.H5("Top Destinos", className="chart-title")
-                    ]),
-                    dbc.CardBody([
-                        html.Div(id="destination-cards-container", children=[
-                            create_enhanced_destination_card(route) for route in route_data[:5]
+                            create_enhanced_destination_card(route) for route in route_data
                         ])
                     ])
                 ], className="chart-card")
-            ], width=4)
+            ], width=12)
         ], className="mb-4"),
         
-        # Gráficas de Análisis
+        # Gráficas Simplificadas
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader([
-                        html.H5("Rendimiento por Ruta", className="chart-title"),
-                        html.Small("Factor de carga vs. Frecuencia semanal", className="chart-subtitle")
+                        html.H5("Distribución por Región", className="chart-title"),
+                        html.Small("Tráfico de pasajeros por zona geográfica", className="chart-subtitle")
                     ]),
                     dbc.CardBody([
-                        dcc.Graph(id="route-performance-scatter")
+                        dcc.Graph(id="geographic-distribution-chart")
                     ])
                 ], className="chart-card")
-            ], width=6),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader([
-                        html.H5("Estacionalidad por Región", className="chart-title"),
-                        html.Small("Variación mensual del tráfico", className="chart-subtitle")
-                    ]),
-                    dbc.CardBody([
-                        dcc.Graph(id="seasonal-trends-chart")
-                    ])
-                ], className="chart-card")
-            ], width=6)
-        ], className="mb-4"),
-        
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader([
-                        html.H5("Análisis de Competencia", className="chart-title"),
-                        html.Small("Participación de mercado por destino", className="chart-subtitle")
-                    ]),
-                    dbc.CardBody([
-                        dcc.Graph(id="competition-analysis")
-                    ])
-                ], className="chart-card")
-            ], width=6),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader([
-                        html.H5("Penetración México", className="chart-title"),
-                        html.Small("Cobertura por estado", className="chart-subtitle")
-                    ]),
-                    dbc.CardBody([
-                        dcc.Graph(id="mexico-penetration-map")
-                    ])
-                ], className="chart-card")
-            ], width=6)
+            ], width=12)
         ])
     ])
 
@@ -997,241 +936,37 @@ def update_financial_trend(n):
 
 # Removed unused callbacks for non-existent chart IDs
 
-# Geographic Tab Callbacks
-@callback(Output('world-routes-map', 'figure'),
-          [Input('filter-all-routes', 'n_clicks'),
-           Input('filter-domestic', 'n_clicks'),
-           Input('filter-international', 'n_clicks'),
-           Input('filter-top-traffic', 'n_clicks'),
-           Input('filter-high-freq', 'n_clicks')])
-def update_world_map(all_routes, domestic, international, top_traffic, high_freq):
+# Geographic Tab Callback - Simplified
+@callback(Output('geographic-distribution-chart', 'figure'),
+          Input('interval-component', 'n_intervals'))
+def update_geographic_distribution(n):
     route_data = get_route_data()
     
-    # Create world map with AIFA routes
-    fig = go.Figure()
-    
-    # AIFA coordinates
-    aifa_lat, aifa_lon = 19.7374, -99.0092
-    
-    # Add route lines and markers
+    # Agrupar por región
+    regions = {'USA': 0, 'México': 0, 'LATAM': 0}
     for route in route_data:
-        # Approximate coordinates for demonstration
         if 'USA' in route['city']:
-            if 'Los Angeles' in route['city']:
-                lat, lon = 34.0522, -118.2437
-            elif 'Houston' in route['city']:
-                lat, lon = 29.7604, -95.3698
-            elif 'Miami' in route['city']:
-                lat, lon = 25.7617, -80.1918
+            regions['USA'] += route['passengers']
         elif 'México' in route['city']:
-            if 'Guadalajara' in route['city']:
-                lat, lon = 20.6597, -103.3496
-            elif 'Monterrey' in route['city']:
-                lat, lon = 25.6866, -100.3161
-            elif 'Cancún' in route['city']:
-                lat, lon = 21.1619, -86.8515
-        elif 'Colombia' in route['city']:
-            lat, lon = 4.7110, -74.0721
-        elif 'Perú' in route['city']:
-            lat, lon = -12.0464, -77.0428
+            regions['México'] += route['passengers']
         else:
-            continue
-            
-        # Add route line
-        fig.add_trace(go.Scattergeo(
-            lon=[aifa_lon, lon],
-            lat=[aifa_lat, lat],
-            mode='lines',
-            line=dict(width=2, color='rgba(0, 212, 255, 0.6)'),
-            showlegend=False,
-            hoverinfo='skip'
-        ))
-        
-        # Add destination marker
-        fig.add_trace(go.Scattergeo(
-            lon=[lon],
-            lat=[lat],
-            mode='markers',
-            marker=dict(
-                size=8 + (route['passengers'] / 10000),
-                color=route['load_factor'],
-                colorscale='Viridis',
-                cmin=75,
-                cmax=95,
-                showscale=True,
-                colorbar=dict(title="Load Factor %")
-            ),
-            text=route['city'],
-            hovertemplate=f"<b>{route['city']}</b><br>" +
-                         f"Pasajeros: {route['passengers']:,}<br>" +
-                         f"Load Factor: {route['load_factor']}%<br>" +
-                         f"Frecuencia: {route['frequency']} vuelos/mes<extra></extra>",
-            showlegend=False
-        ))
-    
-    # Add AIFA marker
-    fig.add_trace(go.Scattergeo(
-        lon=[aifa_lon],
-        lat=[aifa_lat],
-        mode='markers',
-        marker=dict(size=20, color='#f59e0b', symbol='star'),
-        text="AIFA",
-        hovertemplate="<b>Aeropuerto Internacional Felipe Ángeles</b><extra></extra>",
-        showlegend=False
-    ))
-    
-    fig.update_layout(
-        geo=dict(
-            projection_type='natural earth',
-            showland=True,
-            landcolor='rgba(10, 14, 39, 0.8)',
-            showocean=True,
-            oceancolor='rgba(26, 31, 55, 0.9)',
-            showlakes=True,
-            lakecolor='rgba(26, 31, 55, 0.7)',
-            showcountries=True,
-            countrycolor='rgba(255, 255, 255, 0.2)',
-            bgcolor='rgba(0,0,0,0)'
-        ),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        margin=dict(l=0, r=0, t=0, b=0)
-    )
-    
-    return fig
-
-@callback(Output('route-performance-scatter', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_route_performance(n):
-    route_data = get_route_data()
+            regions['LATAM'] += route['passengers']
     
     fig = go.Figure()
     
-    # Crear scatter plot
-    fig.add_trace(go.Scatter(
-        x=[route['frequency'] for route in route_data],
-        y=[route['load_factor'] for route in route_data],
-        mode='markers+text',
+    fig.add_trace(go.Bar(
+        x=list(regions.keys()),
+        y=list(regions.values()),
         marker=dict(
-            size=[route['passengers']/5000 for route in route_data],
-            color=[route['load_factor'] for route in route_data],
-            colorscale='Viridis',
-            showscale=True,
-            colorbar=dict(title="Load Factor %")
+            color=['#00d4ff', '#f59e0b', '#00ff88'],
         ),
-        text=[route['city'].split(',')[0] for route in route_data],
-        textposition='top center',
-        hovertemplate="<b>%{text}</b><br>" +
-                     "Frecuencia: %{x} vuelos/mes<br>" +
-                     "Load Factor: %{y}%<br>" +
-                     "<extra></extra>"
-    ))
-    
-    fig.update_layout(
-        xaxis=dict(title='Frecuencia (vuelos/mes)', gridcolor='rgba(255,255,255,0.1)'),
-        yaxis=dict(title='Factor de Carga (%)', gridcolor='rgba(255,255,255,0.1)'),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        margin=dict(l=40, r=40, t=40, b=40)
-    )
-    
-    return fig
-
-@callback(Output('seasonal-trends-chart', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_seasonal_trends(n):
-    months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-              'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-    
-    # Datos simulados de estacionalidad por región
-    domestic = [85, 88, 92, 95, 98, 85, 90, 92, 88, 85, 82, 88]
-    usa = [78, 80, 85, 88, 90, 95, 98, 96, 92, 88, 82, 80]
-    latam = [82, 85, 88, 90, 88, 82, 85, 88, 92, 95, 90, 85]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatter(x=months, y=domestic, name='Doméstico', line=dict(color='#00d4ff', width=3)))
-    fig.add_trace(go.Scatter(x=months, y=usa, name='USA', line=dict(color='#f59e0b', width=3)))
-    fig.add_trace(go.Scatter(x=months, y=latam, name='LATAM', line=dict(color='#00ff88', width=3)))
-    
-    fig.update_layout(
-        xaxis=dict(title='Mes', gridcolor='rgba(255,255,255,0.1)'),
-        yaxis=dict(title='Load Factor Promedio (%)', gridcolor='rgba(255,255,255,0.1)'),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=40, b=40)
-    )
-    
-    return fig
-
-@callback(Output('competition-analysis', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_competition_analysis(n):
-    destinations = ['Los Angeles', 'Houston', 'Miami', 'Guadalajara', 'Cancún']
-    aifa_share = [15, 22, 8, 35, 18]
-    competition_share = [85, 78, 92, 65, 82]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        name='AIFA',
-        x=destinations,
-        y=aifa_share,
-        marker_color='#00d4ff'
-    ))
-    
-    fig.add_trace(go.Bar(
-        name='Competencia',
-        x=destinations,
-        y=competition_share,
-        marker_color='#8b92a9'
-    ))
-    
-    fig.update_layout(
-        barmode='stack',
-        xaxis=dict(title='Destino', gridcolor='rgba(255,255,255,0.1)'),
-        yaxis=dict(title='Participación de Mercado (%)', gridcolor='rgba(255,255,255,0.1)'),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=40, b=40)
-    )
-    
-    return fig
-
-@callback(Output('mexico-penetration-map', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_mexico_penetration(n):
-    # Mapa de México con cobertura por estado
-    import plotly.graph_objects as go
-    
-    estados = ['Ciudad de México', 'Estado de México', 'Jalisco', 'Nuevo León', 
-               'Quintana Roo', 'Yucatán', 'Veracruz', 'Puebla']
-    cobertura = [100, 95, 85, 80, 75, 60, 45, 35]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        x=estados,
-        y=cobertura,
-        marker=dict(
-            color=cobertura,
-            colorscale='Viridis',
-            showscale=True,
-            colorbar=dict(title="Cobertura %")
-        ),
-        text=[f'{c}%' for c in cobertura],
+        text=[f'{v:,}' for v in regions.values()],
         textposition='auto'
     ))
     
     fig.update_layout(
-        xaxis=dict(title='Estado', gridcolor='rgba(255,255,255,0.1)'),
-        yaxis=dict(title='Cobertura (%)', gridcolor='rgba(255,255,255,0.1)'),
+        xaxis=dict(title='Región', gridcolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(title='Pasajeros Anuales', gridcolor='rgba(255,255,255,0.1)'),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='white'),
