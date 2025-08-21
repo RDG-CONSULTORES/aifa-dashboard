@@ -246,6 +246,57 @@ def create_enhanced_destination_card(route):
         ], className="destination-details")
     ], className="enhanced-destination-card")
 
+# Operations Center Components
+def create_capacity_gauge(title, percentage, value, benchmark, icon, status):
+    """Crear gauge visual para capacidad operativa"""
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                DashIconify(icon=icon, width=40, height=40, className="capacity-gauge-icon"),
+                html.Div([
+                    html.H2(percentage, className="gauge-percentage"),
+                    html.P(title, className="gauge-title"),
+                    html.Small(value, className="gauge-value"),
+                    html.Small(benchmark, className="gauge-benchmark")
+                ])
+            ], className="gauge-content"),
+            
+            # Progress ring visual
+            html.Div([
+                dbc.Progress(
+                    value=int(percentage.replace('%', '')),
+                    color=status,
+                    className="capacity-progress-ring",
+                    style={"height": "8px"}
+                )
+            ], className="mt-2")
+        ])
+    ], className="capacity-gauge-card")
+
+def create_status_row(zone, capacity, utilization, throughput, wait_time, status):
+    """Crear fila para la tabla de estado operativo"""
+    utilization_value = int(utilization.replace('%', ''))
+    status_colors = {"optimal": "success", "warning": "warning", "critical": "danger"}
+    
+    return html.Tr([
+        html.Td(zone, className="zone-name"),
+        html.Td(capacity),
+        html.Td([
+            dbc.Progress(
+                value=utilization_value,
+                color=status_colors[status],
+                className="mb-1",
+                style={"height": "8px"}
+            ),
+            html.Small(utilization)
+        ]),
+        html.Td(throughput),
+        html.Td(wait_time),
+        html.Td([
+            dbc.Badge(status.upper(), color=status_colors[status])
+        ])
+    ])
+
 # Bloomberg Terminal Components
 def create_trading_card(label, value, change, trend):
     """Crear trading card estilo Bloomberg"""
@@ -704,61 +755,132 @@ def render_financial_tab():
     ])
 
 def render_capacity_tab():
+    """Renderiza el tab de capacidad operativa como centro de control aeroportuario avanzado"""
     return html.Div([
-        html.H4("🚀 Capacidad Operativa (FORCE DEPLOY v2.2)", className="page-title", style={'color': 'white'}),
-        html.P("Version: 2.2 - FORCE REDEPLOY - Si ves esto, el deploy funcionó", style={'color': '#f59e0b', 'fontSize': '0.9rem', 'marginBottom': '1rem'}),
+        # Operations Control Header
+        dbc.Card([
+            dbc.CardBody([
+                html.Div([
+                    html.H1("Centro de Control de Capacidad Operativa", className="section-title"),
+                    html.P("Monitoreo en Tiempo Real • Utilización de Recursos • Optimización de Flujos", 
+                           className="section-subtitle"),
+                    html.Div([
+                        dbc.Badge("OPERACIONAL", color="success", className="me-2"),
+                        dbc.Badge("SISTEMA ACTIVO", color="info", className="me-2"),
+                        dbc.Badge("99.7% UPTIME", color="warning", className="me-2"),
+                        dbc.Badge("0 ALERTAS CRÍTICAS", color="success")
+                    ], className="status-badges")
+                ])
+            ])
+        ], className="operations-header mb-4"),
         
-        # Simple KPI Cards Row
+        # Gauges Grid - Visual KPIs
         dbc.Row([
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Área Check-in", style={'color': 'white'}),
-                        html.H2("245 m²", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("98% utilización", style={'color': '#8b92a9'})
-                    ])
-                ], className="chart-card")
+                create_capacity_gauge("Check-in", "98%", "245 m²", "2.1 m²/M pax", "mdi:check-circle", "success")
             ], width=4),
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Salas de Espera", style={'color': 'white'}),
-                        html.H2("890 m²", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("82% utilización", style={'color': '#8b92a9'})
-                    ])
-                ], className="chart-card")
+                create_capacity_gauge("Salas Espera", "82%", "890 m²", "7.2 m²/M pax", "mdi:seat", "info")
             ], width=4),
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H5("Controles Seguridad", style={'color': 'white'}),
-                        html.H2("120 m²", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("76% utilización", style={'color': '#8b92a9'})
-                    ])
-                ], className="chart-card")
+                create_capacity_gauge("Seguridad", "76%", "120 m²", "1.0 m²/M pax", "mdi:shield-check", "warning")
             ], width=4)
+        ], className="mb-3"),
+        
+        dbc.Row([
+            dbc.Col([
+                create_capacity_gauge("Área Estéril", "85%", "450 m²", "3.8 m²/M pax", "mdi:lock", "success")
+            ], width=4),
+            dbc.Col([
+                create_capacity_gauge("Equipajes", "80%", "2,400 bags/hr", "3,000 máx", "mdi:bag-suitcase", "info")
+            ], width=4),
+            dbc.Col([
+                create_capacity_gauge("Puertas", "75%", "18/24 activas", "24 disponibles", "mdi:airplane-takeoff", "info")
+            ], width=4)
+        ], className="mb-4"),
+        
+        # Visual Analytics Grid
+        dbc.Row([
+            dbc.Col([
+                # Heatmap de densidad
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Mapa de Calor - Densidad por Hora", className="chart-title")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="capacity-heatmap", style={"height": "350px"})
+                    ])
+                ], className="chart-card")
+            ], width=6),
+            
+            dbc.Col([
+                # Utilization trends
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Tendencias de Utilización", className="chart-title")
+                    ]),
+                    dbc.CardBody([
+                        dcc.Graph(id="utilization-trends", style={"height": "350px"})
+                    ])
+                ], className="chart-card")
+            ], width=6)
         ], className="mb-4"),
         
         dbc.Row([
             dbc.Col([
+                # Capacity vs Demand
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Capacidad vs Demanda", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Sistema de Equipajes", style={'color': 'white'}),
-                        html.H2("2,400 bags/hr", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("Capacidad máxima: 3,000 bags/hr", style={'color': '#8b92a9'})
+                        dcc.Graph(id="capacity-demand", style={"height": "350px"})
                     ])
                 ], className="chart-card")
             ], width=6),
+            
             dbc.Col([
+                # Real-time monitor gauge
                 dbc.Card([
+                    dbc.CardHeader([
+                        html.H5("Monitor General en Tiempo Real", className="chart-title")
+                    ]),
                     dbc.CardBody([
-                        html.H5("Área Estéril", style={'color': 'white'}),
-                        html.H2("450 m²", style={'color': '#00d4ff', 'margin': '1rem 0'}),
-                        html.P("85% utilización", style={'color': '#8b92a9'})
+                        dcc.Graph(id="general-gauge", style={"height": "350px"})
                     ])
                 ], className="chart-card")
             ], width=6)
-        ])
+        ], className="mb-4"),
+        
+        # Live Operations Table
+        dbc.Card([
+            dbc.CardHeader([
+                html.H5("Estado Operativo en Tiempo Real", className="chart-title"),
+                html.Small("Actualización automática cada 30 segundos", className="text-muted")
+            ]),
+            dbc.CardBody([
+                dbc.Table([
+                    html.Thead([
+                        html.Tr([
+                            html.Th("Zona/Sistema"),
+                            html.Th("Capacidad"),
+                            html.Th("Utilización"),
+                            html.Th("Throughput"),
+                            html.Th("Tiempo Espera"),
+                            html.Th("Estado")
+                        ])
+                    ]),
+                    html.Tbody([
+                        create_status_row("Check-in Counters", "32/40", "98%", "180 pax/hr", "4.2 min", "optimal"),
+                        create_status_row("Security Checkpoints", "8/10", "76%", "420 pax/hr", "8.1 min", "optimal"),
+                        create_status_row("Immigration", "6/8", "68%", "380 pax/hr", "3.5 min", "optimal"),
+                        create_status_row("Baggage Claim", "4/6", "85%", "2,400 bags/hr", "12.8 min", "warning"),
+                        create_status_row("Gates", "18/24", "75%", "3,200 pax/hr", "N/A", "optimal"),
+                        create_status_row("Parking", "2,847/3,500", "81%", "650 veh/hr", "N/A", "optimal")
+                    ])
+                ], striped=True, hover=True, className="operations-table")
+            ])
+        ], className="operations-table-container")
     ])
 
 def render_security_tab():
@@ -1182,6 +1304,125 @@ def update_cashflow_analysis(active_tab):
             )
         ],
         'layout': get_bloomberg_layout()
+    }
+
+# Operations Center Layout Helper
+def get_capacity_layout():
+    return {
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+        'plot_bgcolor': 'rgba(10, 14, 39, 0.9)',
+        'font': {'color': 'white', 'family': 'Inter'},
+        'margin': {'l': 60, 'r': 20, 't': 20, 'b': 60},
+        'xaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.1)'},
+        'yaxis': {'color': '#a0aec0', 'gridcolor': 'rgba(0, 212, 255, 0.1)'},
+        'legend': {'font': {'color': 'white'}, 'bgcolor': 'rgba(26, 31, 58, 0.8)'}
+    }
+
+# Operations Center Charts Callbacks
+@callback(Output('capacity-heatmap', 'figure'), Input('tabs', 'active_tab'))
+def update_capacity_heatmap(active_tab):
+    if active_tab != "capacity":
+        return {}
+    
+    zones = ['Check-in', 'Seguridad', 'Inmigración', 'Espera', 'Gates', 'Equipajes']
+    hours = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00']
+    
+    density_matrix = [
+        [20, 45, 60, 75, 85, 90, 80, 65, 40],  # Check-in
+        [15, 40, 55, 70, 80, 85, 75, 60, 35],  # Seguridad
+        [10, 35, 50, 65, 75, 80, 70, 55, 30],  # Inmigración
+        [25, 50, 65, 80, 90, 95, 85, 70, 45],  # Espera
+        [30, 55, 70, 85, 95, 100, 90, 75, 50], # Gates
+        [18, 42, 58, 72, 82, 88, 78, 62, 38]   # Equipajes
+    ]
+    
+    return {
+        'data': [go.Heatmap(
+            z=density_matrix, x=hours, y=zones,
+            colorscale=[
+                [0, '#0a0e27'], [0.2, '#1a1f3a'], [0.4, '#00d4ff'],
+                [0.6, '#ffb627'], [0.8, '#ff6b35'], [1, '#ff4757']
+            ],
+            hovertemplate='<b>%{y}</b><br>Hora: %{x}<br>Densidad: %{z}%<extra></extra>'
+        )],
+        'layout': get_capacity_layout()
+    }
+
+@callback(Output('utilization-trends', 'figure'), Input('tabs', 'active_tab'))
+def update_utilization_trends(active_tab):
+    if active_tab != "capacity":
+        return {}
+    
+    hours = list(range(6, 23))
+    
+    return {
+        'data': [
+            go.Scatter(x=hours, y=[20, 35, 55, 70, 80, 85, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40],
+                      name='Check-in', line=dict(color='#00ff88', width=3)),
+            go.Scatter(x=hours, y=[15, 30, 50, 65, 75, 80, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35],
+                      name='Seguridad', line=dict(color='#ffb627', width=3)),
+            go.Scatter(x=hours, y=[25, 40, 60, 75, 85, 90, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45],
+                      name='Gates', line=dict(color='#8b5cf6', width=3)),
+            go.Scatter(x=hours, y=[18, 33, 48, 63, 73, 78, 83, 78, 73, 68, 63, 58, 53, 48, 43, 38, 33],
+                      name='Equipajes', line=dict(color='#ff6b35', width=3))
+        ],
+        'layout': get_capacity_layout()
+    }
+
+@callback(Output('capacity-demand', 'figure'), Input('tabs', 'active_tab'))
+def update_capacity_demand(active_tab):
+    if active_tab != "capacity":
+        return {}
+    
+    hours = list(range(6, 23))
+    
+    return {
+        'data': [
+            go.Scatter(
+                x=hours,
+                y=[100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+                name='Capacidad Máxima',
+                mode='lines',
+                line=dict(color='#ff4757', width=2, dash='dash'),
+                fill=None
+            ),
+            go.Scatter(
+                x=hours,
+                y=[20, 35, 55, 70, 80, 85, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40],
+                name='Demanda Actual',
+                mode='lines',
+                line=dict(color='#00d4ff', width=3),
+                fill='tonexty',
+                fillcolor='rgba(0, 212, 255, 0.2)'
+            )
+        ],
+        'layout': get_capacity_layout()
+    }
+
+@callback(Output('general-gauge', 'figure'), Input('tabs', 'active_tab'))
+def update_general_gauge(active_tab):
+    if active_tab != "capacity":
+        return {}
+    
+    return {
+        'data': [go.Indicator(
+            mode="gauge+number+delta",
+            value=78,
+            domain={'x': [0, 1], 'y': [0, 1]},
+            title={'text': "Utilización Terminal (%)"},
+            delta={'reference': 75},
+            gauge={
+                'axis': {'range': [None, 100]},
+                'bar': {'color': "#00d4ff"},
+                'steps': [
+                    {'range': [0, 50], 'color': "rgba(0, 255, 136, 0.3)"},
+                    {'range': [50, 80], 'color': "rgba(255, 182, 39, 0.3)"},
+                    {'range': [80, 100], 'color': "rgba(255, 71, 87, 0.3)"}
+                ],
+                'threshold': {'line': {'color': "white", 'width': 4}, 'thickness': 0.75, 'value': 90}
+            }
+        )],
+        'layout': get_capacity_layout()
     }
 
 # Removed unused callbacks for non-existent chart IDs

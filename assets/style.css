@@ -1372,3 +1372,198 @@ body {
 .bloomberg-header {
     animation: terminal-glow 3s ease-in-out infinite;
 }
+
+/* Operations Center Styles */
+.operations-header {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(0, 212, 255, 0.15) 100%);
+    border: 2px solid var(--primary-gold);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
+}
+
+.section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.section-subtitle {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+}
+
+.status-badges {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* Capacity Gauges */
+.capacity-gauge-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    height: 100%;
+}
+
+.capacity-gauge-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
+    border-color: var(--primary-gold);
+}
+
+.capacity-gauge-icon {
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.gauge-percentage {
+    font-family: 'Inter', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-cyan);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.gauge-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.gauge-value {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.gauge-benchmark {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+.gauge-content {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.capacity-progress-ring {
+    border-radius: 4px !important;
+}
+
+/* Terminal Layout SVG */
+.terminal-svg {
+    background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    border-radius: 12px;
+}
+
+.terminal-zone {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.terminal-zone:hover {
+    filter: brightness(1.3);
+    stroke-width: 3;
+    transform: scale(1.02);
+    transform-origin: center;
+}
+
+/* Operations Table */
+.operations-table {
+    font-family: 'Inter', monospace;
+    font-size: 0.85rem;
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.operations-table .zone-name {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+.operations-table-container {
+    background: var(--glass-bg);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.operations-table th {
+    background: rgba(0, 212, 255, 0.15) !important;
+    color: var(--primary-cyan) !important;
+    border-color: rgba(0, 212, 255, 0.3) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-size: 0.75rem !important;
+    padding: 1rem 0.75rem !important;
+}
+
+.operations-table td {
+    background: rgba(10, 14, 39, 0.6) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    vertical-align: middle !important;
+    padding: 0.875rem 0.75rem !important;
+    font-weight: 500 !important;
+}
+
+.operations-table tbody tr:hover td {
+    background: rgba(245, 158, 11, 0.08) !important;
+}
+
+/* Operations Chart Enhancements */
+.chart-card:has(#capacity-heatmap),
+.chart-card:has(#utilization-trends),
+.chart-card:has(#capacity-demand),
+.chart-card:has(#general-gauge) {
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: rgba(10, 14, 39, 0.9);
+}
+
+.chart-card:has(#capacity-heatmap):hover,
+.chart-card:has(#utilization-trends):hover,
+.chart-card:has(#capacity-demand):hover,
+.chart-card:has(#general-gauge):hover {
+    box-shadow: 0 8px 32px rgba(245, 158, 11, 0.2);
+    border-color: var(--primary-gold);
+}
+
+/* Responsive Operations Center */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.4rem;
+    }
+    
+    .gauge-percentage {
+        font-size: 1.6rem;
+    }
+    
+    .capacity-gauge-card {
+        margin-bottom: 1rem;
+    }
+    
+    .status-badges {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .terminal-svg {
+        height: 300px;
+    }
+}
