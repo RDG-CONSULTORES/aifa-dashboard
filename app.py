@@ -1838,70 +1838,60 @@ def render_productivity_tab():
             dbc.Col([
                 create_productivity_kpi_enhanced(
                     title="Movements per Hour",
-                    subtitle="Aircraft turnaround efficiency",
-                    icon="mdi:airplane-clock",
-                    current_value=productivity_data['movements_per_hour']['current'],
-                    target_value=productivity_data['movements_per_hour']['target'],
-                    benchmark_value=productivity_data['movements_per_hour']['benchmark'],
-                    change=productivity_data['movements_per_hour']['change'],
+                    current=productivity_data['movements_per_hour']['current'],
+                    benchmark=productivity_data['movements_per_hour']['benchmark'],
                     unit="mov/hr",
-                    kpi_id="productivity-movements"
+                    trend=productivity_data['movements_per_hour']['trend'],
+                    icon="mdi:airplane-clock",
+                    performance=productivity_data['movements_per_hour']['performance']
                 )
             ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
                     title="Turnaround Time",
-                    subtitle="Gate-to-gate efficiency",
-                    icon="mdi:timer-outline",
-                    current_value=productivity_data['turnaround_time']['current'],
-                    target_value=productivity_data['turnaround_time']['target'],
-                    benchmark_value=productivity_data['turnaround_time']['benchmark'],
-                    change=productivity_data['turnaround_time']['change'],
+                    current=productivity_data['turnaround_time']['current'],
+                    benchmark=productivity_data['turnaround_time']['benchmark'],
                     unit="min",
-                    kpi_id="productivity-turnaround"
+                    trend=productivity_data['turnaround_time']['trend'],
+                    icon="mdi:timer-outline",
+                    performance=productivity_data['turnaround_time']['performance']
                 )
             ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
                     title="Gate Utilization",
-                    subtitle="Parking position efficiency",
-                    icon="mdi:gate",
-                    current_value=productivity_data['gate_utilization']['current'],
-                    target_value=productivity_data['gate_utilization']['target'],
-                    benchmark_value=productivity_data['gate_utilization']['benchmark'],
-                    change=productivity_data['gate_utilization']['change'],
+                    current=productivity_data['gate_utilization']['current'],
+                    benchmark=productivity_data['gate_utilization']['benchmark'],
                     unit="%",
-                    kpi_id="productivity-gates"
+                    trend=productivity_data['gate_utilization']['trend'],
+                    icon="mdi:gate",
+                    performance=productivity_data['gate_utilization']['performance']
                 )
             ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
                     title="Staff Productivity",
-                    subtitle="Passengers per employee",
-                    icon="mdi:account-group",
-                    current_value=productivity_data['staff_productivity']['current'],
-                    target_value=productivity_data['staff_productivity']['target'],
-                    benchmark_value=productivity_data['staff_productivity']['benchmark'],
-                    change=productivity_data['staff_productivity']['change'],
+                    current=productivity_data['staff_productivity']['current'],
+                    benchmark=productivity_data['staff_productivity']['benchmark'],
                     unit="pax/emp",
-                    kpi_id="productivity-staff"
+                    trend=productivity_data['staff_productivity']['trend'],
+                    icon="mdi:account-group",
+                    performance=productivity_data['staff_productivity']['performance']
                 )
             ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'}),
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
                     title="Cost per WLU",
-                    subtitle="Work Load Unit efficiency",
-                    icon="mdi:currency-usd",
-                    current_value=productivity_data['cost_per_wlu']['current'],
-                    target_value=productivity_data['cost_per_wlu']['target'],
-                    benchmark_value=productivity_data['cost_per_wlu']['benchmark'],
-                    change=productivity_data['cost_per_wlu']['change'],
+                    current=productivity_data['cost_per_wlu']['current'],
+                    benchmark=productivity_data['cost_per_wlu']['benchmark'],
                     unit="USD",
-                    kpi_id="productivity-cost"
+                    trend=productivity_data['cost_per_wlu']['trend'],
+                    icon="mdi:currency-usd",
+                    performance=productivity_data['cost_per_wlu']['performance']
                 )
             ], width=12, md=6, lg=4, xl=2.4, style={'marginBottom': '20px'})
         ], justify="center"),
@@ -2011,7 +2001,7 @@ def render_productivity_tab():
                     title="Revenue per Movement",
                     value=f"${executive_metrics['revenue_per_movement']:,.0f}",
                     change=executive_metrics['revenue_per_movement_change'],
-                    icon="mdi:cash-multiple"
+                    unit="USD"
                 )
             ], width=6, md=3),
             
@@ -2020,7 +2010,7 @@ def render_productivity_tab():
                     title="Asset Utilization",
                     value=f"{executive_metrics['asset_utilization']:.1f}%",
                     change=executive_metrics['asset_utilization_change'],
-                    icon="mdi:factory"
+                    unit="percent"
                 )
             ], width=6, md=3),
             
@@ -2029,7 +2019,7 @@ def render_productivity_tab():
                     title="Labor Efficiency",
                     value=f"{executive_metrics['labor_efficiency']:.1f}%",
                     change=executive_metrics['labor_efficiency_change'],
-                    icon="mdi:account-hard-hat"
+                    unit="percent"
                 )
             ], width=6, md=3),
             
@@ -2038,7 +2028,7 @@ def render_productivity_tab():
                     title="Process Optimization",
                     value=f"{executive_metrics['process_optimization']:.1f}%",
                     change=executive_metrics['process_optimization_change'],
-                    icon="mdi:cog-sync"
+                    unit="percent"
                 )
             ], width=6, md=3)
         ])
