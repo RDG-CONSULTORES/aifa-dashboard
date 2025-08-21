@@ -227,22 +227,40 @@ app.layout = html.Div([
 @callback(Output("tab-content", "children"),
           Input("tabs", "active_tab"))
 def render_tab_content(active_tab):
+    print(f"🐛 DEBUG: Received active_tab = '{active_tab}'")
+    
     try:
         if active_tab == "strategic":
+            print("🐛 DEBUG: Rendering strategic tab")
             return render_strategic_tab()
         elif active_tab == "geographic":
+            print("🐛 DEBUG: Rendering geographic tab")
             return render_geographic_tab()
         elif active_tab == "financial":
+            print("🐛 DEBUG: Rendering financial tab")
             return render_financial_tab()
         elif active_tab == "capacity":
-            return render_capacity_tab()
+            print("🐛 DEBUG: Rendering CAPACITY tab - THIS SHOULD WORK!")
+            result = render_capacity_tab()
+            print("🐛 DEBUG: Capacity tab rendered successfully")
+            return result
         elif active_tab == "security":
-            return render_security_tab()
+            print("🐛 DEBUG: Rendering SECURITY tab - THIS SHOULD WORK!")
+            result = render_security_tab()
+            print("🐛 DEBUG: Security tab rendered successfully")
+            return result
         elif active_tab == "quality":
-            return render_quality_tab()
+            print("🐛 DEBUG: Rendering QUALITY tab - THIS SHOULD WORK!")
+            result = render_quality_tab()
+            print("🐛 DEBUG: Quality tab rendered successfully")
+            return result
         elif active_tab == "productivity":
-            return render_productivity_tab()
+            print("🐛 DEBUG: Rendering PRODUCTIVITY tab - THIS SHOULD WORK!")
+            result = render_productivity_tab()
+            print("🐛 DEBUG: Productivity tab rendered successfully")
+            return result
         else:
+            print(f"🐛 DEBUG: Tab '{active_tab}' not found in conditions - showing default")
             return html.Div([
                 html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
                        style={'color': '#8b92a9', 'textAlign': 'center', 'marginTop': '50px'}),
@@ -250,6 +268,9 @@ def render_tab_content(active_tab):
                       style={'color': '#8b92a9', 'textAlign': 'center'})
             ])
     except Exception as e:
+        print(f"🐛 DEBUG: ERROR in render_tab_content: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return html.Div([
             html.H4("Error en la pestaña", style={'color': '#ff4757', 'textAlign': 'center', 'marginTop': '50px'}),
             html.P(f"Error: {str(e)}", style={'color': '#8b92a9', 'textAlign': 'center'})
@@ -456,8 +477,10 @@ def render_financial_tab():
     ])
 
 def render_capacity_tab():
+    print("🐛 DEBUG: render_capacity_tab() called successfully")
     return html.Div([
-        html.H4("Capacidad Operativa", className="page-title", style={'color': 'white'}),
+        html.H4("✅ Capacidad Operativa (WORKING v2.1)", className="page-title", style={'color': 'white'}),
+        html.P("Version: 2.1 - Debug con logging", style={'color': '#8b92a9', 'fontSize': '0.8rem', 'marginBottom': '1rem'}),
         
         # Simple KPI Cards Row
         dbc.Row([
@@ -846,163 +869,7 @@ def update_financial_trend(n):
     
     return fig
 
-# New tab callbacks
-@callback(Output('capacity-zones-chart', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_capacity_zones(n):
-    zones = get_capacity_zones()
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        x=[zone['zone'] for zone in zones],
-        y=[zone['utilization'] for zone in zones],
-        marker_color='#00d4ff',
-        text=[f"{zone['utilization']}%" for zone in zones],
-        textposition='auto',
-        name='Utilización %'
-    ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Zonas del Aeropuerto'),
-        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Utilización (%)'),
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-    
-    return fig
-
-@callback(Output('capacity-standards-chart', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_capacity_standards(n):
-    data = get_capacity_data()
-    
-    areas = ['Check-in', 'Espera', 'Seguridad', 'Estéril']
-    current = [data['checkin_area']['current'], data['waiting_area']['current'], 
-               data['security_area']['current'], data['sterile_area']['current']]
-    standard = [data['checkin_area']['standard'], data['waiting_area']['standard'],
-                data['security_area']['standard'], data['sterile_area']['standard']]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        x=areas, y=current, name='AIFA', marker_color='#00d4ff'
-    ))
-    
-    fig.add_trace(go.Bar(
-        x=areas, y=standard, name='Estándar IATA', marker_color='#f59e0b'
-    ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
-        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='m²/millón pax'),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02),
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-    
-    return fig
-
-@callback(Output('security-risk-matrix', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_security_matrix(n):
-    risks = [
-        {'name': 'Incursión Pista', 'prob': 2, 'sev': 5, 'color': 'High'},
-        {'name': 'Choque Aves', 'prob': 4, 'sev': 3, 'color': 'Medium'},
-        {'name': 'Acc. Trabajo', 'prob': 1, 'sev': 2, 'color': 'Low'},
-        {'name': 'FOD', 'prob': 3, 'sev': 4, 'color': 'Medium'},
-        {'name': 'Error ATC', 'prob': 1, 'sev': 5, 'color': 'High'}
-    ]
-    
-    colors = {'Low': '#00ff88', 'Medium': '#f59e0b', 'High': '#ff4757'}
-    
-    fig = go.Figure()
-    
-    for risk in risks:
-        fig.add_trace(go.Scatter(
-            x=[risk['prob']],
-            y=[risk['sev']],
-            mode='markers+text',
-            text=[risk['name']],
-            textposition='middle center',
-            marker=dict(size=40, color=colors[risk['color']]),
-            showlegend=False
-        ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        xaxis=dict(range=[0, 5], title='Probabilidad', gridcolor='rgba(255,255,255,0.1)'),
-        yaxis=dict(range=[0, 6], title='Severidad', gridcolor='rgba(255,255,255,0.1)'),
-        margin=dict(l=40, r=20, t=40, b=40)
-    )
-    
-    return fig
-
-@callback(Output('customer-journey-chart', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_customer_journey(n):
-    stages = ['Llegada', 'Check-in', 'Seguridad', 'Espera', 'Embarque']
-    times = [2.1, 3.2, 6.4, 15.5, 8.1]
-    targets = [3.0, 5.0, 8.0, 20.0, 10.0]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatter(
-        x=stages, y=times, mode='lines+markers', name='Tiempo Actual',
-        line=dict(color='#00d4ff', width=3), marker=dict(size=10)
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=stages, y=targets, mode='lines+markers', name='Meta',
-        line=dict(color='#f59e0b', width=2, dash='dash'), marker=dict(size=8)
-    ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Etapa del Viaje'),
-        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Tiempo (min)'),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02),
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-    
-    return fig
-
-@callback(Output('productivity-benchmark-chart', 'figure'),
-          Input('interval-component', 'n_intervals'))
-def update_productivity_benchmark(n):
-    airports = ['AIFA', 'Dubai', 'Amsterdam', 'Frankfurt', 'Singapore', 'Heathrow']
-    pax_per_emp = [1240, 1180, 1350, 1220, 1420, 1050]
-    
-    colors = ['#00d4ff' if x == 'AIFA' else '#8b92a9' for x in airports]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        x=airports,
-        y=pax_per_emp,
-        marker_color=colors,
-        text=pax_per_emp,
-        textposition='auto'
-    ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Aeropuerto'),
-        yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title='Pasajeros por Empleado/Año'),
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
-    
-    return fig
+# Removed unused callbacks for non-existent chart IDs
 
 # Time update callback
 @callback(Output('live-update-time', 'children'),
