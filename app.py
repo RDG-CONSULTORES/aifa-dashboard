@@ -364,36 +364,27 @@ def create_security_gauge(title, percentage, critical_threshold, icon):
 def create_airport_map_svg():
     """Crear mapa SVG del aeropuerto AIFA con zonas de seguridad"""
     return html.Div([
-        html.Svg([
-            # Pista principal
-            html.Rect(x="100", y="150", width="400", height="40", fill="#1a1f37", stroke="#00d4ff", strokeWidth="2"),
-            html.Text("Pista 12L/30R", x="280", y="175", fill="white", fontSize="12", textAnchor="middle"),
-            
-            # Pista secundaria  
-            html.Rect(x="100", y="220", width="400", height="40", fill="#1a1f37", stroke="#00d4ff", strokeWidth="2"),
-            html.Text("Pista 12R/30L", x="280", y="245", fill="white", fontSize="12", textAnchor="middle"),
-            
-            # Terminal
-            html.Rect(x="150", y="50", width="300", height="80", fill="#0a0e27", stroke="#f59e0b", strokeWidth="3"),
-            html.Text("Terminal AIFA", x="300", y="95", fill="#f59e0b", fontSize="16", textAnchor="middle", fontWeight="bold"),
-            
-            # Torre de Control
-            html.Circle(cx="300", cy="300", r="20", fill="#ff4757", stroke="white", strokeWidth="2"),
-            html.Text("Torre Control", x="300", y="340", fill="white", fontSize="10", textAnchor="middle"),
-            
-            # Zonas de seguridad
-            html.Circle(cx="120", cy="170", r="8", fill="#00ff88", className="security-zone-indicator"),
-            html.Circle(cx="480", cy="170", r="8", fill="#00ff88", className="security-zone-indicator"),
-            html.Circle(cx="120", cy="240", r="8", fill="#00ff88", className="security-zone-indicator"),
-            html.Circle(cx="480", cy="240", r="8", fill="#00ff88", className="security-zone-indicator"),
-            
-            # Cámaras de seguridad
-            html.Circle(cx="180", cy="100", r="4", fill="#f59e0b"),
-            html.Circle(cx="250", cy="100", r="4", fill="#f59e0b"),
-            html.Circle(cx="350", cy="100", r="4", fill="#f59e0b"),
-            html.Circle(cx="420", cy="100", r="4", fill="#f59e0b"),
-            
-        ], width="600", height="400", viewBox="0 0 600 400", className="airport-security-map")
+        html.Div([
+            # Representación visual del aeropuerto con CSS
+            html.Div([
+                html.Div("Terminal AIFA", className="airport-terminal"),
+                html.Div("Pista 12L/30R", className="airport-runway runway-1"),
+                html.Div("Pista 12R/30L", className="airport-runway runway-2"),
+                html.Div("Torre Control", className="control-tower"),
+                
+                # Zonas de seguridad
+                html.Div(className="security-zone zone-1"),
+                html.Div(className="security-zone zone-2"),
+                html.Div(className="security-zone zone-3"),
+                html.Div(className="security-zone zone-4"),
+                
+                # Cámaras de seguridad
+                html.Div(className="security-camera cam-1"),
+                html.Div(className="security-camera cam-2"),
+                html.Div(className="security-camera cam-3"),
+                html.Div(className="security-camera cam-4"),
+            ], className="airport-layout")
+        ], className="airport-visual-container")
     ], className="map-container")
 
 def get_security_chart_layout():

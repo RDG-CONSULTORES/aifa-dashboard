@@ -1755,24 +1755,177 @@ body {
     align-items: center;
 }
 
-.airport-security-map {
-    max-width: 100%;
-    height: auto;
-    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+.airport-visual-container {
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(10, 14, 39, 0.9) 0%, rgba(26, 31, 58, 0.9) 100%);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.security-zone-indicator {
+.airport-layout {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Terminal */
+.airport-terminal {
+    position: absolute;
+    top: 60px;
+    left: 150px;
+    width: 300px;
+    height: 80px;
+    background: rgba(245, 158, 11, 0.2);
+    border: 2px solid var(--primary-gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-gold);
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Pistas */
+.airport-runway {
+    position: absolute;
+    width: 400px;
+    height: 40px;
+    left: 100px;
+    background: rgba(0, 212, 255, 0.1);
+    border: 2px solid var(--primary-cyan);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    font-weight: 500;
+}
+
+.runway-1 {
+    top: 160px;
+}
+
+.runway-2 {
+    top: 230px;
+}
+
+/* Torre de Control */
+.control-tower {
+    position: absolute;
+    top: 290px;
+    left: 280px;
+    width: 40px;
+    height: 40px;
+    background: var(--danger-red);
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+    animation: control-tower-pulse 3s ease-in-out infinite;
+}
+
+.control-tower::after {
+    content: "Torre Control";
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: white;
+    white-space: nowrap;
+}
+
+@keyframes control-tower-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 71, 87, 0.6);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(255, 71, 87, 0.9);
+    }
+}
+
+/* Zonas de Seguridad */
+.security-zone {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: var(--success-green);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
     animation: security-pulse 2s ease-in-out infinite;
+}
+
+.zone-1 {
+    top: 162px;
+    left: 112px;
+}
+
+.zone-2 {
+    top: 162px;
+    left: 472px;
+}
+
+.zone-3 {
+    top: 232px;
+    left: 112px;
+}
+
+.zone-4 {
+    top: 232px;
+    left: 472px;
 }
 
 @keyframes security-pulse {
     0%, 100% { 
         opacity: 1;
-        r: 8;
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(0, 255, 136, 0.6);
     }
     50% { 
-        opacity: 0.6;
-        r: 12;
+        opacity: 0.7;
+        transform: scale(1.3);
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.9);
+    }
+}
+
+/* Cámaras de Seguridad */
+.security-camera {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-gold);
+    border-radius: 50%;
+    top: 96px;
+    animation: camera-blink 4s ease-in-out infinite;
+}
+
+.cam-1 { left: 176px; }
+.cam-2 { left: 246px; }
+.cam-3 { left: 346px; }
+.cam-4 { left: 416px; }
+
+@keyframes camera-blink {
+    0%, 90%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.6);
+    }
+    95% { 
+        opacity: 0.3;
+        box-shadow: 0 0 2px rgba(245, 158, 11, 0.3);
     }
 }
 
