@@ -183,8 +183,10 @@ app.layout = html.Div([
                     height="50px",
                     style={
                         'marginRight': '15px',
-                        'filter': 'drop-shadow(0 0 10px rgba(0, 212, 255, 0.3))'
-                    }
+                        'backgroundColor': 'transparent',
+                        'isolation': 'isolate'
+                    },
+                    className="header-logo"
                 ),
                 html.Div([
                     html.H1("Centro de Operaciones AIFA", className="header-title"),
