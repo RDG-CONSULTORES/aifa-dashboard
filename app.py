@@ -1839,7 +1839,7 @@ def render_productivity_tab():
         dbc.Row([
             dbc.Col([
                 create_productivity_kpi_enhanced(
-                    title="Movements per Hour",
+                    title="Movimientos por Hora",
                     current=productivity_data['movements_per_hour']['current'],
                     benchmark=productivity_data['movements_per_hour']['benchmark'],
                     unit="mov/hr",
@@ -1851,7 +1851,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
-                    title="Turnaround Time",
+                    title="Tiempo de Rotación",
                     current=productivity_data['turnaround_time']['current'],
                     benchmark=productivity_data['turnaround_time']['benchmark'],
                     unit="min",
@@ -1863,7 +1863,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
-                    title="Gate Utilization",
+                    title="Utilización de Puertas",
                     current=productivity_data['gate_utilization']['current'],
                     benchmark=productivity_data['gate_utilization']['benchmark'],
                     unit="%",
@@ -1875,7 +1875,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
-                    title="Staff Productivity",
+                    title="Productividad Personal",
                     current=productivity_data['staff_productivity']['current'],
                     benchmark=productivity_data['staff_productivity']['benchmark'],
                     unit="pax/emp",
@@ -1887,7 +1887,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_productivity_kpi_enhanced(
-                    title="Cost per WLU",
+                    title="Costo por UTC",
                     current=productivity_data['cost_per_wlu']['current'],
                     benchmark=productivity_data['cost_per_wlu']['benchmark'],
                     unit="USD",
@@ -1900,7 +1900,7 @@ def render_productivity_tab():
         
         # Analytics Section
         html.Div([
-            html.H5("Operational Analytics", 
+            html.H5("Analytics Operacionales", 
                    style={'marginBottom': '20px', 'color': '#ffffff', 'fontWeight': '500'})
         ], style={'marginTop': '30px', 'marginBottom': '20px'}),
         
@@ -1910,7 +1910,7 @@ def render_productivity_tab():
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H6("Efficiency Matrix", 
+                        html.H6("Matriz de Eficiencia", 
                                style={'marginBottom': '15px', 'color': '#8b92a9'}),
                         dcc.Graph(
                             id='productivity-efficiency-matrix',
@@ -1924,7 +1924,7 @@ def render_productivity_tab():
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H6("International Benchmark Comparison", 
+                        html.H6("Comparación Benchmark Internacional", 
                                style={'marginBottom': '15px', 'color': '#8b92a9'}),
                         dcc.Graph(
                             id='productivity-benchmark-radar',
@@ -1938,7 +1938,7 @@ def render_productivity_tab():
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H6("Productivity Trends Analysis", 
+                        html.H6("Análisis de Tendencias de Productividad", 
                                style={'marginBottom': '15px', 'color': '#8b92a9'}),
                         dcc.Graph(
                             id='productivity-trends',
@@ -1952,7 +1952,7 @@ def render_productivity_tab():
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H6("Resource ROI Analysis", 
+                        html.H6("Análisis ROI de Recursos", 
                                style={'marginBottom': '15px', 'color': '#8b92a9'}),
                         dcc.Graph(
                             id='productivity-roi-scatter',
@@ -1966,7 +1966,7 @@ def render_productivity_tab():
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H6("Capacity Utilization Metrics", 
+                        html.H6("Métricas de Utilización de Capacidad", 
                                style={'marginBottom': '15px', 'color': '#8b92a9'}),
                         dcc.Graph(
                             id='productivity-capacity-gauges',
@@ -1980,7 +1980,7 @@ def render_productivity_tab():
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H6("Operational Cost Breakdown", 
+                        html.H6("Desglose de Costos Operacionales", 
                                style={'marginBottom': '15px', 'color': '#8b92a9'}),
                         dcc.Graph(
                             id='productivity-cost-waterfall',
@@ -1993,14 +1993,14 @@ def render_productivity_tab():
         
         # Executive Metrics Summary
         html.Div([
-            html.H5("Executive Metrics Summary", 
+            html.H5("Resumen Ejecutivo de Métricas", 
                    style={'marginBottom': '20px', 'color': '#ffffff', 'fontWeight': '500'})
         ], style={'marginTop': '30px', 'marginBottom': '20px'}),
         
         dbc.Row([
             dbc.Col([
                 create_executive_metric(
-                    title="Revenue per Movement",
+                    title="Ingresos por Movimiento",
                     value=f"${executive_metrics['revenue_per_movement']:,.0f}",
                     change=executive_metrics['revenue_per_movement_change'],
                     unit="USD"
@@ -2009,7 +2009,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_executive_metric(
-                    title="Asset Utilization",
+                    title="Utilización de Activos",
                     value=f"{executive_metrics['asset_utilization']:.1f}%",
                     change=executive_metrics['asset_utilization_change'],
                     unit="percent"
@@ -2018,7 +2018,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_executive_metric(
-                    title="Labor Efficiency",
+                    title="Eficiencia Laboral",
                     value=f"{executive_metrics['labor_efficiency']:.1f}%",
                     change=executive_metrics['labor_efficiency_change'],
                     unit="percent"
@@ -2027,7 +2027,7 @@ def render_productivity_tab():
             
             dbc.Col([
                 create_executive_metric(
-                    title="Process Optimization",
+                    title="Optimización de Procesos",
                     value=f"{executive_metrics['process_optimization']:.1f}%",
                     change=executive_metrics['process_optimization_change'],
                     unit="percent"
@@ -2039,11 +2039,18 @@ def render_productivity_tab():
 # Productivity Chart Functions
 def create_efficiency_matrix():
     """Create efficiency matrix heatmap"""
-    departments = ['Ground Ops', 'Security', 'Customer Service', 'Maintenance', 'Cargo', 'Immigration']
-    metrics = ['Productivity', 'Quality', 'Cost Control', 'Time Management']
+    departments = ['Operaciones Terrestres', 'Seguridad', 'Servicio al Cliente', 'Mantenimiento', 'Carga', 'Migración']
+    metrics = ['Productividad', 'Calidad', 'Control de Costos', 'Gestión del Tiempo']
     
-    values = np.random.normal(75, 15, (len(departments), len(metrics)))
-    values = np.clip(values, 40, 100)
+    # Datos más realistas y consistentes
+    values = np.array([
+        [88, 85, 82, 90],  # Operaciones Terrestres
+        [76, 92, 78, 85],  # Seguridad  
+        [82, 88, 75, 80],  # Servicio al Cliente
+        [91, 83, 85, 87],  # Mantenimiento
+        [78, 80, 88, 82],  # Carga
+        [74, 85, 72, 78]   # Migración
+    ])
     
     fig = go.Figure(data=go.Heatmap(
         z=values,
@@ -2053,29 +2060,46 @@ def create_efficiency_matrix():
         showscale=True,
         text=[[f"{val:.0f}%" for val in row] for row in values],
         texttemplate="%{text}",
-        textfont={"size": 10, "color": "white"},
-        hovertemplate='<b>%{y}</b><br>%{x}: %{z:.0f}%<extra></extra>'
+        textfont={"size": 11, "color": "white", "family": "Inter"},
+        hovertemplate='<b>%{y}</b><br>%{x}: %{z:.0f}%<extra></extra>',
+        colorbar=dict(
+            title="Eficiencia (%)",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10)
+        )
     ))
     
     fig.update_layout(
-        title="Operational Efficiency by Department",
-        title_font_color='white',
-        xaxis_title="Metrics",
-        yaxis_title="Departments",
-        font=dict(color='white'),
+        title=dict(
+            text="Eficiencia Operacional por Departamento",
+            font=dict(color='white', size=14, family='Inter'),
+            x=0.5
+        ),
+        xaxis=dict(
+            title="Métricas",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10)
+        ),
+        yaxis=dict(
+            title="Departamentos", 
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10)
+        ),
+        font=dict(color='white', family='Inter'),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        height=350
+        height=350,
+        margin=dict(l=120, r=60, t=60, b=60)
     )
     
     return fig
 
 def create_benchmark_radar():
     """Create international benchmark radar chart"""
-    categories = ['Staff Productivity', 'Cost Efficiency', 'Turnaround Time', 
-                 'Gate Utilization', 'Customer Satisfaction']
+    categories = ['Productividad Personal', 'Eficiencia de Costos', 'Tiempo de Rotación', 
+                 'Utilización de Puertas', 'Satisfacción del Cliente']
     
-    aifa_values = [87, 82, 91, 78, 85]
+    aifa_values = [92, 85, 94, 81, 88]
     benchmark_values = [85, 80, 88, 75, 82]
     
     fig = go.Figure()
@@ -2085,40 +2109,57 @@ def create_benchmark_radar():
         theta=categories + [categories[0]],
         fill='toself',
         name='AIFA',
-        line_color='#00d4ff',
-        fillcolor='rgba(0, 212, 255, 0.2)'
+        line=dict(color='#00d4ff', width=3),
+        fillcolor='rgba(0, 212, 255, 0.3)',
+        marker=dict(size=8, color='#00d4ff')
     ))
     
     fig.add_trace(go.Scatterpolar(
         r=benchmark_values + [benchmark_values[0]],
         theta=categories + [categories[0]],
         fill='toself',
-        name='International Benchmark',
-        line_color='#ffa726',
-        fillcolor='rgba(255, 167, 38, 0.2)'
+        name='Benchmark Internacional',
+        line=dict(color='#ffa726', width=3),
+        fillcolor='rgba(255, 167, 38, 0.2)',
+        marker=dict(size=8, color='#ffa726')
     ))
     
     fig.update_layout(
+        title=dict(
+            text="Comparación con Benchmark Internacional",
+            font=dict(color='white', size=14, family='Inter'),
+            x=0.5
+        ),
         polar=dict(
             radialaxis=dict(
                 visible=True,
                 range=[0, 100],
-                color='white'
+                color='white',
+                tickfont=dict(size=10),
+                gridcolor='rgba(255,255,255,0.2)'
             ),
-            angularaxis=dict(color='white')
+            angularaxis=dict(
+                color='white',
+                tickfont=dict(size=10, family='Inter')
+            )
         ),
         showlegend=True,
-        legend=dict(font_color='white'),
+        legend=dict(
+            font=dict(color='white', size=11, family='Inter'),
+            x=0.85,
+            y=0.95
+        ),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        height=350
+        height=350,
+        margin=dict(l=60, r=60, t=60, b=60)
     )
     
     return fig
 
 def create_productivity_trends():
     """Create productivity trends time series"""
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
     
     movements_per_hour = [15.2, 15.8, 16.1, 15.9, 16.4, 16.8, 17.1, 17.3, 17.0, 17.5, 17.8, 18.2]
     staff_productivity = [1185, 1205, 1240, 1228, 1265, 1290, 1315, 1325, 1308, 1340, 1355, 1380]
@@ -2129,44 +2170,76 @@ def create_productivity_trends():
     fig.add_trace(go.Scatter(
         x=months, y=movements_per_hour,
         mode='lines+markers',
-        name='Movements/Hour',
+        name='Movimientos/Hora',
         line=dict(color='#00d4ff', width=3),
+        marker=dict(size=8, color='#00d4ff'),
+        hovertemplate='<b>Movimientos/Hora</b><br>%{x}: %{y:.1f}<extra></extra>',
         yaxis='y'
     ))
     
     fig.add_trace(go.Scatter(
         x=months, y=[x/100 for x in staff_productivity],
         mode='lines+markers',
-        name='Staff Productivity (x100)',
+        name='Productividad Personal (x100)',
         line=dict(color='#00ff88', width=3),
+        marker=dict(size=8, color='#00ff88'),
+        hovertemplate='<b>Productividad Personal</b><br>%{x}: %{customdata}<extra></extra>',
+        customdata=staff_productivity,
         yaxis='y'
     ))
     
     fig.add_trace(go.Scatter(
         x=months, y=cost_per_wlu,
         mode='lines+markers',
-        name='Cost per WLU',
+        name='Costo por UTC',
         line=dict(color='#ffa726', width=3),
+        marker=dict(size=8, color='#ffa726'),
+        hovertemplate='<b>Costo por UTC</b><br>%{x}: $%{y:.2f}<extra></extra>',
         yaxis='y2'
     ))
     
     fig.update_layout(
-        title="12-Month Productivity Trends",
-        title_font_color='white',
-        xaxis=dict(title="Month", color='white'),
-        yaxis=dict(title="Productivity Index", color='white', side='left'),
-        yaxis2=dict(title="Cost per WLU (USD)", color='white', overlaying='y', side='right'),
-        legend=dict(font_color='white'),
+        title=dict(
+            text="Tendencias de Productividad - 12 Meses",
+            font=dict(color='white', size=14, family='Inter'),
+            x=0.5
+        ),
+        xaxis=dict(
+            title="Mes",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            gridcolor='rgba(255,255,255,0.1)'
+        ),
+        yaxis=dict(
+            title="Índice de Productividad",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            side='left',
+            gridcolor='rgba(255,255,255,0.1)'
+        ),
+        yaxis2=dict(
+            title="Costo por UTC (USD)",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            overlaying='y',
+            side='right'
+        ),
+        legend=dict(
+            font=dict(color='white', size=11, family='Inter'),
+            x=0.02,
+            y=0.98
+        ),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        height=350
+        height=350,
+        margin=dict(l=60, r=60, t=60, b=60)
     )
     
     return fig
 
 def create_roi_scatter():
     """Create resource ROI scatter plot"""
-    departments = ['Ground Ops', 'Security', 'Customer Service', 'Maintenance', 'Cargo', 'Immigration', 'IT', 'Admin']
+    departments = ['Ops. Terrestres', 'Seguridad', 'Servicio Cliente', 'Mantenimiento', 'Carga', 'Migración', 'TI', 'Admin']
     investment = [850, 420, 320, 1200, 380, 180, 520, 240]
     roi = [185, 142, 138, 168, 155, 134, 172, 125]
     
@@ -2177,30 +2250,50 @@ def create_roi_scatter():
         text=departments,
         textposition='top center',
         marker=dict(
-            size=15,
+            size=20,
             color=roi,
             colorscale='RdYlGn',
             showscale=True,
-            colorbar=dict(title="ROI %", titlefont_color='white', tickfont_color='white')
+            colorbar=dict(
+                title="ROI (%)",
+                titlefont=dict(color='white', size=12),
+                tickfont=dict(color='white', size=10)
+            ),
+            line=dict(width=2, color='white')
         ),
-        textfont=dict(color='white', size=10)
+        textfont=dict(color='white', size=11, family='Inter'),
+        hovertemplate='<b>%{text}</b><br>Inversión: $%{x}K USD<br>ROI: %{y}%<extra></extra>'
     ))
     
     fig.update_layout(
-        title="Resource Investment vs ROI",
-        title_font_color='white',
-        xaxis=dict(title="Investment (K USD)", color='white'),
-        yaxis=dict(title="ROI (%)", color='white'),
+        title=dict(
+            text="Inversión vs ROI por Departamento",
+            font=dict(color='white', size=14, family='Inter'),
+            x=0.5
+        ),
+        xaxis=dict(
+            title="Inversión (K USD)",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            gridcolor='rgba(255,255,255,0.1)'
+        ),
+        yaxis=dict(
+            title="ROI (%)",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            gridcolor='rgba(255,255,255,0.1)'
+        ),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        height=350
+        height=350,
+        margin=dict(l=60, r=60, t=60, b=60)
     )
     
     return fig
 
 def create_capacity_gauges():
     """Create capacity utilization gauge charts"""
-    resources = ['Gates', 'Check-in', 'Security', 'Baggage']
+    resources = ['Puertas', 'Check-in', 'Seguridad', 'Equipajes']
     utilizations = [78, 85, 72, 80]
     colors = ['#00d4ff', '#00ff88', '#ffa726', '#ff6b6b']
     
@@ -2211,60 +2304,95 @@ def create_capacity_gauges():
             mode="gauge+number",
             value=util,
             domain={'row': i//2, 'column': i%2},
-            title={'text': resource, 'font': {'color': 'white', 'size': 12}},
+            title={
+                'text': f"<b>{resource}</b>",
+                'font': {'color': 'white', 'size': 14, 'family': 'Inter'}
+            },
             gauge={
-                'axis': {'range': [None, 100], 'tickcolor': 'white'},
-                'bar': {'color': color},
+                'axis': {
+                    'range': [None, 100],
+                    'tickcolor': 'white',
+                    'tickfont': {'size': 10, 'color': 'white'}
+                },
+                'bar': {'color': color, 'thickness': 0.8},
+                'bgcolor': 'rgba(255,255,255,0.1)',
+                'borderwidth': 2,
+                'bordercolor': 'rgba(255,255,255,0.3)',
                 'steps': [
-                    {'range': [0, 50], 'color': 'rgba(255, 71, 87, 0.3)'},
-                    {'range': [50, 80], 'color': 'rgba(255, 167, 38, 0.3)'},
-                    {'range': [80, 100], 'color': 'rgba(0, 255, 136, 0.3)'}
+                    {'range': [0, 50], 'color': 'rgba(255, 71, 87, 0.2)'},
+                    {'range': [50, 80], 'color': 'rgba(255, 167, 38, 0.2)'},
+                    {'range': [80, 100], 'color': 'rgba(0, 255, 136, 0.2)'}
                 ],
                 'threshold': {
-                    'line': {'color': "red", 'width': 4},
+                    'line': {'color': "#ff4757", 'width': 3},
                     'thickness': 0.75,
                     'value': 90
                 }
             },
-            number={'font': {'color': 'white'}}
+            number={
+                'font': {'color': 'white', 'size': 18, 'family': 'Inter'},
+                'suffix': '%'
+            }
         ))
     
     fig.update_layout(
+        title=dict(
+            text="Utilización de Recursos Críticos",
+            font=dict(color='white', size=14, family='Inter'),
+            x=0.5,
+            y=0.95
+        ),
         grid={'rows': 2, 'columns': 2, 'pattern': "independent"},
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        height=300
+        height=300,
+        margin=dict(l=20, r=20, t=50, b=20)
     )
     
     return fig
 
 def create_cost_waterfall():
     """Create operational cost breakdown waterfall chart"""
-    categories = ['Personnel', 'Infrastructure', 'Technology', 'Energy', 'Maintenance', 'Other']
+    categories = ['Personal', 'Infraestructura', 'Tecnología', 'Energía', 'Mantenimiento', 'Otros']
     values = [4500, 2800, 1200, 800, 1100, 600]
     
     fig = go.Figure(go.Waterfall(
-        name="Cost Breakdown",
+        name="Desglose de Costos",
         orientation="v",
         measure=["relative"]*len(categories),
         x=categories,
         textposition="auto",
         text=[f"${v}K" for v in values],
         y=values,
-        connector={"line": {"color": "rgb(63, 63, 63)"}},
-        increasing={"marker": {"color": "#00d4ff"}},
-        decreasing={"marker": {"color": "#ff4757"}},
-        totals={"marker": {"color": "#00ff88"}}
+        textfont=dict(color='white', size=12, family='Inter'),
+        connector={"line": {"color": "rgba(255,255,255,0.3)", "width": 2}},
+        increasing={"marker": {"color": "#00d4ff", "line": {"color": "white", "width": 2}}},
+        decreasing={"marker": {"color": "#ff4757", "line": {"color": "white", "width": 2}}},
+        totals={"marker": {"color": "#00ff88", "line": {"color": "white", "width": 2}}},
+        hovertemplate='<b>%{x}</b><br>Costo: $%{y}K USD<extra></extra>'
     ))
     
     fig.update_layout(
-        title="Monthly Operational Cost Breakdown",
-        title_font_color='white',
-        xaxis=dict(color='white'),
-        yaxis=dict(title="Cost (K USD)", color='white'),
+        title=dict(
+            text="Desglose de Costos Operacionales Mensuales",
+            font=dict(color='white', size=14, family='Inter'),
+            x=0.5
+        ),
+        xaxis=dict(
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            gridcolor='rgba(255,255,255,0.1)'
+        ),
+        yaxis=dict(
+            title="Costo (K USD)",
+            titlefont=dict(color='white', size=12),
+            tickfont=dict(color='white', size=10),
+            gridcolor='rgba(255,255,255,0.1)'
+        ),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        height=300
+        height=300,
+        margin=dict(l=60, r=20, t=60, b=60)
     )
     
     return fig
