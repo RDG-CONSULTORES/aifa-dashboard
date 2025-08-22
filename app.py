@@ -226,6 +226,231 @@ def get_benchmark_data():
         'categorias': ['Pax/Empleado', 'Ops/Empleado', 'Carga/Empleado', 'Ops/Puerta', 'Pax/Puerta', 'Eficiencia']
     }
 
+# Metodología Data Functions
+def get_dashboard_mapping():
+    """Mapeo completo de KPIs y sistemas del dashboard AIFA"""
+    return {
+        'geografico': {
+            'kpis': 8,
+            'implementado': True,
+            'sistemas': ['AODB', 'GIS', 'Radar'],
+            'complejidad': 'Media',
+            'descripcion': 'Análisis geográfico de rutas y conectividad internacional',
+            'kpis_principales': ['Rutas Domésticas', 'Rutas Internacionales', 'Conectividad Hub', 'Cobertura Geográfica']
+        },
+        'financiero': {
+            'kpis': 8, 
+            'implementado': True,
+            'sistemas': ['ERP', 'Contabilidad', 'CRM'],
+            'complejidad': 'Baja',
+            'descripcion': 'Indicadores financieros y rentabilidad operacional',
+            'kpis_principales': ['Revenue per Pax', 'EBITDA', 'ROI', 'Cost per Operation']
+        },
+        'capacidad': {
+            'kpis': 6,
+            'implementado': True,
+            'sistemas': ['AODB', 'BRS', 'FIDS'],
+            'complejidad': 'Media',
+            'descripcion': 'Utilización de capacidad de infraestructura aeroportuaria',
+            'kpis_principales': ['Utilización Terminal', 'Throughput Pax', 'Capacity Load Factor']
+        },
+        'seguridad': {
+            'kpis': 15,
+            'implementado': True,
+            'sistemas': ['SMS', 'AODB', 'Radar', 'CCTV'],
+            'complejidad': 'Alta',
+            'descripcion': 'Seguridad operacional y compliance OACI',
+            'kpis_principales': ['Incidentes Runway', 'FOD Rate', 'Security Index', 'Safety Score']
+        },
+        'calidad': {
+            'kpis': 11,
+            'implementado': True, 
+            'sistemas': ['IoT', 'CRM', 'Encuestas', 'Sensors'],
+            'complejidad': 'Alta',
+            'descripcion': 'Calidad de servicio y satisfacción del pasajero',
+            'kpis_principales': ['NPS Score', 'Tiempo de Espera', 'Satisfacción General', 'Customer Journey']
+        },
+        'productividad': {
+            'kpis': 5,
+            'implementado': True,
+            'sistemas': ['AODB', 'RH', 'ERP', 'WMS'],
+            'complejidad': 'Media',
+            'descripcion': 'Eficiencia operacional y productividad de recursos',
+            'kpis_principales': ['Movimientos/Hora', 'Staff Productivity', 'Turnaround Time', 'Gate Utilization']
+        }
+    }
+
+def get_technical_glossary():
+    """Glosario técnico completo del sector aeroportuario"""
+    return {
+        'AODB': {
+            'nombre': 'Airport Operational Database',
+            'definicion': 'Sistema central que gestiona toda la información operacional del aeropuerto en tiempo real, incluyendo vuelos, recursos y coordinación entre sistemas.',
+            'funciones': ['Seguimiento de vuelos en tiempo real', 'Gestión de recursos aeroportuarios', 'Integración con sistemas externos', 'Generación de reportes operacionales'],
+            'criticidad': 'Alta - Sistema crítico del aeropuerto'
+        },
+        'SMS': {
+            'nombre': 'Safety Management System', 
+            'definicion': 'Sistema integral de gestión de seguridad operacional según estándares OACI Anexo 19, que permite identificar, evaluar y mitigar riesgos de seguridad.',
+            'funciones': ['Reportes de incidentes y accidentes', 'Análisis de riesgos operacionales', 'Auditorías de seguridad', 'Gestión de indicadores de seguridad'],
+            'criticidad': 'Crítica - Requerimiento regulatorio OACI'
+        },
+        'SCT_AFAC': {
+            'nombre': 'Secretaría de Comunicaciones y Transportes / Agencia Federal de Aviación Civil',
+            'definicion': 'Autoridades aeronáuticas mexicanas que regulan, certifican y supervisan todas las actividades de aviación civil en territorio nacional.',
+            'funciones': ['Regulación aeronáutica nacional', 'Certificación de aeropuertos', 'Supervisión y auditorías', 'Emisión de licencias'],
+            'criticidad': 'Crítica - Autoridad regulatoria nacional'
+        },
+        'OACI_ICAO': {
+            'nombre': 'Organización de Aviación Civil Internacional / International Civil Aviation Organization',
+            'definicion': 'Organismo especializado de la ONU que establece estándares y prácticas recomendadas internacionales para la aviación civil.',
+            'funciones': ['Desarrollo de estándares globales', 'Prácticas recomendadas (SARPs)', 'Auditorías internacionales', 'Coordinación entre Estados'],
+            'criticidad': 'Crítica - Estándares internacionales obligatorios'
+        },
+        'ERP': {
+            'nombre': 'Enterprise Resource Planning',
+            'definicion': 'Sistema integrado de gestión empresarial que unifica todos los procesos de negocio: finanzas, recursos humanos, operaciones y logística.',
+            'funciones': ['Gestión financiera y contable', 'Administración de recursos humanos', 'Gestión de compras y logística', 'Reportes ejecutivos integrados'],
+            'criticidad': 'Alta - Backbone administrativo'
+        },
+        'IoT': {
+            'nombre': 'Internet of Things (Internet de las Cosas)',
+            'definicion': 'Red interconectada de sensores, dispositivos y sistemas que recopilan y transmiten datos en tiempo real para monitoreo y control automatizado.',
+            'funciones': ['Sensores de flujo de pasajeros', 'Monitoreo ambiental (temperatura, humedad)', 'Tracking de activos y equipos', 'Automatización de procesos'],
+            'criticidad': 'Media - Optimización operacional'
+        },
+        'FOD': {
+            'nombre': 'Foreign Object Debris/Damage',
+            'definicion': 'Objetos extraños presentes en áreas operacionales (pistas, calles de rodaje) que representan riesgo de daño a aeronaves o equipos.',
+            'funciones': ['Inspección sistemática de pistas', 'Reportes y clasificación de objetos', 'Protocolos de remoción', 'Prevención de incidentes'],
+            'criticidad': 'Alta - Seguridad operacional crítica'
+        },
+        'NPS': {
+            'nombre': 'Net Promoter Score',
+            'definicion': 'Métrica de lealtad y satisfacción que mide la probabilidad de que un pasajero recomiende el aeropuerto, basada en escala 0-10.',
+            'funciones': ['Encuestas de satisfacción a pasajeros', 'Análisis de tendencias de servicio', 'Benchmarking con otros aeropuertos', 'Identificación de áreas de mejora'],
+            'criticidad': 'Media - Indicador de calidad de servicio'
+        },
+        'BRS': {
+            'nombre': 'Baggage Reconciliation System',
+            'definicion': 'Sistema de reconciliación y seguimiento de equipaje que garantiza que cada maleta esté asociada con un pasajero que efectivamente abordó.',
+            'funciones': ['Tracking de equipaje end-to-end', 'Verificación de seguridad', 'Gestión de conexiones internacionales', 'Localización de equipaje extraviado'],
+            'criticidad': 'Alta - Seguridad y satisfacción del pasajero'
+        },
+        'CRM': {
+            'nombre': 'Customer Relationship Management',
+            'definicion': 'Sistema de gestión de relaciones con pasajeros y clientes que centraliza interacciones, quejas, sugerencias y análisis de comportamiento.',
+            'funciones': ['Gestión centralizada de quejas', 'Encuestas de satisfacción', 'Análisis de comportamiento del pasajero', 'Seguimiento de resoluciones'],
+            'criticidad': 'Media - Experiencia del cliente'
+        },
+        'WLU': {
+            'nombre': 'Work Load Unit',
+            'definicion': 'Unidad de medida estándar de la industria aeroportuaria que equivale a 1 pasajero o 100 kg de carga, utilizada para cálculos de capacidad y productividad.',
+            'funciones': ['Medición de carga de trabajo', 'Cálculos de capacidad', 'Benchmarking internacional', 'Planificación de recursos'],
+            'criticidad': 'Media - Estándar de medición industria'
+        },
+        'FIDS': {
+            'nombre': 'Flight Information Display System',
+            'definicion': 'Sistema de pantallas de información de vuelos que muestra en tiempo real horarios, puertas, estados y actualizaciones para pasajeros.',
+            'funciones': ['Información en tiempo real a pasajeros', 'Integración con AODB', 'Gestión de contenido dinámico', 'Multilenguaje y accesibilidad'],
+            'criticidad': 'Alta - Información crítica para pasajeros'
+        }
+    }
+
+def get_system_architecture():
+    """Arquitectura de sistemas y flujo de datos"""
+    return {
+        'core_systems': {
+            'AODB': {
+                'descripcion': 'Sistema central de base de datos operacionales',
+                'conexiones': ['SMS', 'FIDS', 'BRS', 'ERP'],
+                'datos': ['Información de vuelos', 'Recursos aeroportuarios', 'Estadísticas operacionales'],
+                'criticidad': 'Crítica'
+            },
+            'SMS': {
+                'descripcion': 'Sistema de gestión de seguridad',
+                'conexiones': ['AODB', 'Radar', 'CCTV'],
+                'datos': ['Incidentes de seguridad', 'Análisis de riesgos', 'Reportes regulatorios'],
+                'criticidad': 'Crítica'
+            },
+            'ERP': {
+                'descripcion': 'Sistema de planificación de recursos empresariales',
+                'conexiones': ['AODB', 'CRM', 'RH'],
+                'datos': ['Información financiera', 'Recursos humanos', 'Gestión de activos'],
+                'criticidad': 'Alta'
+            }
+        },
+        'integration_apis': [
+            {'nombre': 'AODB-API', 'protocolo': 'REST', 'formato': 'JSON', 'tiempo_real': True},
+            {'nombre': 'SMS-API', 'protocolo': 'SOAP', 'formato': 'XML', 'tiempo_real': False},
+            {'nombre': 'IoT-Gateway', 'protocolo': 'MQTT', 'formato': 'JSON', 'tiempo_real': True},
+            {'nombre': 'ERP-Integration', 'protocolo': 'REST', 'formato': 'JSON', 'tiempo_real': False}
+        ],
+        'data_flow': {
+            'tiempo_real': ['AODB', 'IoT', 'FIDS', 'Sensors'],
+            'batch': ['ERP', 'CRM', 'Reportes', 'Analytics'],
+            'frecuencia_actualizacion': {
+                'AODB': '5 segundos',
+                'IoT': '30 segundos', 
+                'ERP': '1 hora',
+                'CRM': '15 minutos'
+            }
+        }
+    }
+
+def get_kpi_formulas():
+    """Fórmulas matemáticas exactas para cada KPI"""
+    return {
+        'seguridad': {
+            'runway_incident_rate': {
+                'formula': '(Número de Incidentes en Pista / Total de Movimientos) × 1000',
+                'unidad': 'incidentes por 1000 operaciones',
+                'fuente': 'SMS + AODB',
+                'estandar_oaci': 'Anexo 19 - SMS',
+                'meta_aifa': '< 0.15 por 1000 ops'
+            },
+            'fod_detection_rate': {
+                'formula': '(FODs Detectados / Total de Inspecciones) × 100',
+                'unidad': 'porcentaje',
+                'fuente': 'Sistema de Inspección + Reportes Manuales',
+                'estandar_oaci': 'Anexo 14 - Diseño de Aeródromos',
+                'meta_aifa': '> 95% detección'
+            }
+        },
+        'productividad': {
+            'movements_per_hour': {
+                'formula': 'Total de Movimientos de Aeronaves / Horas de Operación',
+                'unidad': 'movimientos por hora',
+                'fuente': 'AODB',
+                'benchmark_internacional': '16-18 mov/hr aeropuertos similares',
+                'meta_aifa': '> 16 movimientos/hora'
+            },
+            'staff_productivity': {
+                'formula': 'Total de Pasajeros Atendidos / Número de Empleados FTE',
+                'unidad': 'pasajeros por empleado',
+                'fuente': 'AODB + Sistema RH',
+                'benchmark_internacional': '1200-1500 pax/empleado',
+                'meta_aifa': '> 1200 pax/empleado'
+            }
+        },
+        'calidad': {
+            'nps_score': {
+                'formula': '% Promotores (9-10) - % Detractores (0-6)',
+                'unidad': 'puntos NPS (-100 a +100)',
+                'fuente': 'Sistema de Encuestas CRM',
+                'benchmark_internacional': 'NPS > 30 considerado bueno',
+                'meta_aifa': 'NPS > 40'
+            },
+            'average_waiting_time': {
+                'formula': 'Σ(Tiempo de Espera por Pasajero) / Total de Pasajeros',
+                'unidad': 'minutos',
+                'fuente': 'Sensores IoT + Sistema de Colas',
+                'estandar_servicio': '< 15 min en seguridad, < 5 min en migración',
+                'meta_aifa': '< 10 min promedio general'
+            }
+        }
+    }
+
 def get_route_network_data():
     """Datos de la red de rutas AIFA con coordenadas geográficas"""
     aifa_lat, aifa_lon = 19.7373, -99.0068
@@ -775,6 +1000,9 @@ app.layout = html.Div([
                 active_label_style={'color': '#00d4ff', 'background': 'rgba(0, 212, 255, 0.1)'}),
         dbc.Tab(label="Productividad", tab_id="productivity",
                 label_style={'color': '#8b92a9'},
+                active_label_style={'color': '#00d4ff', 'background': 'rgba(0, 212, 255, 0.1)'}),
+        dbc.Tab(label="Metodología", tab_id="metodologia",
+                label_style={'color': '#8b92a9'},
                 active_label_style={'color': '#00d4ff', 'background': 'rgba(0, 212, 255, 0.1)'})
     ], id="tabs", active_tab="strategic", className="nav-tabs"),
     
@@ -802,6 +1030,8 @@ def render_tab_content(active_tab):
         return render_quality_tab()
     elif active_tab == "productivity":
         return render_productivity_tab()
+    elif active_tab == "metodologia":
+        return render_metodologia_tab()
     else:
         return html.Div([
             html.H4(f"Módulo: {active_tab.replace('_', ' ').title()}", 
@@ -2397,6 +2627,354 @@ def create_cost_waterfall():
     
     return fig
 
+def render_metodologia_tab():
+    """Render del tab de Metodología con sistema de autenticación"""
+    
+    # Modal de autenticación
+    auth_modal = dbc.Modal([
+        dbc.ModalHeader(dbc.ModalTitle([
+            DashIconify(icon="mdi:shield-check", width=24, height=24, style={'marginRight': '10px', 'color': '#00d4ff'}),
+            "Acceso a Documentación Técnica"
+        ])),
+        dbc.ModalBody([
+            html.Div([
+                html.P("Esta sección contiene información confidencial del sistema AIFA. Ingrese sus credenciales para acceder:", 
+                       style={'color': '#ffffff', 'marginBottom': '20px'}),
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Label("Usuario:", style={'color': '#ffffff', 'fontWeight': 'bold'}),
+                        dbc.Input(
+                            id="auth-username",
+                            type="text",
+                            placeholder="Ingrese su usuario",
+                            style={
+                                'backgroundColor': 'rgba(26, 31, 58, 0.9)',
+                                'border': '1px solid rgba(0, 212, 255, 0.3)',
+                                'color': '#ffffff'
+                            }
+                        )
+                    ], width=12)
+                ], className="mb-3"),
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Label("Contraseña:", style={'color': '#ffffff', 'fontWeight': 'bold'}),
+                        dbc.Input(
+                            id="auth-password",
+                            type="password",
+                            placeholder="Ingrese su contraseña",
+                            style={
+                                'backgroundColor': 'rgba(26, 31, 58, 0.9)',
+                                'border': '1px solid rgba(0, 212, 255, 0.3)',
+                                'color': '#ffffff'
+                            }
+                        )
+                    ], width=12)
+                ], className="mb-3"),
+                html.Div(id="auth-message", style={'color': '#ff4757', 'marginTop': '10px'})
+            ])
+        ]),
+        dbc.ModalFooter([
+            dbc.Button("Cancelar", id="auth-cancel", className="me-2", 
+                      style={'backgroundColor': '#374151', 'border': 'none'}),
+            dbc.Button("Ingresar", id="auth-submit", 
+                      style={'backgroundColor': '#00d4ff', 'border': 'none'})
+        ])
+    ], id="auth-modal", size="md", is_open=False, backdrop="static")
+
+    return html.Div([
+        auth_modal,
+        
+        # Header de la sección
+        html.Div([
+            html.Div([
+                DashIconify(icon="mdi:book-open-variant", width=32, height=32, 
+                           style={'color': '#00d4ff', 'marginRight': '15px'}),
+                html.H3("Metodología Técnica AIFA", 
+                       style={'color': '#ffffff', 'margin': '0', 'fontWeight': '600'})
+            ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '10px'}),
+            html.P("Documentación técnica, arquitectura de sistemas y metodologías operacionales", 
+                   style={'color': '#8b92a9', 'margin': '0', 'fontSize': '1.1rem'})
+        ], style={'marginBottom': '30px'}),
+        
+        # Botón de acceso principal
+        html.Div([
+            dbc.Button([
+                DashIconify(icon="mdi:shield-lock", width=24, height=24, style={'marginRight': '10px'}),
+                "Acceder a Documentación Técnica"
+            ], id="open-auth-modal", size="lg", 
+               style={
+                   'backgroundColor': '#00d4ff', 
+                   'border': 'none', 
+                   'padding': '15px 30px',
+                   'fontSize': '1.1rem',
+                   'fontWeight': '600',
+                   'boxShadow': '0 4px 15px rgba(0, 212, 255, 0.3)'
+               })
+        ], style={'textAlign': 'center', 'marginBottom': '40px'}),
+        
+        # Contenido protegido (inicialmente oculto)
+        html.Div(id="protected-content", children=[], style={'display': 'none'}),
+        
+        # Preview público de metodología
+        html.Div([
+            html.H4("Vista Previa de Metodología", 
+                   style={'color': '#ffffff', 'marginBottom': '20px', 'textAlign': 'center'}),
+            
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Div([
+                                DashIconify(icon="mdi:chart-line", width=40, height=40, 
+                                           style={'color': '#00d4ff'}),
+                                html.H5("Dashboard Overview", 
+                                       style={'color': '#ffffff', 'marginTop': '15px'}),
+                                html.P("Vista general de 53 KPIs distribuidos en 7 módulos operacionales", 
+                                       style={'color': '#8b92a9', 'fontSize': '0.9rem'})
+                            ], style={'textAlign': 'center'})
+                        ])
+                    ], className="chart-card", style={'height': '200px', 'display': 'flex', 'alignItems': 'center'})
+                ], width=4),
+                
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Div([
+                                DashIconify(icon="mdi:sitemap", width=40, height=40, 
+                                           style={'color': '#f59e0b'}),
+                                html.H5("Arquitectura de Sistemas", 
+                                       style={'color': '#ffffff', 'marginTop': '15px'}),
+                                html.P("Diagramas de integración entre AODB, SMS, ERP y sistemas complementarios", 
+                                       style={'color': '#8b92a9', 'fontSize': '0.9rem'})
+                            ], style={'textAlign': 'center'})
+                        ])
+                    ], className="chart-card", style={'height': '200px', 'display': 'flex', 'alignItems': 'center'})
+                ], width=4),
+                
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Div([
+                                DashIconify(icon="mdi:book-variant", width=40, height=40, 
+                                           style={'color': '#8b5cf6'}),
+                                html.H5("Glosario Técnico", 
+                                       style={'color': '#ffffff', 'marginTop': '15px'}),
+                                html.P("Definiciones completas de 12+ términos técnicos del sector aeroportuario", 
+                                       style={'color': '#8b92a9', 'fontSize': '0.9rem'})
+                            ], style={'textAlign': 'center'})
+                        ])
+                    ], className="chart-card", style={'height': '200px', 'display': 'flex', 'alignItems': 'center'})
+                ], width=4)
+            ])
+        ])
+    ])
+
+def render_protected_methodology_content():
+    """Contenido completo de metodología (después de autenticación)"""
+    dashboard_mapping = get_dashboard_mapping()
+    technical_glossary = get_technical_glossary()
+    system_architecture = get_system_architecture()
+    kpi_formulas = get_kpi_formulas()
+    
+    return html.Div([
+        # 1. Dashboard Overview - Mapeo completo de KPIs
+        html.Div([
+            html.H4([
+                DashIconify(icon="mdi:view-dashboard", width=28, height=28, 
+                           style={'marginRight': '10px', 'color': '#00d4ff'}),
+                "Dashboard Overview - Mapeo de KPIs"
+            ], style={'color': '#ffffff', 'marginBottom': '20px'}),
+            
+            dbc.Card([
+                dbc.CardBody([
+                    html.Div([
+                        html.H6("Distribución de KPIs por Módulo", 
+                               style={'color': '#ffffff', 'marginBottom': '15px'}),
+                        dbc.Table([
+                            html.Thead([
+                                html.Tr([
+                                    html.Th("Módulo", style={'color': '#00d4ff', 'borderColor': 'rgba(0, 212, 255, 0.3)'}),
+                                    html.Th("KPIs", style={'color': '#00d4ff', 'borderColor': 'rgba(0, 212, 255, 0.3)'}),
+                                    html.Th("Estado", style={'color': '#00d4ff', 'borderColor': 'rgba(0, 212, 255, 0.3)'}),
+                                    html.Th("Sistemas", style={'color': '#00d4ff', 'borderColor': 'rgba(0, 212, 255, 0.3)'}),
+                                    html.Th("Complejidad", style={'color': '#00d4ff', 'borderColor': 'rgba(0, 212, 255, 0.3)'})
+                                ])
+                            ]),
+                            html.Tbody([
+                                html.Tr([
+                                    html.Td(modulo.title(), style={'color': '#ffffff', 'borderColor': 'rgba(255,255,255,0.1)'}),
+                                    html.Td(str(data['kpis']), style={'color': '#ffffff', 'borderColor': 'rgba(255,255,255,0.1)'}),
+                                    html.Td([
+                                        dbc.Badge("✓ Implementado" if data['implementado'] else "Pendiente", 
+                                                 color="success" if data['implementado'] else "warning",
+                                                 className="me-1")
+                                    ], style={'borderColor': 'rgba(255,255,255,0.1)'}),
+                                    html.Td(", ".join(data['sistemas']), style={'color': '#8b92a9', 'fontSize': '0.9rem', 'borderColor': 'rgba(255,255,255,0.1)'}),
+                                    html.Td([
+                                        dbc.Badge(data['complejidad'], 
+                                                 color="danger" if data['complejidad'] == "Alta" else 
+                                                       "warning" if data['complejidad'] == "Media" else "info")
+                                    ], style={'borderColor': 'rgba(255,255,255,0.1)'})
+                                ]) for modulo, data in dashboard_mapping.items()
+                            ])
+                        ], bordered=True, hover=True, responsive=True, dark=True)
+                    ])
+                ])
+            ], className="chart-card", style={'marginBottom': '30px'})
+        ]),
+        
+        # 2. System Architecture
+        html.Div([
+            html.H4([
+                DashIconify(icon="mdi:sitemap", width=28, height=28, 
+                           style={'marginRight': '10px', 'color': '#f59e0b'}),
+                "Arquitectura de Sistemas"
+            ], style={'color': '#ffffff', 'marginBottom': '20px'}),
+            
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H6("Sistemas Core", style={'color': '#ffffff', 'marginBottom': '15px'}),
+                            html.Div([
+                                html.Div([
+                                    html.H6(sistema, style={'color': '#00d4ff', 'fontSize': '1rem'}),
+                                    html.P(data['descripcion'], style={'color': '#ffffff', 'fontSize': '0.9rem', 'marginBottom': '5px'}),
+                                    html.P(f"Criticidad: {data['criticidad']}", style={'color': '#f59e0b', 'fontSize': '0.8rem', 'marginBottom': '10px'}),
+                                    html.P(f"Conexiones: {', '.join(data['conexiones'])}", style={'color': '#8b92a9', 'fontSize': '0.8rem'})
+                                ], style={'marginBottom': '20px'}) for sistema, data in system_architecture['core_systems'].items()
+                            ])
+                        ])
+                    ], className="chart-card")
+                ], width=6),
+                
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H6("APIs de Integración", style={'color': '#ffffff', 'marginBottom': '15px'}),
+                            html.Div([
+                                html.Div([
+                                    html.H6(api['nombre'], style={'color': '#00ff88', 'fontSize': '1rem'}),
+                                    html.P(f"Protocolo: {api['protocolo']} | Formato: {api['formato']}", 
+                                           style={'color': '#ffffff', 'fontSize': '0.9rem', 'marginBottom': '5px'}),
+                                    html.P(f"Tiempo Real: {'Sí' if api['tiempo_real'] else 'No'}", 
+                                           style={'color': '#f59e0b' if api['tiempo_real'] else '#8b92a9', 'fontSize': '0.8rem'})
+                                ], style={'marginBottom': '15px'}) for api in system_architecture['integration_apis']
+                            ])
+                        ])
+                    ], className="chart-card")
+                ], width=6)
+            ], style={'marginBottom': '30px'})
+        ]),
+        
+        # 3. KPI Documentation
+        html.Div([
+            html.H4([
+                DashIconify(icon="mdi:calculator", width=28, height=28, 
+                           style={'marginRight': '10px', 'color': '#8b5cf6'}),
+                "Documentación de KPIs"
+            ], style={'color': '#ffffff', 'marginBottom': '20px'}),
+            
+            dbc.Accordion([
+                dbc.AccordionItem([
+                    html.Div([
+                        html.H6("KPIs de Seguridad", style={'color': '#ffffff', 'marginBottom': '15px'}),
+                        html.Div([
+                            html.Div([
+                                html.H6(kpi.replace('_', ' ').title(), style={'color': '#00d4ff'}),
+                                html.P(f"Fórmula: {data['formula']}", style={'color': '#ffffff', 'fontFamily': 'monospace', 'backgroundColor': 'rgba(0,0,0,0.3)', 'padding': '8px', 'borderRadius': '4px'}),
+                                html.P(f"Unidad: {data['unidad']}", style={'color': '#f59e0b'}),
+                                html.P(f"Fuente: {data['fuente']}", style={'color': '#8b92a9'}),
+                                html.P(f"Meta AIFA: {data['meta_aifa']}", style={'color': '#00ff88'})
+                            ], style={'marginBottom': '20px'}) for kpi, data in kpi_formulas['seguridad'].items()
+                        ])
+                    ])
+                ], title="Fórmulas de Seguridad"),
+                
+                dbc.AccordionItem([
+                    html.Div([
+                        html.H6("KPIs de Productividad", style={'color': '#ffffff', 'marginBottom': '15px'}),
+                        html.Div([
+                            html.Div([
+                                html.H6(kpi.replace('_', ' ').title(), style={'color': '#00d4ff'}),
+                                html.P(f"Fórmula: {data['formula']}", style={'color': '#ffffff', 'fontFamily': 'monospace', 'backgroundColor': 'rgba(0,0,0,0.3)', 'padding': '8px', 'borderRadius': '4px'}),
+                                html.P(f"Unidad: {data['unidad']}", style={'color': '#f59e0b'}),
+                                html.P(f"Fuente: {data['fuente']}", style={'color': '#8b92a9'}),
+                                html.P(f"Meta AIFA: {data['meta_aifa']}", style={'color': '#00ff88'})
+                            ], style={'marginBottom': '20px'}) for kpi, data in kpi_formulas['productividad'].items()
+                        ])
+                    ])
+                ], title="Fórmulas de Productividad"),
+                
+                dbc.AccordionItem([
+                    html.Div([
+                        html.H6("KPIs de Calidad", style={'color': '#ffffff', 'marginBottom': '15px'}),
+                        html.Div([
+                            html.Div([
+                                html.H6(kpi.replace('_', ' ').title(), style={'color': '#00d4ff'}),
+                                html.P(f"Fórmula: {data['formula']}", style={'color': '#ffffff', 'fontFamily': 'monospace', 'backgroundColor': 'rgba(0,0,0,0.3)', 'padding': '8px', 'borderRadius': '4px'}),
+                                html.P(f"Unidad: {data['unidad']}", style={'color': '#f59e0b'}),
+                                html.P(f"Fuente: {data['fuente']}", style={'color': '#8b92a9'}),
+                                html.P(f"Meta AIFA: {data['meta_aifa']}", style={'color': '#00ff88'})
+                            ], style={'marginBottom': '20px'}) for kpi, data in kpi_formulas['calidad'].items()
+                        ])
+                    ])
+                ], title="Fórmulas de Calidad")
+            ], start_collapsed=True, style={'marginBottom': '30px'})
+        ]),
+        
+        # 4. Technical Glossary
+        html.Div([
+            html.H4([
+                DashIconify(icon="mdi:book-variant", width=28, height=28, 
+                           style={'marginRight': '10px', 'color': '#00ff88'}),
+                "Glosario Técnico"
+            ], style={'color': '#ffffff', 'marginBottom': '20px'}),
+            
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Div([
+                                html.H5(f"{termino} ({data['nombre']})", style={'color': '#00d4ff', 'marginBottom': '10px'}),
+                                html.P(data['definicion'], style={'color': '#ffffff', 'marginBottom': '15px'}),
+                                html.H6("Funciones Principales:", style={'color': '#f59e0b', 'fontSize': '0.9rem', 'marginBottom': '8px'}),
+                                html.Ul([
+                                    html.Li(funcion, style={'color': '#8b92a9', 'fontSize': '0.8rem'}) 
+                                    for funcion in data['funciones']
+                                ], style={'marginBottom': '10px'}),
+                                dbc.Badge(data['criticidad'], 
+                                         color="danger" if "Crítica" in data['criticidad'] else 
+                                               "warning" if "Alta" in data['criticidad'] else "info",
+                                         style={'fontSize': '0.75rem'})
+                            ])
+                        ])
+                    ], className="chart-card", style={'marginBottom': '20px'})
+                ], width=6) for i, (termino, data) in enumerate(list(technical_glossary.items())[:8])
+            ] + [
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.Div([
+                                html.H5(f"{termino} ({data['nombre']})", style={'color': '#00d4ff', 'marginBottom': '10px'}),
+                                html.P(data['definicion'], style={'color': '#ffffff', 'marginBottom': '15px'}),
+                                html.H6("Funciones Principales:", style={'color': '#f59e0b', 'fontSize': '0.9rem', 'marginBottom': '8px'}),
+                                html.Ul([
+                                    html.Li(funcion, style={'color': '#8b92a9', 'fontSize': '0.8rem'}) 
+                                    for funcion in data['funciones']
+                                ], style={'marginBottom': '10px'}),
+                                dbc.Badge(data['criticidad'], 
+                                         color="danger" if "Crítica" in data['criticidad'] else 
+                                               "warning" if "Alta" in data['criticidad'] else "info",
+                                         style={'fontSize': '0.75rem'})
+                            ])
+                        ])
+                    ], className="chart-card", style={'marginBottom': '20px'})
+                ], width=6) for i, (termino, data) in enumerate(list(technical_glossary.items())[8:])
+            ])
+        ])
+    ])
+
 # Callbacks for charts
 @callback(Output('participation-trend-chart', 'figure'),
           Input('interval-component', 'n_intervals'))
@@ -3294,6 +3872,61 @@ def update_time(n):
     mexico_tz = pytz.timezone('America/Mexico_City')
     now = datetime.now(mexico_tz)
     return now.strftime("%d/%m/%Y %H:%M:%S CST")
+
+# Authentication Callbacks for Metodología Tab
+@callback(
+    Output("auth-modal", "is_open"),
+    [Input("open-auth-modal", "n_clicks"), 
+     Input("auth-cancel", "n_clicks"),
+     Input("auth-submit", "n_clicks")],
+    [State("auth-modal", "is_open"),
+     State("auth-username", "value"),
+     State("auth-password", "value")]
+)
+def toggle_auth_modal(open_clicks, cancel_clicks, submit_clicks, is_open, username, password):
+    """Control del modal de autenticación"""
+    ctx = dash.callback_context
+    
+    if not ctx.triggered:
+        return False
+    
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    
+    if button_id == "open-auth-modal":
+        return True
+    elif button_id == "auth-cancel":
+        return False
+    elif button_id == "auth-submit":
+        # Aquí validaríamos las credenciales - por ahora aceptamos cualquier valor
+        if username and password:
+            return False  # Cerrar modal si hay credenciales
+        else:
+            return True   # Mantener abierto si faltan datos
+    
+    return is_open
+
+@callback(
+    [Output("protected-content", "children"),
+     Output("protected-content", "style"),
+     Output("auth-message", "children")],
+    [Input("auth-submit", "n_clicks")],
+    [State("auth-username", "value"),
+     State("auth-password", "value")]
+)
+def authenticate_and_show_content(submit_clicks, username, password):
+    """Autenticación y mostrar contenido protegido"""
+    if not submit_clicks:
+        return [], {'display': 'none'}, ""
+    
+    # Validación simple - en producción sería más segura
+    if username and password:
+        # Credenciales válidas - mostrar contenido completo
+        if (username.lower() in ['admin', 'aifa', 'metodologia', 'tecnico']) and len(password) >= 4:
+            return render_protected_methodology_content(), {'display': 'block'}, ""
+        else:
+            return [], {'display': 'none'}, "Credenciales incorrectas. Intente nuevamente."
+    else:
+        return [], {'display': 'none'}, "Por favor ingrese usuario y contraseña."
 
 if __name__ == '__main__':
     import os
