@@ -79,3 +79,10 @@ Thumbs.db
 # Dash
 dash_bootstrap_components/
 plotly/
+
+# Security - Credenciales confidenciales
+credentials.txt
+*.credentials
+passwords.txt
+secrets.txt
+auth_config.py

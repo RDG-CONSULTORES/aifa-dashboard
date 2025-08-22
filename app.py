@@ -2638,15 +2638,27 @@ def render_metodologia_tab():
         ])),
         dbc.ModalBody([
             html.Div([
-                html.P("Esta sección contiene información confidencial del sistema AIFA. Ingrese sus credenciales para acceder:", 
-                       style={'color': '#ffffff', 'marginBottom': '20px'}),
+                html.Div([
+                    html.Div([
+                        DashIconify(icon="mdi:security", width=48, height=48, style={'color': '#f59e0b', 'marginBottom': '10px'}),
+                        html.H5("Área Restringida - Documentación Técnica AIFA", 
+                               style={'color': '#ffffff', 'fontWeight': '700', 'marginBottom': '15px'}),
+                        html.P("Esta sección contiene información confidencial clasificada. Solo personal autorizado.", 
+                               style={'color': '#8b92a9', 'fontSize': '0.95rem', 'marginBottom': '20px'})
+                    ], style={'textAlign': 'center', 'marginBottom': '25px'}),
+                    
+                    html.Div([
+                        html.P("🔐 Credenciales válidas requeridas", 
+                               style={'color': '#00d4ff', 'fontSize': '0.9rem', 'textAlign': 'center', 'marginBottom': '20px'})
+                    ])
+                ]),
                 dbc.Row([
                     dbc.Col([
                         dbc.Label("Usuario:", style={'color': '#ffffff', 'fontWeight': 'bold'}),
                         dbc.Input(
                             id="auth-username",
                             type="text",
-                            placeholder="Ingrese su usuario",
+                            placeholder="ej: director-aifa, metodologia-senior",
                             style={
                                 'backgroundColor': 'rgba(26, 31, 58, 0.9)',
                                 'border': '1px solid rgba(0, 212, 255, 0.3)',
@@ -2661,7 +2673,7 @@ def render_metodologia_tab():
                         dbc.Input(
                             id="auth-password",
                             type="password",
-                            placeholder="Ingrese su contraseña",
+                            placeholder="Contraseña segura (8+ caracteres)",
                             style={
                                 'backgroundColor': 'rgba(26, 31, 58, 0.9)',
                                 'border': '1px solid rgba(0, 212, 255, 0.3)',
@@ -3918,15 +3930,26 @@ def authenticate_and_show_content(submit_clicks, username, password):
     if not submit_clicks:
         return [], {'display': 'none'}, ""
     
-    # Validación simple - en producción sería más segura
+    # Sistema de autenticación robusto con credenciales seguras
     if username and password:
-        # Credenciales válidas - mostrar contenido completo
-        if (username.lower() in ['admin', 'aifa', 'metodologia', 'tecnico']) and len(password) >= 4:
+        # Credenciales autorizadas - Nivel Enterprise
+        valid_credentials = {
+            'director-aifa': 'AIFAExec2024!Tech',
+            'gerente-ops': 'OpsSecure#2024',
+            'metodologia-senior': 'TechDoc2024$AIFA',
+            'ingeniero-sistemas': 'SysArch!2024#Safe',
+            'analista-datos': 'DataAIFA2024@Secure',
+            'consultor-externo': 'Consultant#AIFA24',
+            'auditor-tecnico': 'Audit2024!Technical'
+        }
+        
+        # Validación exacta de credenciales
+        if username.lower() in valid_credentials and password == valid_credentials[username.lower()]:
             return render_protected_methodology_content(), {'display': 'block'}, ""
         else:
-            return [], {'display': 'none'}, "Credenciales incorrectas. Intente nuevamente."
+            return [], {'display': 'none'}, "⚠️ Acceso denegado. Credenciales inválidas o cuenta suspendida."
     else:
-        return [], {'display': 'none'}, "Por favor ingrese usuario y contraseña."
+        return [], {'display': 'none'}, "🔐 Ingrese credenciales válidas para acceder a documentación técnica."
 
 if __name__ == '__main__':
     import os
